@@ -44,8 +44,8 @@ class Log(DateTimeFields, SafeDeleteModel):
       - Calories Out
     """
 
-    user = models.OneToOneField(
-        get_user_model(), unique=True, blank=False, null=False, on_delete=models.CASCADE
+    user = models.ForeignKey(
+        get_user_model(), blank=False, null=False, on_delete=models.CASCADE,
     )
 
     date = models.DateField()  # Log the date
