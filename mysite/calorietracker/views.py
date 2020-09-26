@@ -30,6 +30,7 @@ class LogData(CreateView):
     model = Log
     form_class = LogForm
     template_name = "calorietracker/logdata.html"
+    success_url = reverse_lazy("analytics")
 
 
 class Register(CreateView):

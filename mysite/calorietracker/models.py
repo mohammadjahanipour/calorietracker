@@ -53,7 +53,7 @@ class Log(models.Model):
         ("ST", "Strength"),
         ("O", "Other"),
     ]
-    exercise_time = models.DateTimeField(null=True)  # Time spent exercising
+    exercise_time = models.IntegerField(null=True)  # Time spent exercising
     exercise_type = models.CharField(choices=exercise_choices, max_length=20, null=True)
 
     steps = models.IntegerField(null=True)  # From fitness tracker or phone

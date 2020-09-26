@@ -85,7 +85,7 @@ class LogForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_method = "post"
+        self.helper.form_method = "POST"
         self.helper.layout = Layout(
             Row(
                 Column(
@@ -104,25 +104,10 @@ class LogForm(forms.ModelForm):
                 Column("steps", css_class="form-group col-md-2 mb-0"),
                 css_class="form-row",
             ),
-            # Row(
-            #     Column("exercise_time", css_class="form-group col-md-2 mb-0"),
-            #     Column("exercise_type", css_class="form-group col-md-4 mb-0"),
-            #     css_class="form-row",
-            # ),
-        )
-        self.helper.add_input(
-            Button(
-                "submit",
-                "Submit",
-                css_class="btn-primary",
-                onclick="javascript:location.href = '/analytics';",
-            )
-        )
-        self.helper.add_input(
-            Button(
-                "cancel",
-                "Cancel",
-                css_class="btn-primary",
-                onclick="javascript:location.href = '/analytics';",
-            )
+            Row(
+                Column("exercise_time", css_class="form-group col-md-2 mb-0"),
+                Column("exercise_type", css_class="form-group col-md-4 mb-0"),
+                css_class="form-row",
+            ),
+            Submit("submit", "Submit", css_class="btn-primary"),
         )
