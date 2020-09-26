@@ -1,5 +1,6 @@
 {% extends "extends/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -9,8 +10,9 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Logs</h1>
+    <h1 class="h3 mb-0 text-gray-800">Log Data</h1>
   </div>
+  {% crispy form %}
 
 
 </div>
@@ -18,6 +20,4 @@
 
 
 <!-- Page level custom scripts -->
-
-
 {% endblock %}

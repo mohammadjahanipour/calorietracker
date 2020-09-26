@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 django = "*"
 django-safedelete = "*"
+django-crispy-forms = "*"
+django-bootstrap-datepicker-plus = "*"
 
 [requires]
 python_version = "3.7"

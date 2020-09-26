@@ -35,6 +35,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
 
 class Log(models.Model):
     """
+      - Date
       - Weight
       - Calories In
       - Exercise time
@@ -43,16 +44,20 @@ class Log(models.Model):
       - Calories Out
     """
 
-    created_at = models.DateField(auto_now_add=True)  # Log the date
+    date = models.DateField()  # Log the date
     weight = models.FloatField()  # TODO: Handle unit conversion kg vs lbs
     calories_in = models.IntegerField()  # Calories consumed in kcal
 
-    EXERCISE_CHOICES = [("Cardio"), ("Strength Training")]
-    exercise_time = models.DateTimeField()  # Time spent exercising
-    exercise_type = models.CharField(choices=[EXERCISE_CHOICES], max_length=6)
+    exercise_choices = [
+        ("C", "Cardio"),
+        ("ST", "Strength"),
+        ("O", "Other"),
+    ]
+    exercise_time = models.DateTimeField(null=True)  # Time spent exercising
+    exercise_type = models.CharField(choices=exercise_choices, max_length=20, null=True)
 
-    steps = models.IntegerField()  # From fitness tracker or phone
+    steps = models.IntegerField(null=True)  # From fitness tracker or phone
 
-    calories_out = (
-        models.IntegerField()
+    calories_out = models.IntegerField(
+        null=True
     )  # From fitness tracker e.g. apple watch, fitbit etc.

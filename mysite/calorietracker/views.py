@@ -1,8 +1,9 @@
 from django.db import transaction
 from django.shortcuts import render
-from django.views.generic import TemplateView, CreateView, FormView
+from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, LogForm
+from .models import Log
 
 from django.contrib.auth.views import LoginView, LogoutView
 
@@ -25,8 +26,9 @@ class Analytics(TemplateView):
     template_name = "calorietracker/analytics.html"
 
 
-class LogData(TemplateView):
-    # form_class = LogDataForm
+class LogData(CreateView):
+    model = Log
+    form_class = LogForm
     template_name = "calorietracker/logdata.html"
 
 
