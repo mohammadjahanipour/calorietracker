@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "calorietracker",
+
+    # third party packages/apps
+    'safedelete',
 ]
 
 MIDDLEWARE = [
