@@ -33,7 +33,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
     goal_date = models.DateTimeField(blank=True, null=True)
 
 
-class Log(models.Model):
+class Log(DateTimeFields, SafeDeleteModel):
     """
       - Date
       - Weight
@@ -43,6 +43,10 @@ class Log(models.Model):
       - Steps
       - Calories Out
     """
+
+    user = models.OneToOneField(
+        get_user_model(), unique=True, blank=False, null=False, on_delete=models.CASCADE
+    )
 
     date = models.DateField()  # Log the date
     weight = models.FloatField()  # TODO: Handle unit conversion kg vs lbs
