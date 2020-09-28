@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
 from .forms import RegisterForm, LoginForm, LogForm
 from .models import Log, Setting
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bootstrap_datepicker_plus import DateTimePickerInput
 
@@ -75,3 +75,10 @@ class Login(LoginView):
 
 class Logout(LogoutView):
     """Logout"""
+
+
+class PasswordChange(PasswordChangeView):
+    """PasswordChange"""
+
+    success_url = reverse_lazy("home")
+    template_name = "calorietracker/change-password.html"
