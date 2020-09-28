@@ -4,6 +4,46 @@ from django.contrib.auth import get_user_model
 from safedelete.models import SafeDeleteModel
 
 
+class Streak(DateTimeFields, SafeDeleteModel):
+    """
+        Represents the user streaks
+    """
+
+    user = models.OneToOneField(
+        get_user_model(), on_delete=models.CASCADE
+    )
+
+    input_streak = models.IntegerField(default=0)  # Amount of days the user has in succession inputed data
+    defecit_streak = models.IntegerField(default=0)  # Amount of days in succession that the user has a caloric defecit
+    surplus_streak = models.IntegerField(default=0)  # Amount of days in succession that the user has a caloric surplus
+
+    def actualize_input_streak(self):
+        """
+        Actualizes the input streak via counting the consecutive log entries
+        """
+
+        logs = self.user.log_set.all().order_by("date")
+        streak = 0
+        last_log = None
+
+        for log in logs:
+            print(log.date)
+
+            if last_log is None:
+                last_log = log
+                continue
+
+            if (log.date - last_log.date).days <= 1:
+                streak += 1
+            else:
+                streak = 0
+
+            last_log = log
+
+        self.input_streak = streak
+        self.save()
+
+
 class Setting(DateTimeFields, SafeDeleteModel):
     """
       - Age
