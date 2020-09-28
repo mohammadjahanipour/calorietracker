@@ -1,11 +1,28 @@
 from django.db import transaction
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
 from .forms import RegisterForm, LoginForm, LogForm
-from .models import Log
+from .models import Log, Setting
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from bootstrap_datepicker_plus import DateTimePickerInput
+
+
+class Settings(UpdateView):
+
+    model = Setting
+    fields = ['age', "height", "activity", "goal", "goal_date"]
+    template_name = "calorietracker/settings.html"
+    success_url = reverse_lazy("settings")
+
+    def get_object(self):
+        return self.request.user.setting
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields['goal_date'].widget = DateTimePickerInput()
+        return form
 
 
 class HomePage(TemplateView):

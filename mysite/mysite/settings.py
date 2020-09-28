@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # third party packages/apps
     "safedelete",
     "crispy_forms",
+    'bootstrap_datepicker_plus',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
