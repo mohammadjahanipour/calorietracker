@@ -14,7 +14,9 @@ django.setup()
 from calorietracker.models import Log
 from django.contrib.auth import get_user_model
 
-user = get_user_model()(username="test")
+
+username = 'test'
+user = get_user_model()(username=username)
 user.save()
 
 df = pd.DataFrame(data, columns=["Date", "Weight", "CO", "CI", "Steps"]).dropna()
