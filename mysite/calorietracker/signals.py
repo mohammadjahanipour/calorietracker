@@ -2,7 +2,15 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
-from .models import Streak
+from .models import Streak, Setting
+
+
+@receiver(post_save, sender=get_user_model())
+def create_user_setting_model(sender, instance, created, **kwargs):
+
+    if created:
+        user = instance
+        Setting(user=user).save()
 
 
 @receiver(post_save, sender=get_user_model())
