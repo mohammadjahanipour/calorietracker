@@ -1,6 +1,7 @@
 import os, sys
 import django
 import datetime
+import pandas as pd
 
 sys.path.append("")  # add path to project root dir
 os.environ["DJANGO_SETTINGS_MODULE"] = "mysite.settings"
@@ -14,8 +15,9 @@ django.setup()
 from calorietracker.models import Log
 from django.contrib.auth import get_user_model
 
+data = pd.read_csv("sampledata.csv")
 
-username = 'test'
+username = "test3"
 user = get_user_model()(username=username)
 user.save()
 

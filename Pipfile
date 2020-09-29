@@ -12,6 +12,7 @@ django-crispy-forms = "*"
 django-bootstrap-datepicker-plus = "*"
 install = "*"
 django-activity-stream = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"
