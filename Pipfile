@@ -10,6 +10,8 @@ django = "*"
 django-safedelete = "*"
 django-crispy-forms = "*"
 django-bootstrap-datepicker-plus = "*"
+install = "*"
+django-activity-stream = "*"
 
 [requires]
 python_version = "3.7"

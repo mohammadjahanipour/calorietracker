@@ -47,7 +47,10 @@ INSTALLED_APPS = [
     "safedelete",
     "crispy_forms",
     'bootstrap_datepicker_plus',
+    'actstream',
 ]
+
+SITE_ID = 1  # comes from actstream
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 

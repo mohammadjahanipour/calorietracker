@@ -6,3 +6,7 @@ class CalorietrackerConfig(AppConfig):
 
     def ready(self):
         import calorietracker.signals  # signal dependendcy
+
+        # Actsream
+        # from actstream import registry
+        # registry.register(self.get_model('SomeModel'))
