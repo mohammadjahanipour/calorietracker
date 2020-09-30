@@ -11,8 +11,20 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
 
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+   <form action="" method="get">
+    <select name = "rangeDrop" class="form-control" onchange="this.form.submit()">
+      <option value="" disabled selected>Date Range</option>      
+      <option value="7">Last 7 Days</option>
+      <option value="14">Last 14 Days</option>
+      <option value="31">Last 31 Days</option>
+      <option value="100">All Time</option>
+    </select>
+  </form>
+
   </div>
+
+
+
 
   <!-- Content Row -->
   <div class="row">
@@ -110,7 +122,7 @@
         <!-- Card Body -->
         <div class="card-body">
           <div class="chart-area">
-            <canvas id="myChart"></canvas>
+            <canvas id="weightChart"></canvas>
           </div>
         </div>
       </div>
@@ -182,17 +194,19 @@
 
 <!-- Page level custom scripts -->
 <script src="{% static "js/demo/chart-pie-demo.js" %}"></script>
-<script type="text/javascript">
-    $.get('{% url "line_chart_json" %}', function(data) {
-        var ctx = $("#myChart").get(0).getContext("2d");
-        new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: {
-              maintainAspectRatio: false,
-            }
-        });
-    });
+
+<script>
+var timestamps = {{data_date | safe}}
+var weights = {{data_weight}}
+
+$(".dropdown-menu li a").click(function(){
+  var selText = $(this).text();
+  $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+});
+
 </script>
+
+<script src="{% static "js/line-chart-weights.js" %}"></script>
+
 
 {% endblock %}
