@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-import os
+import os, sys
 
 
 # Regression - Single Variable
@@ -126,7 +126,7 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
     Weights : daily weights list
         list
     n : last number of days to calculate TDEE over
-        list
+        int
     smooth : If true, will use moving_average() to smooth the daily weights, reducing day-to-day variation
         bool, default = True
     window : If smooth is true, the window over which averages will be computed
@@ -176,57 +176,115 @@ def moving_average(x, w=5):
 
     Returns
     -------
-    array 
+    array
     """
     return np.convolve(x, np.ones(w), "valid") / w
 
 
-if __name__ == "__main__":
-    # Read in the data (csv for now)
-    # os.path.join(os.getcwd(), "..", "sampledata.csv")
-    data = pd.read_csv(os.path.join(os.getcwd(), "..", "sampledata.csv"))
+def weight_change(weights, n, smooth=True):
+    """
+    Calculate change in weight.
 
-    weights = pd.DataFrame(data, columns=["Weight"]).dropna()
-    cal_in = pd.DataFrame(data, columns=["CI"]).dropna()
-    cal_out = pd.DataFrame(data, columns=["CO"]).dropna()
-    steps = pd.DataFrame(data, columns=["Steps"]).dropna()
-    defecit = pd.DataFrame(data, columns=["Defecit"]).dropna()
+    Parameters
+    ----------
+    weights : all daily weights
+        array or list
+    n : last number of days to calculate weight_change over
+        int
+    smooth : If true, will use moving_average() to smooth the daily weights, reducing day-to-day variation
+        bool
+
+    Returns
+    -------
+    float
+    """
+    if smooth:
+        weights = moving_average(weights)
+
+    weights = weights[-n:]
+    return weights[-1] - weights[0]
+
+
+if __name__ == "__main__":
+    sys.path.append(os.path.join(os.getcwd(), ".."))  # add path to project root dir
+    os.environ["DJANGO_SETTINGS_MODULE"] = "mysite.settings"
+
+    # Connect to Django ORM
+    import django
+
+    django.setup()
+
+    from calorietracker.models import Log, Setting
+    from django.contrib.auth import get_user_model
+
+    username = "test3"
+    df = pd.DataFrame(
+        list(
+            Log.objects.all()
+            .filter(user__username=username)
+            .values(
+                "id",
+                "created_at",
+                "updated_at",
+                "deleted",
+                "date",
+                "weight",
+                "calories_in",
+                "calories_out",
+                "steps",
+            )
+        )
+    )
+    print(df)
+
+    n = 102
+    print("Summary Analytics for user", username, "over last", n, "days")
+
+    TDEE = calculate_TDEE(
+        df["calories_in"].tolist(), df["weight"].tolist(), n=n, smooth=True, window=3,
+    )
+    print("\nEstimated TDEE:", TDEE)
+    weight_change_raw, weight_change_smooth = (
+        weight_change(df["weight"].tolist(), n=n, smooth=False),
+        weight_change(df["weight"].tolist(), n=n, smooth=True),
+    )
+    print("Raw Weight Change:", weight_change_raw)
+    print("Smoothed Weight Change:", weight_change_smooth)
+    print("Rate of Weight Change:", weight_change_smooth / n, "pounds per day")
+    print("Rate of Weight Change:", (weight_change_smooth / n) * 7, "pounds per week")
 
     # # Single Regression - pretty straight forward here.
-    # print("Single Regression Results for cal_in vs weights")
-    # single_regression(cal_in, weights)
-    # print("Single Regression Results for cal_out vs weights")
-    # single_regression(cal_out, weights)
-    # print("Single Regression Results for defecit vs weights")
-    # single_regression(defecit, weights)
-    #
-    # # Scikit multiple regression - use multiple features to predict weights
-    # print("Multiple Regression Results with SciKit for defecit and steps vs weights")
-    # features = pd.DataFrame(data, columns=["Defecit", "Steps"]).dropna()
-    # sci_multiple_regression(features, weights)
-    #
-    # # Statsmodels multiple regression - use multiple features to predict weights
-    # # Gets more detailed summary statistics
-    # features = [
-    #     cal_in.to_numpy().ravel().tolist(),
-    #     steps.to_numpy().ravel().tolist(),
-    #     cal_out.to_numpy().ravel().tolist(),
-    # ]
-    # result = sm_multiple_regression(features, weights.to_numpy().ravel().tolist())
-    # print(result.summary())
-    #
-    # # Doing it with statsmodels.formula.api is a bit easier when working with dataframes
-    # #  -1 below removes the constant (y intercept)
-    # df = pd.DataFrame(data, columns=["CI", "Steps", "CO", "Weight"]).dropna()
-    # result = smf.ols(formula="Weight ~ CI + Steps + CO -1", data=df).fit()
-    # print(result.summary())
-
-    # TDEE Calculation; n is the last number of days to calculate TDEE for
-    TDEE = calculate_TDEE(
-        cal_in.to_numpy().ravel().tolist(),
-        weights.to_numpy().ravel().tolist(),
-        n=14,
-        smooth=True,
-        window=3,
+    print("\nSingle Regression Results for cal_in vs weights")
+    single_regression(
+        df["calories_in"].to_numpy().reshape(-1, 1),
+        df["weight"].to_numpy().reshape(-1, 1),
     )
-    print("Estimated TDEE:", TDEE)
+    print("\nSingle Regression Results for cal_out vs weights")
+    single_regression(
+        df["calories_out"].to_numpy().reshape(-1, 1),
+        df["weight"].to_numpy().reshape(-1, 1),
+    )
+
+    # Scikit multiple regression - use multiple features to predict weights
+    print(
+        "\nMultiple Regression Results with SciKit for cal_in, cal_out, steps vs weights"
+    )
+    features = df[["calories_in", "calories_out", "steps"]]
+    sci_multiple_regression(features, df["weight"])
+
+    # Statsmodels multiple regression - use multiple features to predict weights
+    # Gets more detailed summary statistics
+    features = [
+        df["calories_in"].tolist(),
+        df["steps"].tolist(),
+        df["calories_out"].tolist(),
+    ]
+    result = sm_multiple_regression(features, df["weight"].tolist())
+    print(result.summary())
+
+    # Doing it with statsmodels.formula.api is a bit easier when working with dataframes
+    #  -1 below removes the constant (y intercept)
+    result = smf.ols(
+        formula="weight ~ calories_in + steps + calories_out -1", data=df
+    ).fit()
+    print(result.summary())
