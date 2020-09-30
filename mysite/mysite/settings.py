@@ -46,8 +46,9 @@ INSTALLED_APPS = [
     # third party packages/apps
     "safedelete",
     "crispy_forms",
-    'bootstrap_datepicker_plus',
-    'actstream',
+    "bootstrap_datepicker_plus",
+    "actstream",
+    "chartjs",
 ]
 
 SITE_ID = 1  # comes from actstream

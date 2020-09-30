@@ -9,7 +9,8 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Analytics</h1>
+    <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
+
     <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
   </div>
 
@@ -23,10 +24,10 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Weight Change</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">-10 lbs.</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change_smooth }} lbs</div>
             </div>
             <div class="col-auto">
-              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+              <i class="fas fa-chart-line fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -40,10 +41,10 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Estimated TDEE</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">3500 Calories / day</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ TDEE }} Calories / day</div>
             </div>
             <div class="col-auto">
-              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+              <i class="fas fa-fire fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -56,10 +57,10 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Daily Calories Target</div>
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Time to Goal</div>
               <div class="row no-gutters align-items-center">
                 <div class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">2500 Calories</div>
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">TBD!</div>
                 </div>
                   <!--<div class="col">
                   <div class="progress progress-sm mr-2">
@@ -69,7 +70,7 @@
               </div>
             </div>
             <div class="col-auto">
-              <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -83,10 +84,11 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Rate of Weight Loss</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"> - 2 lbs. / week</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ weekly_weight_change }} lbs / week</div>
+              <!-- <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ daily_weight_change }} lbs / day</div> -->
             </div>
             <div class="col-auto">
-              <i class="fas fa-comments fa-2x text-gray-300"></i>
+              <i class="fas fa-weight fa-2x text-gray-300"></i>
             </div>
           </div>
         </div>
@@ -108,7 +110,7 @@
         <!-- Card Body -->
         <div class="card-body">
           <div class="chart-area">
-            <canvas id="myAreaChart"></canvas>
+            <canvas id="myChart"></canvas>
           </div>
         </div>
       </div>
@@ -179,7 +181,18 @@
 <script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
 
 <!-- Page level custom scripts -->
-<script src="{% static "js/demo/chart-area-demo.js" %}"></script>
 <script src="{% static "js/demo/chart-pie-demo.js" %}"></script>
+<script type="text/javascript">
+    $.get('{% url "line_chart_json" %}', function(data) {
+        var ctx = $("#myChart").get(0).getContext("2d");
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+              maintainAspectRatio: false,
+            }
+        });
+    });
+</script>
 
 {% endblock %}

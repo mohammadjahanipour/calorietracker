@@ -8,6 +8,9 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bootstrap_datepicker_plus import DateTimePickerInput
 
+from chartjs.views.lines import BaseLineChartView
+from .utilities import *
+
 
 class Settings(UpdateView):
 
@@ -41,6 +44,79 @@ class Profile(TemplateView):
 
 class Analytics(TemplateView):
     template_name = "calorietracker/analytics.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        current_user_authenticated = self.request.user
+        n = 102
+        context["n"] = n
+        print(
+            "Summary Analytics for user",
+            current_user_authenticated.username,
+            "over last",
+            n,
+            "days",
+        )
+
+        df = pd.DataFrame(
+            list(
+                Log.objects.all()
+                .filter(user=current_user_authenticated)
+                .values(
+                    "id",
+                    "created_at",
+                    "updated_at",
+                    "deleted",
+                    "date",
+                    "weight",
+                    "calories_in",
+                    "calories_out",
+                    "steps",
+                )
+            )
+        )
+
+        context["TDEE"] = round(
+            calculate_TDEE(
+                df["calories_in"].tolist(),
+                df["weight"].tolist(),
+                n=n,
+                smooth=True,
+                window=3,
+            )
+        )
+        context["weight_change_raw"], context["weight_change_smooth"] = (
+            round(weight_change(df["weight"].tolist(), n=n, smooth=False), 1),
+            round(weight_change(df["weight"].tolist(), n=n, smooth=True), 1),
+        )
+        context["daily_weight_change"] = round(context["weight_change_smooth"] / n, 2)
+        context["weekly_weight_change"] = round(context["daily_weight_change"] * 7, 2)
+
+        return context
+
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        """Return 7 labels for the x-axis."""
+        return ["January", "February", "March", "April", "May", "June", "July"]
+
+    def get_providers(self):
+        """Return names of datasets."""
+        return ["Central", "Eastside", "Westside"]
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+
+        return [
+            [75, 44, 92, 11, 44, 95, 35],
+            [41, 92, 18, 3, 73, 87, 92],
+            [87, 21, 94, 3, 90, 13, 65],
+        ]
+
+
+line_chart = TemplateView.as_view(template_name="line_chart.html")
+line_chart_json = LineChartJSONView.as_view()
 
 
 class LogData(CreateView):

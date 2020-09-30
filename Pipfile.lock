@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9749d4dfb25a4ef552691df59eaa48977031dcea196e09ba2e1cd6e78772fc6a"
+            "sha256": "31bd1ff6669b179835b3610830e1a77ee5e07cb3ad27702b92f4443f11b2fa5a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -48,6 +48,14 @@
             "index": "pypi",
             "version": "==3.0.5"
         },
+        "django-chartjs": {
+            "hashes": [
+                "sha256:b434c4784c6af216a97b9f25f821bd08f6db70996a0ddc0e51cbcfb4b3937693",
+                "sha256:f7af4107f0d34057d1b8cc63ec16e8edc1bb7be23663c7a614296492d4f396b2"
+            ],
+            "index": "pypi",
+            "version": "==2.2.1"
+        },
         "django-crispy-forms": {
             "hashes": [
                 "sha256:888bb316db89b60050a42ec35080facb361d823eec38010ccb0702f45642d3b8",
@@ -67,11 +75,11 @@
         },
         "install": {
             "hashes": [
-                "sha256:d6d927c47b82f0183557830b98dcc36f3520489c66c3a2eda0c898b718e393b2",
-                "sha256:fe75019b45eb1febc9232f452861e7693efeadd554f18cdc4ff647f29349b145"
+                "sha256:1455304a2475b6753a9b0c28243ca7d8b7d71aeea1a88e6de94034fc57d765a0",
+                "sha256:dfec614e0cc90f00659067a078bc2ec032d9f0758f3df230c073eeaffd0cefa1"
             ],
             "index": "pypi",
-            "version": "==1.3.3"
+            "version": "==1.3.4"
         },
         "joblib": {
             "hashes": [
