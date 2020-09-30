@@ -12,7 +12,7 @@ from bootstrap_datepicker_plus import DateTimePickerInput
 class Settings(UpdateView):
 
     model = Setting
-    fields = ['age', "height", "activity", "goal", "goal_date"]
+    fields = ["age", "height", "activity", "goal", "goal_date"]
     template_name = "calorietracker/settings.html"
     success_url = reverse_lazy("settings")
 
@@ -21,12 +21,11 @@ class Settings(UpdateView):
 
     def get_form(self):
         form = super().get_form()
-        form.fields['goal_date'].widget = DateTimePickerInput()
+        form.fields["goal_date"].widget = DateTimePickerInput()
         return form
 
 
 class HomePage(TemplateView):
-
     def get(self, request, *args, **kwargs):
         """
         method only servers to run code for testing
@@ -38,10 +37,6 @@ class HomePage(TemplateView):
 
 class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
-
-
-class Charts(TemplateView):
-    template_name = "calorietracker/charts.html"
 
 
 class Analytics(TemplateView):
