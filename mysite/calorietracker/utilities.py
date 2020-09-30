@@ -9,8 +9,19 @@ import os
 # Regression - Single Variable
 def single_regression(X, Y):
     """
-    Take (X, dependent variable) and (Y, independent variable)
-    Predict Y from X
+    Predict Y from X using single variable regression
+
+    Parameters
+    ----------
+    X : dependent variable
+        {array-like, sparse matrix} of shape (n_samples, n_features)
+    Y : dependent variable
+        {array-like, sparse matrix} of shape (n_samples, n_features)
+
+    Returns
+    -------
+    model
+        Class with attributes coef_, rank, singular_, intercept_
     """
 
     linear_regressor = LinearRegression()  #  object for the class
@@ -29,8 +40,19 @@ def single_regression(X, Y):
 # Regression - Multiple Variables (scikit)
 def sci_multiple_regression(X, Y):
     """
-    Take (X, independent variables/features) and (Y, dependent variable)
-    Predict Y from X
+    Predict Y from X using multiple variable regression
+
+    Parameters
+    ----------
+    X : dependent variables or features
+        {array-like, sparse matrix} of shape (n_samples, n_features)
+    Y : dependent variable
+        {array-like, sparse matrix} of shape (n_samples, n_features)
+
+    Returns
+    -------
+    model
+        Class with attributes coef_, rank, singular_, intercept_
     """
 
     linear_regressor = LinearRegression()  #  object for the class
@@ -48,15 +70,27 @@ def sci_multiple_regression(X, Y):
 # Regression - Multiple Variables (statsmodels)
 def sm_multiple_regression(x, y):
     """
-    Take (X, independent variables/features as a list of lists) and (Y, dependent variable as a list)
-    Predict Y from X
-    """
+    Predict Y from X using single variable regression
 
+    Parameters
+    ----------
+    X : dependent variables or features
+        list of lists
+    Y : dependent variable
+        list
+
+    Returns
+    -------
+    OLSResults
+        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLSResults.html#statsmodels.regression.linear_model.OLSResults
+    """
     ones = np.ones(len(x[0]))
     X = sm.add_constant(np.column_stack((x[0], ones)))
     for ele in x[1:]:
         X = sm.add_constant(np.column_stack((ele, X)))
-    results = sm.OLS(y, X).fit()
+    results = sm.OLS(
+        y, X
+    ).fit()  # OLS : ordinary least squares for i.i.d. errors Σ=𝐈; Alternatives GLS, WLS, GLSAR
 
     return results
 
@@ -84,6 +118,24 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
 
     The only caveat in this calculation is the day to day variability in weight affecting the total weight change calculation.
     This is counteracted by smoothing the weight over 'window' days.
+
+    Parameters
+    ----------
+    CI : daily caloric intake
+        list
+    Weights : daily weights list
+        list
+    n : last number of days to calculate TDEE over
+        list
+    smooth : If true, will use moving_average() to smooth the daily weights, reducing day-to-day variation
+        bool, default = True
+    window : If smooth is true, the window over which averages will be computed
+        int, default = 5 (Days)
+
+    Returns
+    -------
+    OLSResults
+        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLSResults.html#statsmodels.regression.linear_model.OLSResults
     """
 
     # print("Daily Caloric Intake", "\n", CI)
@@ -113,7 +165,18 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
 def moving_average(x, w=5):
     """
     Helper function for smoothing an array or list (x) over a window (w). Window is the number of elements over which to smooth
-    Note that using valid avoids boundary effects at start and end of array but it also returns an array of size max(x, w) - min(x, w) + 1
+    Note that using "valid" avoids boundary effects at start and end of array but it also returns an array of size max(x, w) - min(x, w) + 1
+
+    Parameters
+    ----------
+    x : array or list to be smoothed
+        list or array
+    window : dependent variable
+        list
+
+    Returns
+    -------
+    array 
     """
     return np.convolve(x, np.ones(w), "valid") / w
 
