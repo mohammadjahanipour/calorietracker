@@ -69,7 +69,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         ("M", "Maintain"),
         ("G", "Gain"),
     ]
-    goal = models.CharField(max_length=2, choices=goal_choices, default="Maintain",)
+    goal = models.CharField(max_length=1, choices=goal_choices, blank=True, null=True)
     goal_date = models.DateTimeField(blank=True, null=True)
 
 
