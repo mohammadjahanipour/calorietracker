@@ -9,9 +9,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from bootstrap_datepicker_plus import DateTimePickerInput
 
 from chartjs.views.lines import BaseLineChartView
+
 from .utilities import *
 from datetime import date
 import json
+
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 class Settings(UpdateView):
@@ -51,23 +54,13 @@ class Analytics(TemplateView):
         context = super().get_context_data(**kwargs)
 
         # Load the user's logs as a DataFrame
-        df = pd.DataFrame(
-            list(
-                Log.objects.all()
-                .filter(user=self.request.user)
-                .values(
-                    "id",
-                    "created_at",
-                    "updated_at",
-                    "deleted",
-                    "date",
-                    "weight",
-                    "calories_in",
-                    "calories_out",
-                    "steps",
-                )
-            )
+        query_set = (
+            Log.objects.all()
+            .filter(user=self.request.user)
+            .values("date", "weight", "calories_in", "calories_out", "steps",)
         )
+
+        df = pd.DataFrame(list(query_set))
 
         # Load the date range as n
         if self.request.method == "GET":
@@ -99,6 +92,15 @@ class Analytics(TemplateView):
         context["data_weight"] = df["weight"].tolist()[-n:]
         string_dates = [date.strftime("%-m-%d-%y") for date in df["date"].tolist()][-n:]
         context["data_date"] = json.dumps(string_dates)
+
+        # Populate json_data from query for table
+        query_set = json.dumps(
+            {"data": list(query_set)[-n:]},
+            sort_keys=True,
+            indent=1,
+            cls=DjangoJSONEncoder,
+        )
+        context["json_data"] = query_set
 
         return context
 
