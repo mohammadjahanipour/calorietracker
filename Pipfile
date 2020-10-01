@@ -15,6 +15,9 @@ django-activity-stream = "*"
 pandas = "*"
 django-heroku = "*"
 gunicorn = "*"
+scikit-learn = "*"
+statsmodels = "*"
+django-chartjs = "*"
 
 [requires]
 python_version = "3.7"
