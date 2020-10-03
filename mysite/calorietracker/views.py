@@ -17,8 +17,6 @@ from .utilities import *
 from datetime import date
 import json
 
-from django.core.serializers.json import DjangoJSONEncoder
-
 
 class Settings(LoginRequiredMixin, UpdateView):
 
@@ -106,10 +104,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         # Populate json_data from query for table
         query_set = json.dumps(
-            {"data": list(query_set)[-n:]},
-            sort_keys=True,
-            indent=1,
-            cls=DjangoJSONEncoder,
+            {"data": list(query_set)[-n:]}, sort_keys=True, indent=1, cls=str,
         )
         context["json_data"] = query_set
 

@@ -223,6 +223,16 @@ $(document).ready(function() {
   });
 })
 
+$('#dataTable').on('click', 'tbody > tr > td', function (e) {
+    // 'this' refers to the current <td>, if you need information out of it
+    e.preventDefault();
+    var table = $('#dataTable').DataTable();
+    var data = table.row($(this).closest('tr')).data();
+    console.log(data);
+    // TODO: href to updateview of logdata
+
+  });
+
 
 </script>
 
