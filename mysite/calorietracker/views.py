@@ -17,7 +17,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 
 
-class Settings(UpdateView):
+class Settings(LoginRequiredMixin, UpdateView):
 
     model = Setting
     fields = ["age", "height", "activity", "goal", "goal_date"]
@@ -47,7 +47,7 @@ class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
 
 
-class Analytics(TemplateView):
+class Analytics(LoginRequiredMixin, TemplateView):
     template_name = "calorietracker/analytics.html"
 
     def get_context_data(self, **kwargs):
@@ -113,7 +113,7 @@ line_chart = TemplateView.as_view(template_name="line_chart.html")
 line_chart_json = LineChartJSONView.as_view()
 
 
-class LogData(CreateView):
+class LogData(LoginRequiredMixin, CreateView):
     model = Log
     form_class = LogForm
     template_name = "calorietracker/logdata.html"
