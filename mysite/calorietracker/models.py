@@ -4,6 +4,24 @@ from django.contrib.auth import get_user_model
 from safedelete.models import SafeDeleteModel
 
 
+class Subscription(DateTimeFields, SafeDeleteModel):
+    """docstring for Subscription."""
+
+    user = models.OneToOneField(
+        get_user_model(), on_delete=models.CASCADE
+    )
+
+    choices = [
+        ("F", "Free"),
+        ("B", "Bronze"),
+        ("S", "Silver"),
+        ("G", "Gold"),
+        ("P", "Platinum"),
+    ]
+    type = models.CharField(max_length=1, choices=choices, default="Free", blank=True, null=True)
+    expires = models.DateTimeField(null=True, blank=True)
+
+
 class Streak(DateTimeFields, SafeDeleteModel):
     """
         Represents the user streaks
