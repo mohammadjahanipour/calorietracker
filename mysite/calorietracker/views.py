@@ -1,3 +1,5 @@
+from django.urls import reverse
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404
@@ -50,6 +52,14 @@ class Profile(TemplateView):
 
 class Analytics(LoginRequiredMixin, TemplateView):
     template_name = "calorietracker/analytics.html"
+
+    def dispatch(self, request):
+
+        if not Log.objects.filter(user=self.request.user).exists():
+            messages.info(request, "You need to have made at least one log entry")
+            return redirect(reverse_lazy("logdata"))
+
+        return super().dispatch(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
