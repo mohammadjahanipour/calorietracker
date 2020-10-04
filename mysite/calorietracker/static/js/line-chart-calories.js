@@ -1,27 +1,44 @@
-var ctx = document.getElementById("weightChart");
+var ctx = document.getElementById("calorieChart");
 
-async function createWeightChart() {
+async function createCalorieChart() {
 
     var myLineChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: timestamps,
         datasets: [{
-          label: "Weight",
+          label: "Calories",
           yAxisID: 'A',
           fill: true,
           lineTension: 0.3,
-          backgroundColor: "rgba(78, 115, 223, 0.05)",
+          backgroundColor: "rgba(78, 115, 223, 0.25)",
           borderColor: "rgba(78, 115, 223, 1)",
-          pointRadius: 3,
-          pointBackgroundColor: "rgba(78, 115, 223, .35)",
-          pointBorderColor: "rgba(78, 115, 223, .35)",
+          pointRadius: 0,
+          pointBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointBorderColor: "rgba(78, 115, 223, 1)",
           pointHoverRadius: 3,
           pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
           pointHoverBorderColor: "rgba(78, 115, 223, 1)",
           pointHitRadius: 10,
           pointBorderWidth: 2,
-          data: weights
+          data: goal_calories_in
+        },
+        {
+          label: "Target Daily Caloric Intake",
+          yAxisID: 'A',
+          fill: true,
+          lineTension: 0.3,
+          backgroundColor: "rgba(255, 0, 0, 0.1)",
+          borderColor: "rgba(255, 0, 0, 0.6)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(255, 0, 0, 0.20)",
+          pointBorderColor: "rgba(255, 0, 0, 0.25)",
+          pointHoverRadius: 3,
+          pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
+          pointHoverBorderColor: "rgba(255, 0, 0, 1)",
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: calories_in
         }],
       },
       options: {
@@ -92,4 +109,4 @@ async function createWeightChart() {
 
 };
 
-createWeightChart()
+createCalorieChart()

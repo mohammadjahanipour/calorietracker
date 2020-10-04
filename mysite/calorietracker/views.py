@@ -168,10 +168,10 @@ class Analytics(LoginRequiredMixin, TemplateView):
         context["weekly_weight_change"] = round(context["daily_weight_change"] * 7, 2)
 
         # Populate time to goal and summary stats.
-        context["goal_date"] = df_settings["goal_date"][0].date()
-        context["time_left"] = (context["goal_date"] - date.today()).days
+        context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b. %d")
+        context["time_left"] = (df_settings["goal_date"][0].date() - date.today()).days
 
-        context["goal_weight"] = int(df_settings["goal_weight"])
+        context["goal_weight"] = round(float(int(df_settings["goal_weight"])), 1)
         context["current_weight"] = moving_average(df["weight"].tolist())[-1]
 
         context["weight_to_go"] = context["goal_weight"] - context["current_weight"]
@@ -183,8 +183,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
         context["target_deficit_per_day"] = context["target_deficit_per_week"] / 7
         context["target_cal_deficit_per_day"] = context["target_deficit_per_day"] * 3500
 
-        context["target_cal_in_per_day"] = abs(
-            context["TDEE"] - context["target_cal_deficit_per_day"]
+        context["target_cal_in_per_day"] = round(
+            abs(context["TDEE"] - context["target_cal_deficit_per_day"])
         )
 
         context["current_time_to_goal"] = abs(
@@ -198,8 +198,9 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         # print(context)
 
-        # Populate data_weight and data_date for chart
+        # Populate data_weight, data_cal_in and data_date for charts
         context["data_weight"] = df["weight"].tolist()[-n:]
+        context["data_cal_in"] = df["calories_in"].tolist()[-n:]
         string_dates = [date.strftime("%-m-%d-%y") for date in df["date"].tolist()][-n:]
         context["data_date"] = json.dumps(string_dates)
 

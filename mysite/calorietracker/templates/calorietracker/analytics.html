@@ -137,11 +137,35 @@
         </div>
         <!-- Card Body -->
         <div class="card-body">
-          <h6 class="m-3 font-weight">Your current weight is <b>{{current_weight}} {{units_weight}} </b></h6>
-          <h6 class="m-3 font-weight">Your goal is <b>{{goal_weight}} {{units_weight}}</b> by <b>{{goal_date}}</b></h6>
-
-          <h6 class="m-3 font-weight">Based on your estimated TDEE, you should consume <strong>{{target_cal_in_per_day}} calories / day</strong> for  <br> <b>{{ target_deficit_per_week }} {{units_weight}} / week</b> of weekly weight change</b></h6>
-
+          <div class="table">
+            <table class="table table-bordered" style="table-layout:fixed" id="summaryTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                <td>Current Weight</td>
+                <td><b>{{current_weight}} {{units_weight}} </b></td>
+              </tr>
+              <tr>
+              <td>Goal Weight</td>
+              <td><b>{{goal_weight}} {{units_weight}} </b></td>
+              </tr>
+              <tr>
+              <td>Goal Date</td>
+              <td><b>{{goal_date}} ({{time_left}} days)</b></td>
+              </tr>
+              <tr>
+              <td>Target Weight Change per Week</td>
+              <td><b>{{target_deficit_per_week}} {{units_weight}} / week</b></td>
+              </tr>
+              <td>Target Daily Caloric Intake</td>
+              <td><b>{{target_cal_in_per_day}} cal / day</b></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
           <!-- Card Body
           <div class="chart-pie pt-4 pb-2">
             <canvas id="myPieChart"></canvas>
@@ -157,6 +181,25 @@
               <i class="fas fa-circle text-info"></i> Referral
             </span>
           </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Weight Over Time Chart -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Over Time</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="calorieChart"></canvas>
+          </div>
         </div>
       </div>
     </div>
@@ -205,7 +248,11 @@
 <script>
 var timestamps = {{data_date | safe}}
 var weights = {{data_weight}}
-
+var calories_in = {{data_cal_in}}
+var goal_calories_in = [];
+  for (var i = 0; i < calories_in.length; i++) {
+    goal_calories_in.push({{target_cal_in_per_day}});
+  }
 var json = {{json_data | safe}}
 
 $(".dropdown-menu li a").click(function(){
@@ -239,6 +286,6 @@ $('#dataTable').on('click', 'tbody > tr > td', function (e) {
 </script>
 
 <script src="{% static "js/line-chart-weights.js" %}"></script>
-
+<script src="{% static "js/line-chart-calories.js" %}"></script>
 
 {% endblock %}
