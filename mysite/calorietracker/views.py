@@ -9,7 +9,7 @@ from .forms import RegisterForm, LoginForm, LogForm
 from .models import Log, Setting
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from bootstrap_datepicker_plus import DateTimePickerInput
+from bootstrap_datepicker_plus import DateTimePickerInput, DatePickerInput
 
 from chartjs.views.lines import BaseLineChartView
 
@@ -17,6 +17,31 @@ from .utilities import *
 from datetime import date
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+
+
+class UpdateLogData(LoginRequiredMixin, UpdateView):
+    """docstring for UpdateLogData."""
+
+    # TODO: check if date does not overlap with existing log
+
+    template_name = "calorietracker/update_logdata.html"
+    model = Log
+    fields = (
+        "date",
+        "weight",
+        "calories_in",
+        "exercise_time",
+        "exercise_type",
+        "steps",
+        "calories_out",
+    )
+
+    success_url = reverse_lazy("analytics")
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["date"].widget = DatePickerInput()
+        return form
 
 
 class Settings(LoginRequiredMixin, UpdateView):
