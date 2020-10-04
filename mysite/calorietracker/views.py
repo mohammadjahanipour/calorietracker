@@ -168,7 +168,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         context["weekly_weight_change"] = round(context["daily_weight_change"] * 7, 2)
 
         # Populate time to goal and summary stats.
-        context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b. %d")
+        context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b-%d")
         context["time_left"] = (df_settings["goal_date"][0].date() - date.today()).days
 
         context["goal_weight"] = round(float(int(df_settings["goal_weight"])), 1)
@@ -214,7 +214,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         # Populate data_weight, data_cal_in and data_date for charts
         context["data_weight"] = df["weight"].tolist()[-n:]
         context["data_cal_in"] = df["calories_in"].tolist()[-n:]
-        string_dates = [date.strftime("%-m-%d-%y") for date in df["date"].tolist()][-n:]
+        string_dates = [date.strftime("%b-%d") for date in df["date"].tolist()][-n:]
         context["data_date"] = json.dumps(string_dates)
 
         # Populate red, green, yellow for pie chart
