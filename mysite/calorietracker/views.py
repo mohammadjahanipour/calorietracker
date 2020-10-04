@@ -102,6 +102,9 @@ class Analytics(LoginRequiredMixin, TemplateView):
         print(df)
         print(df_settings)
 
+        # TODO: HANDLE UNITS CONVERSION FOR UI/FRONT END
+        context["units_weight"] = "lbs"
+
         # Load the date range as n
         if self.request.method == "GET":
             rangeDrop_option = self.request.GET.get("rangeDrop", False)
@@ -164,6 +167,37 @@ class Analytics(LoginRequiredMixin, TemplateView):
         context["daily_weight_change"] = round(context["weight_change_smooth"] / n, 2)
         context["weekly_weight_change"] = round(context["daily_weight_change"] * 7, 2)
 
+        # Populate time to goal and summary stats.
+        context["goal_date"] = df_settings["goal_date"][0].date()
+        context["time_left"] = (context["goal_date"] - date.today()).days
+
+        context["goal_weight"] = int(df_settings["goal_weight"])
+        context["current_weight"] = moving_average(df["weight"].tolist())[-1]
+
+        context["weight_to_go"] = context["goal_weight"] - context["current_weight"]
+        context["weight_to_go_abs"] = abs(context["weight_to_go"])
+
+        context["target_deficit_per_week"] = round(
+            (context["weight_to_go"] / context["time_left"]) * 7, 2
+        )
+        context["target_deficit_per_day"] = context["target_deficit_per_week"] / 7
+        context["target_cal_deficit_per_day"] = context["target_deficit_per_day"] * 3500
+
+        context["target_cal_in_per_day"] = abs(
+            context["TDEE"] - context["target_cal_deficit_per_day"]
+        )
+
+        context["current_time_to_goal"] = abs(
+            round(
+                float(
+                    (context["current_weight"] - context["goal_weight"])
+                    / (context["daily_weight_change"])
+                )
+            )
+        )
+
+        # print(context)
+
         # Populate data_weight and data_date for chart
         context["data_weight"] = df["weight"].tolist()[-n:]
         string_dates = [date.strftime("%-m-%d-%y") for date in df["date"].tolist()][-n:]
@@ -176,6 +210,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             indent=1,
             cls=DjangoJSONEncoder,
         )
+
         context["json_data"] = query_set
 
         return context

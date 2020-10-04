@@ -29,14 +29,14 @@
   <!-- Content Row -->
   <div class="row">
 
-    <!-- Earnings (Monthly) Card Example -->
+    <!-- Weight Change Card -->
     <div class="col-xl-3 col-md-6 mb-4">
       <div class="card border-left-primary shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Weight Change</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change_smooth }} lbs</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change_smooth }} {{units_weight}}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-chart-line fa-2x text-gray-300"></i>
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <!-- Earnings (Monthly) Card Example -->
+    <!-- Estimated TDEE) Card  -->
     <div class="col-xl-3 col-md-6 mb-4">
       <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
@@ -63,16 +63,16 @@
       </div>
     </div>
 
-    <!-- Earnings (Monthly) Card Example -->
+    <!-- Estimated Time to Goal Card -->
     <div class="col-xl-3 col-md-6 mb-4">
       <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Time to Goal</div>
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Estimated Time to {{ goal_weight}}</div>
               <div class="row no-gutters align-items-center">
                 <div class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">TBD!</div>
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ current_time_to_goal }} days</div>
                 </div>
                   <!--<div class="col">
                   <div class="progress progress-sm mr-2">
@@ -89,15 +89,15 @@
       </div>
     </div>
 
-    <!-- Pending Requests Card Example -->
+    <!-- Rate of Weight Loss Card -->
     <div class="col-xl-3 col-md-6 mb-4">
       <div class="card border-left-warning shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Rate of Weight Loss</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ weekly_weight_change }} lbs / week</div>
-              <!-- <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ daily_weight_change }} lbs / day</div> -->
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Current Rate of Weight Change</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ weekly_weight_change }} {{units_weight}} / week</div>
+              <!-- <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ daily_weight_change }} {{units_weight}} / day</div> -->
             </div>
             <div class="col-auto">
               <i class="fas fa-weight fa-2x text-gray-300"></i>
@@ -112,7 +112,7 @@
 
   <div class="row">
 
-    <!-- Area Chart -->
+    <!-- Weight Over Time Chart -->
     <div class="col-xl-8 col-lg-7">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
@@ -128,15 +128,21 @@
       </div>
     </div>
 
-    <!-- Pie Chart -->
+    <!-- Goal Summary Card -->
     <div class="col-xl-4 col-lg-5">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Days Meeting Caloric Goal</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Summary</h6>
         </div>
         <!-- Card Body -->
         <div class="card-body">
+          <h6 class="m-3 font-weight">Your current weight is <b>{{current_weight}} {{units_weight}} </b></h6>
+          <h6 class="m-3 font-weight">Your goal is <b>{{goal_weight}} {{units_weight}}</b> by <b>{{goal_date}}</b></h6>
+
+          <h6 class="m-3 font-weight">Based on your estimated TDEE, you should consume <strong>{{target_cal_in_per_day}} calories / day</strong> for  <br> <b>{{ target_deficit_per_week }} {{units_weight}} / week</b> of weekly weight change</b></h6>
+
+          <!-- Card Body
           <div class="chart-pie pt-4 pb-2">
             <canvas id="myPieChart"></canvas>
           </div>
@@ -150,7 +156,7 @@
             <span class="mr-2">
               <i class="fas fa-circle text-info"></i> Referral
             </span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -174,8 +180,6 @@
                   <th>Date</th>
                   <th>Weight</th>
                   <th>Calories In</th>
-                  <th>Calories Out</th>
-                  <th>Steps</th>
                 </tr>
               </thead>
               <tbody>
@@ -217,8 +221,6 @@ $(document).ready(function() {
     { "data": "date" },
     { "data": "weight" },
     { "data": "calories_in" },
-    { "data": "calories_out" },
-    { "data": "steps" }
   ],
   });
 })
