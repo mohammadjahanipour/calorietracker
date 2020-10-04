@@ -205,6 +205,32 @@ def weight_change(weights, n, smooth=True):
     return weights[-1] - weights[0]
 
 
+def unit_conv(x, unit):
+    """
+    Converts cm to inches and vice versa
+    Converts lbs to kg and vice versa
+
+    Parameters
+    ----------
+    x : number to be converted
+        float
+    unit : current unit. Options: lbs, kgs, cm, in
+        string
+
+    Returns
+    -------
+    float
+    """
+    if unit == "lbs":
+        return x * 0.453592
+    if unit == "kgs":
+        return x * 2.20462
+    if unit == "in":
+        return x * 2.54
+    if unit == "cm":
+        return x * 0.393701
+
+
 if __name__ == "__main__":
     sys.path.append(os.path.join(os.getcwd(), ".."))  # add path to project root dir
     os.environ["DJANGO_SETTINGS_MODULE"] = "mysite.settings"

@@ -45,7 +45,7 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
 class Settings(LoginRequiredMixin, UpdateView):
 
     model = Setting
-    fields = ["age", "height", "activity", "goal", "goal_date"]
+    fields = ["age", "sex", "height", "activity", "goal", "goal_weight", "goal_date"]
     template_name = "calorietracker/settings.html"
     success_url = reverse_lazy("settings")
 
@@ -90,10 +90,17 @@ class Analytics(LoginRequiredMixin, TemplateView):
         query_set = (
             Log.objects.all()
             .filter(user=self.request.user)
-            .values("date", "weight", "calories_in", "calories_out", "steps",)
+            .values("date", "weight", "calories_in", "calories_out")
         )
 
         df = pd.DataFrame(list(query_set))
+
+        settings_set = Setting.objects.all().filter(user=self.request.user).values()
+
+        df_settings = pd.DataFrame(list(settings_set))
+
+        print(df)
+        print(df_settings)
 
         # Load the date range as n
         if self.request.method == "GET":
@@ -105,15 +112,51 @@ class Analytics(LoginRequiredMixin, TemplateView):
             context["n"] = n
 
         # Calculate TDEE, weight change, weight change rate
-        context["TDEE"] = round(
-            calculate_TDEE(
-                df["calories_in"].tolist(),
-                df["weight"].tolist(),
-                n=n,
-                smooth=True,
-                window=3,
+        if len(df["weight"].tolist()) < 14:
+            # Not enough data to accurately calculate TDEE using weight changes vs calories in
+            # So we use Harris-Benedict formula:
+            # Men: BMR = 88.362 + (13.397 × weight in kg) + (4.799 × height in cm) - (5.677 × age in years)
+            # Women: BMR = 447.593 + (9.247 × weight in kg) + (3.098 × height in cm) - (4.330 × age in years)
+            if df_settings["sex"].all() == "M":
+                context["BMR"] = round(
+                    float(
+                        88.362
+                        + (13.397 * unit_conv(df["weight"].tolist()[-1], "lbs"))
+                        + (4.799 * unit_conv(df_settings["height"], "in"))
+                        - (5.677 * df_settings["age"])
+                    ),
+                )
+            elif df_settings["sex"].all() == "F":
+                context["BMR"] = round(
+                    float(
+                        447.593
+                        + (9.247 * unit_conv(df["weight"].tolist()[-1], "lbs"))
+                        + (3.098 * unit_conv(df_settings["height"], "in"))
+                        - (4.330 * df_settings["age"])
+                    ),
+                )
+            if df_settings["activity"].all() == "1":
+                context["TDEE"] = context["BMR"] * 1.2
+            elif df_settings["activity"].all() == "2":
+                context["TDEE"] = context["BMR"] * 1.375
+            elif df_settings["activity"].all() == "3":
+                context["TDEE"] = context["BMR"] * 1.55
+            elif df_settings["activity"].all() == "4":
+                context["TDEE"] = context["BMR"] * 1.725
+            elif df_settings["activity"].all() == "5":
+                context["TDEE"] = context["BMR"] * 1.9
+
+        else:
+            # Enough data to accurately calculate TDEE using weight changes vs calories in
+            context["TDEE"] = round(
+                calculate_TDEE(
+                    df["calories_in"].tolist(),
+                    df["weight"].tolist(),
+                    n=n,
+                    smooth=True,
+                    window=3,
+                )
             )
-        )
         context["weight_change_raw"], context["weight_change_smooth"] = (
             round(weight_change(df["weight"].tolist(), n=n, smooth=False), 1),
             round(weight_change(df["weight"].tolist(), n=n, smooth=True), 1),
