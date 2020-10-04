@@ -217,6 +217,62 @@ class Analytics(LoginRequiredMixin, TemplateView):
         string_dates = [date.strftime("%-m-%d-%y") for date in df["date"].tolist()][-n:]
         context["data_date"] = json.dumps(string_dates)
 
+        # Populate red, green, yellow for pie chart
+        if df_settings["goal"].all() == "L" or df_settings["goal"].all() == "M":
+            context["pie_labels"] = [
+                "Days Above TDEE",
+                "Days Below Target",
+                "Days Above Target but Below TDEE",
+            ]
+            context["pie_cal_in_red"] = len(
+                [
+                    i
+                    for i in df["calories_in"].tolist()[-n:]
+                    if (i > abs(context["TDEE"]))
+                ]
+            )
+            context["pie_cal_in_yellow"] = len(
+                [
+                    i
+                    for i in df["calories_in"].tolist()[-n:]
+                    if (context["target_cal_in_per_day"] < i < abs(context["TDEE"]))
+                ]
+            )
+            context["pie_cal_in_green"] = len(
+                [
+                    i
+                    for i in df["calories_in"].tolist()[-n:]
+                    if i < context["target_cal_in_per_day"]
+                ]
+            )
+        elif df_settings["goal"].all() == "G":
+            context["pie_labels"] = [
+                "Days Below TDEE",
+                "Days Above Target",
+                "Days Above TDEE but Below Target",
+            ]
+            context["pie_cal_in_red"] = len(
+                [
+                    i
+                    for i in df["calories_in"].tolist()[-n:]
+                    if (i < abs(context["TDEE"]))
+                ]
+            )
+            context["pie_cal_in_yellow"] = len(
+                [
+                    i
+                    for i in df["calories_in"].tolist()[-n:]
+                    if (context["TDEE"] < i < abs(context["target_cal_in_per_day"]))
+                ]
+            )
+            context["pie_cal_in_green"] = len(
+                [
+                    i
+                    for i in df["calories_in"].tolist()[-n:]
+                    if i > context["target_cal_in_per_day"]
+                ]
+            )
+
         # Populate json_data from query for table
         query_set = json.dumps(
             {"data": list(query_set)[-n:]},

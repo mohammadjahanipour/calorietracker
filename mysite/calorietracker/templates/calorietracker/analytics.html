@@ -161,31 +161,26 @@
               <td>Goal Date</td>
               <td><b>{{goal_date}} ({{time_left}} days)</b></td>
               </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table">
+            <table class="table table-bordered" style="table-layout:fixed" id="summaryTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                </tr>
+              </thead>
+              <tbody>
               <tr>
-              <td>Target Weight Change per Week</td>
+              <td> <b>Target Weight Change per Week </b></td>
               <td><b>{{target_deficit_per_week}} {{units_weight}} / week</b></td>
               </tr>
-              <td>Target Daily Caloric Intake</td>
+              <td><b>Target Daily Caloric Intake</b></td>
               <td><b>{{target_cal_in_per_day}} cal / day</b></td>
               </tr>
               </tbody>
             </table>
           </div>
-          <!-- Card Body
-          <div class="chart-pie pt-4 pb-2">
-            <canvas id="myPieChart"></canvas>
-          </div>
-          <div class="mt-4 text-center small">
-            <span class="mr-2">
-              <i class="fas fa-circle text-primary"></i> Direct
-            </span>
-            <span class="mr-2">
-              <i class="fas fa-circle text-success"></i> Social
-            </span>
-            <span class="mr-2">
-              <i class="fas fa-circle text-info"></i> Referral
-            </span>
-          </div> -->
         </div>
       </div>
     </div>
@@ -193,7 +188,7 @@
 
   <!-- Content Row -->
   <div class="row">
-    <!-- Weight Over Time Chart -->
+    <!-- Calorie Over Time Chart -->
     <div class="col-xl-8 col-lg-7">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
@@ -205,6 +200,34 @@
           <div class="chart-area">
             <canvas id="calorieChart"></canvas>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goal Summary Card -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Breakdown</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="piechartCalories"></canvas>
+          </div>
+          <!-- Card legend
+          <div class="mt-4 text-center small">
+            <span class="mr-2">
+              <i class="fas fa-circle text-primary"></i> Direct
+            </span>
+            <span class="mr-2">
+              <i class="fas fa-circle text-success"></i> Social
+            </span>
+            <span class="mr-2">
+              <i class="fas fa-circle text-info"></i> Referral
+            </span>
+          </div> -->
         </div>
       </div>
     </div>
@@ -245,9 +268,6 @@
 <!-- Page level plugins -->
 <script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
 
-<!-- Page level custom scripts -->
-<script src="{% static "js/demo/chart-pie-demo.js" %}"></script>
-
 
 <!-- Page level global data and charts -->
 <script>
@@ -258,7 +278,16 @@ var goal_calories_in = [];
   for (var i = 0; i < calories_in.length; i++) {
     goal_calories_in.push({{target_cal_in_per_day}});
   }
+var estimated_TDEE = [];
+  for (var i = 0; i < calories_in.length; i++) {
+    estimated_TDEE.push(Math.abs({{ TDEE }}));
+  }
 var json = {{json_data | safe}}
+var pie_labels = {{pie_labels | safe}}
+var pie_cal_in_red = {{pie_cal_in_red}}
+var pie_cal_in_yellow = {{pie_cal_in_yellow}}
+var pie_cal_in_green = {{pie_cal_in_green}}
+
 
 $(".dropdown-menu li a").click(function(){
   var selText = $(this).text();
@@ -292,5 +321,6 @@ $('#dataTable').on('click', 'tbody > tr > td', function (e) {
 
 <script src="{% static "js/line-chart-weights.js" %}"></script>
 <script src="{% static "js/line-chart-calories.js" %}"></script>
+<script src="{% static "js/pie-chart-calories.js" %}"></script>
 
 {% endblock %}
