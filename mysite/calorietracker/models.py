@@ -83,6 +83,13 @@ class Setting(DateTimeFields, SafeDeleteModel):
     )
 
     age = models.IntegerField(blank=True, null=True)
+
+    sex_choices = [
+        ("M", "Male"),
+        ("F", "Female"),
+    ]
+
+    sex = models.CharField(max_length=1, choices=sex_choices, blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
     # this should represent a range from 0 - 100 # TODO: add min max value validation
     activity = models.IntegerField(blank=True, null=True)
