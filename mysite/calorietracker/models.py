@@ -92,7 +92,17 @@ class Setting(DateTimeFields, SafeDeleteModel):
     sex = models.CharField(max_length=1, choices=sex_choices, blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
     # this should represent a range from 0 - 100 # TODO: add min max value validation
-    activity = models.IntegerField(blank=True, null=True)
+
+    activity_choices = [
+        ("1", "Sedentary (little or no exercise)"),
+        ("2", "Lightly active (light exercise/sports 1-3 days/week)"),
+        ("3", "Moderatetely active (moderate exercise/sports 3-5 days/week)"),
+        ("4", "Very active (hard exercise/sports 6-7 days a week)"),
+        ("5", "Extra active (very hard exercise/sports & physical job or 2x training)"),
+    ]
+    activity = models.CharField(
+        max_length=1, choices=activity_choices, blank=True, null=True
+    )
 
     goal_choices = [
         ("L", "Lose"),
