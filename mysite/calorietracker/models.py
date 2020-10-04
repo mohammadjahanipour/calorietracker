@@ -7,9 +7,7 @@ from safedelete.models import SafeDeleteModel
 class Subscription(DateTimeFields, SafeDeleteModel):
     """docstring for Subscription."""
 
-    user = models.OneToOneField(
-        get_user_model(), on_delete=models.CASCADE
-    )
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 
     choices = [
         ("F", "Free"),
@@ -18,7 +16,9 @@ class Subscription(DateTimeFields, SafeDeleteModel):
         ("G", "Gold"),
         ("P", "Platinum"),
     ]
-    type = models.CharField(max_length=1, choices=choices, default="Free", blank=True, null=True)
+    type = models.CharField(
+        max_length=1, choices=choices, default="Free", blank=True, null=True
+    )
     expires = models.DateTimeField(null=True, blank=True)
 
 
@@ -27,13 +27,17 @@ class Streak(DateTimeFields, SafeDeleteModel):
         Represents the user streaks
     """
 
-    user = models.OneToOneField(
-        get_user_model(), on_delete=models.CASCADE
-    )
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 
-    input_streak = models.IntegerField(default=0)  # Amount of days the user has in succession inputed data
-    defecit_streak = models.IntegerField(default=0)  # Amount of days in succession that the user has a caloric defecit
-    surplus_streak = models.IntegerField(default=0)  # Amount of days in succession that the user has a caloric surplus
+    input_streak = models.IntegerField(
+        default=0
+    )  # Amount of days the user has in succession inputed data
+    defecit_streak = models.IntegerField(
+        default=0
+    )  # Amount of days in succession that the user has a caloric defecit
+    surplus_streak = models.IntegerField(
+        default=0
+    )  # Amount of days in succession that the user has a caloric surplus
 
     def actualize_input_streak(self):
         """
@@ -69,6 +73,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
       - Height
       - Perceived activity level
       - Goal - maintain, lose, gain
+      - Goal weight
       - Goal date - by when?
       - *Goal per week - caloric deficit/surprlus/goal for week, pounds per week ** not yet implemented
     """
@@ -88,6 +93,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         ("G", "Gain"),
     ]
     goal = models.CharField(max_length=1, choices=goal_choices, blank=True, null=True)
+    goal_weight = models.IntegerField(blank=True, null=True)
     goal_date = models.DateTimeField(blank=True, null=True)
 
 
@@ -117,4 +123,6 @@ class Log(DateTimeFields, SafeDeleteModel):
         ("H", "High"),
     ]
 
-    activity_lvl = models.CharField(max_length=1, choices=choices, blank=True, null=True)
+    activity_lvl = models.CharField(
+        max_length=1, choices=choices, blank=True, null=True
+    )
