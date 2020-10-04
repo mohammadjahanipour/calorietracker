@@ -176,6 +176,19 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         context["weight_to_go"] = context["goal_weight"] - context["current_weight"]
         context["weight_to_go_abs"] = abs(context["weight_to_go"])
+        context["percent_to_goal"] = round(
+            100
+            * (
+                1
+                - abs(
+                    context["weight_to_go"]
+                    / (
+                        moving_average(df["weight"].tolist())[0]
+                        - context["goal_weight"]
+                    )
+                )
+            )
+        )
 
         context["target_deficit_per_week"] = round(
             (context["weight_to_go"] / context["time_left"]) * 7, 2

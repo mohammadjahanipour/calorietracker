@@ -38,8 +38,13 @@
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Weight Change</div>
               <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change_smooth }} {{units_weight}}</div>
             </div>
-            <div class="col-auto">
-              <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+            <div class="col">
+              <div class="progress progress-sm mr-2">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{percent_to_goal}}%" aria-valuenow="{{percent_to_goal}}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="col-auto">
+              <div class="h9 mb-0 mr-3 font-weight-bold text-gray-800">{{percent_to_goal}}% to goal</div>
+            </div>
             </div>
           </div>
         </div>
