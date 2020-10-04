@@ -30,9 +30,6 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
         "date",
         "weight",
         "calories_in",
-        "exercise_time",
-        "exercise_type",
-        "steps",
         "calories_out",
     )
 
