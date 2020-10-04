@@ -97,6 +97,7 @@ class Log(DateTimeFields, SafeDeleteModel):
       - Weight
       - Calories In
       - Calories Out
+      - Activity LVL
     """
 
     user = models.ForeignKey(
@@ -109,3 +110,11 @@ class Log(DateTimeFields, SafeDeleteModel):
     calories_out = models.IntegerField(
         null=True
     )  # From fitness tracker e.g. apple watch, fitbit etc.
+
+    choices = [
+        ("L", "Low"),
+        ("M", "Moderate"),
+        ("H", "High"),
+    ]
+
+    activity_lvl = models.CharField(max_length=1, choices=choices, blank=True, null=True)

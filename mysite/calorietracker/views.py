@@ -31,6 +31,7 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
         "weight",
         "calories_in",
         "calories_out",
+        "activity_lvl",
     )
 
     success_url = reverse_lazy("analytics")

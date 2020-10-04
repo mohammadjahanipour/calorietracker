@@ -74,6 +74,7 @@ class LogForm(forms.ModelForm):
             "weight",
             "calories_in",
             "calories_out",
+            "activity_lvl",
         )
         widgets = {
             "date": DateInput(attrs={"type": "date"}),
@@ -98,12 +99,7 @@ class LogForm(forms.ModelForm):
                 css_class="form-row",
             ),
             Row(
-                Column("steps", css_class="form-group col-md-2 mb-0"),
-                css_class="form-row",
-            ),
-            Row(
-                Column("exercise_time", css_class="form-group col-md-2 mb-0"),
-                Column("exercise_type", css_class="form-group col-md-4 mb-0"),
+                Column("activity_lvl", css_class="form-group col-md-2 mb-0"),
                 css_class="form-row",
             ),
             Submit("submit", "Submit", css_class="btn-primary"),
