@@ -1,5 +1,11 @@
 # Calorietracker
 
+
+### Enviroment
+
+  Pipenv by default loads in a .env file automatically see .env.example for examples
+
+
 ### Package Documentation
 
 <br>
