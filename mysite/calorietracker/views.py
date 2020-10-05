@@ -173,7 +173,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             context["weekly_weight_change"] = "TBD"
 
         # Populate time to goal and summary stats.
-        context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b-%d")
+        context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b-%-d")
         context["time_left"] = (df_settings["goal_date"][0].date() - date.today()).days
 
         context["goal_weight"] = round(float(int(df_settings["goal_weight"])), 1)
