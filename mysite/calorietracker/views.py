@@ -224,6 +224,12 @@ class Analytics(LoginRequiredMixin, TemplateView):
             abs(context["TDEE"]) + context["target_cal_deficit_per_day"]
         )
 
+        if abs(context["target_deficit_per_week"]) > 2:
+            messages.info(
+                self.request,
+                "Warning: Your goal weight and/or date are very aggressive. We recommend setting goals that require between -2 to 2 lbs (-1 to 1 kgs) of weight change per week.",
+            )
+
         if len(df["weight"].tolist()) > 1:
             context["current_time_to_goal"] = abs(
                 round(

@@ -86,7 +86,7 @@ async function createCalorieChart() {
             position: 'left',
             scaleLabel: {
               display: true,
-              labelString: 'Weight'
+              labelString: 'Calories'
             },
             ticks: {
               maxTicksLimit: 10,
