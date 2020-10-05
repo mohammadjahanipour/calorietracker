@@ -4,6 +4,14 @@ from django.contrib.auth import get_user_model
 from safedelete.models import SafeDeleteModel
 
 
+class Feedback(DateTimeFields, SafeDeleteModel):
+    """docstring for Feedback."""
+
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    comment = models.TextField()
+    contact_email = models.EmailField()
+
+
 class Subscription(DateTimeFields, SafeDeleteModel):
     """docstring for Subscription."""
 
