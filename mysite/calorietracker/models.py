@@ -135,11 +135,11 @@ class Log(DateTimeFields, SafeDeleteModel):
         get_user_model(), blank=False, null=False, on_delete=models.CASCADE,
     )
 
-    date = models.DateField()  # Log the date
-    weight = models.FloatField()  # TODO: Handle unit conversion kg vs lbs
-    calories_in = models.IntegerField()  # Calories consumed in kcal
+    date = models.DateField(blank=False)  # Log the date
+    weight = models.FloatField(blank=False)  # TODO: Handle unit conversion kg vs lbs
+    calories_in = models.IntegerField(blank=False)  # Calories consumed in kcal
     calories_out = models.IntegerField(
-        null=True
+        blank=True, null=True
     )  # From fitness tracker e.g. apple watch, fitbit etc.
 
     choices = [
