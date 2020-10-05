@@ -77,10 +77,28 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
     def dispatch(self, request):
 
+        if not self.request.user.is_authenticated:
+            return redirect(reverse_lazy("login"))
         if not Log.objects.filter(user=self.request.user).exists():
             messages.info(request, "You need to have made at least one log entry")
             return redirect(reverse_lazy("logdata"))
 
+        settings_vars = [
+            "age",
+            "sex",
+            "height",
+            "activity",
+            "goal",
+            "goal_weight",
+            "goal_date",
+        ]
+        for var in settings_vars:
+            print("checking for", var)
+            if not (
+                list(Setting.objects.filter(user=self.request.user).values(var))[0][var]
+            ):
+                messages.info(request, "Please fill out your settings. Missing: " + var)
+                return redirect(reverse_lazy("settings"))
         return super().dispatch(request)
 
     def get_context_data(self, **kwargs):
@@ -92,15 +110,9 @@ class Analytics(LoginRequiredMixin, TemplateView):
             .filter(user=self.request.user)
             .values("date", "weight", "calories_in", "calories_out")
         )
-
         df = pd.DataFrame(list(query_set))
-
         settings_set = Setting.objects.all().filter(user=self.request.user).values()
-
         df_settings = pd.DataFrame(list(settings_set))
-
-        print(df)
-        print(df_settings)
 
         # TODO: HANDLE UNITS CONVERSION FOR UI/FRONT END
         context["units_weight"] = "lbs"
@@ -139,16 +151,15 @@ class Analytics(LoginRequiredMixin, TemplateView):
                     ),
                 )
             if df_settings["activity"].all() == "1":
-                context["TDEE"] = context["BMR"] * 1.2
+                context["TDEE"] = round(context["BMR"] * 1.2)
             elif df_settings["activity"].all() == "2":
-                context["TDEE"] = context["BMR"] * 1.375
+                context["TDEE"] = round(context["BMR"] * 1.375)
             elif df_settings["activity"].all() == "3":
-                context["TDEE"] = context["BMR"] * 1.55
+                context["TDEE"] = round(context["BMR"] * 1.55)
             elif df_settings["activity"].all() == "4":
-                context["TDEE"] = context["BMR"] * 1.725
+                context["TDEE"] = round(context["BMR"] * 1.725)
             elif df_settings["activity"].all() == "5":
-                context["TDEE"] = context["BMR"] * 1.9
-
+                context["TDEE"] = round(context["BMR"] * 1.9)
         else:
             # Enough data to accurately calculate TDEE using weight changes vs calories in
             context["TDEE"] = round(
@@ -160,6 +171,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
                     window=3,
                 )
             )
+
         context["weight_change_raw"], context["weight_change_smooth"] = (
             round(weight_change(df["weight"].tolist(), n=n, smooth=False), 1),
             round(weight_change(df["weight"].tolist(), n=n, smooth=True), 1),
@@ -224,8 +236,6 @@ class Analytics(LoginRequiredMixin, TemplateView):
             )
         else:
             context["current_time_to_goal"] = "TBD"
-
-        # print(context)
 
         # Populate data_weight, data_cal_in and data_date for charts
         context["data_weight"] = df["weight"].tolist()[-n:]
