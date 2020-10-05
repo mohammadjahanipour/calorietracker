@@ -115,7 +115,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             context["n"] = n
 
         # Calculate TDEE, weight change, weight change rate
-        if len(df["weight"].tolist()) < 14:
+        if len(df["weight"].tolist()) < 10:
             # Not enough data to accurately calculate TDEE using weight changes vs calories in
             # So we use Harris-Benedict formula:
             # Men: BMR = 88.362 + (13.397 × weight in kg) + (4.799 × height in cm) - (5.677 × age in years)
@@ -165,16 +165,26 @@ class Analytics(LoginRequiredMixin, TemplateView):
             round(weight_change(df["weight"].tolist(), n=n, smooth=True), 1),
         )
         context["daily_weight_change"] = round(context["weight_change_smooth"] / n, 2)
-        context["weekly_weight_change"] = round(context["daily_weight_change"] * 7, 2)
+        if len(df["weight"].tolist()) > 7:
+            context["weekly_weight_change"] = round(
+                context["daily_weight_change"] * 7, 2
+            )
+        else:
+            context["weekly_weight_change"] = "TBD"
 
         # Populate time to goal and summary stats.
         context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b-%d")
         context["time_left"] = (df_settings["goal_date"][0].date() - date.today()).days
 
         context["goal_weight"] = round(float(int(df_settings["goal_weight"])), 1)
-        context["current_weight"] = moving_average(df["weight"].tolist())[-1]
+        if len(df["weight"].tolist()) < 5:
+            context["current_weight"] = df["weight"].tolist()[-1]
+        else:
+            context["current_weight"] = moving_average(df["weight"].tolist())[-1]
 
-        context["weight_to_go"] = context["goal_weight"] - context["current_weight"]
+        context["weight_to_go"] = round(
+            context["goal_weight"] - context["current_weight"], 1
+        )
         context["weight_to_go_abs"] = abs(context["weight_to_go"])
         context["percent_to_goal"] = round(
             100
@@ -182,32 +192,38 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 1
                 - abs(
                     context["weight_to_go"]
-                    / (
-                        moving_average(df["weight"].tolist())[0]
-                        - context["goal_weight"]
-                    )
+                    / (df["weight"].tolist()[0] - context["goal_weight"])
                 )
             )
         )
-
+        if context["percent_to_goal"] < 0:
+            context["percent_to_goal"] = 0
+        elif context["weight_to_go_abs"] < 1.5:
+            context["percent_to_goal"] = 100
+        print(context["weight_to_go"], context["time_left"])
         context["target_deficit_per_week"] = round(
             (context["weight_to_go"] / context["time_left"]) * 7, 2
         )
         context["target_deficit_per_day"] = context["target_deficit_per_week"] / 7
         context["target_cal_deficit_per_day"] = context["target_deficit_per_day"] * 3500
+        print(context["target_cal_deficit_per_day"])
 
         context["target_cal_in_per_day"] = round(
-            abs(context["TDEE"] - context["target_cal_deficit_per_day"])
+            abs(context["TDEE"]) + context["target_cal_deficit_per_day"]
         )
 
-        context["current_time_to_goal"] = abs(
-            round(
-                float(
-                    (context["current_weight"] - context["goal_weight"])
-                    / (context["daily_weight_change"])
+        if len(df["weight"].tolist()) > 1:
+            context["current_time_to_goal"] = abs(
+                round(
+                    float(
+                        (context["current_weight"] - context["goal_weight"])
+                        / (context["daily_weight_change"])
+                    ),
+                    0,
                 )
             )
-        )
+        else:
+            context["current_time_to_goal"] = "TBD"
 
         # print(context)
 

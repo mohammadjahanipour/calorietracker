@@ -74,16 +74,11 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Estimated Time to {{ goal_weight}}</div>
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Estimated Time to Goal Weight</div>
               <div class="row no-gutters align-items-center">
                 <div class="col-auto">
                   <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ current_time_to_goal }} days</div>
                 </div>
-                  <!--<div class="col">
-                  <div class="progress progress-sm mr-2">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div> -->
               </div>
             </div>
             <div class="col-auto">
@@ -155,7 +150,7 @@
               </tr>
               <tr>
               <td>Goal Weight</td>
-              <td><b>{{goal_weight}} {{units_weight}} </b></td>
+              <td><b>{{goal_weight}} {{units_weight}} ({{weight_to_go}} {{units_weight}})</b></td>
               </tr>
               <tr>
               <td>Goal Date</td>
@@ -216,18 +211,6 @@
           <div class="chart-area">
             <canvas id="piechartCalories"></canvas>
           </div>
-          <!-- Card legend
-          <div class="mt-4 text-center small">
-            <span class="mr-2">
-              <i class="fas fa-circle text-primary"></i> Direct
-            </span>
-            <span class="mr-2">
-              <i class="fas fa-circle text-success"></i> Social
-            </span>
-            <span class="mr-2">
-              <i class="fas fa-circle text-info"></i> Referral
-            </span>
-          </div> -->
         </div>
       </div>
     </div>
