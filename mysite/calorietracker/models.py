@@ -83,7 +83,6 @@ class Setting(DateTimeFields, SafeDeleteModel):
       - Goal - maintain, lose, gain
       - Goal weight
       - Goal date - by when?
-      - *Goal per week - caloric deficit/surprlus/goal for week, pounds per week ** not yet implemented
     """
 
     user = models.OneToOneField(
@@ -109,7 +108,11 @@ class Setting(DateTimeFields, SafeDeleteModel):
         ("5", "Extra active (very hard exercise/sports & physical job or 2x training)"),
     ]
     activity = models.CharField(
-        max_length=1, choices=activity_choices, blank=True, null=True
+        max_length=1,
+        choices=activity_choices,
+        blank=True,
+        null=True,
+        help_text="Used to estimate your total daily energy expenditure until we have enough data to calculate it",
     )
 
     goal_choices = [
@@ -117,7 +120,13 @@ class Setting(DateTimeFields, SafeDeleteModel):
         ("M", "Maintain"),
         ("G", "Gain"),
     ]
-    goal = models.CharField(max_length=1, choices=goal_choices, blank=True, null=True)
+    goal = models.CharField(
+        max_length=1,
+        choices=goal_choices,
+        blank=True,
+        null=True,
+        help_text="Do you want to lose, maintain, or gain weight?",
+    )
     goal_weight = models.IntegerField(blank=True, null=True)
     goal_date = models.DateTimeField(blank=True, null=True)
 
@@ -136,10 +145,16 @@ class Log(DateTimeFields, SafeDeleteModel):
     )
 
     date = models.DateField(blank=False)  # Log the date
-    weight = models.FloatField(blank=False)  # TODO: Handle unit conversion kg vs lbs
-    calories_in = models.IntegerField(blank=False)  # Calories consumed in kcal
+    weight = models.FloatField(
+        blank=False, help_text="Try to weigh yourself at the same time every day"
+    )  # TODO: Handle unit conversion kg vs lbs
+    calories_in = models.IntegerField(
+        blank=False, help_text="Total calories consumed",
+    )  # Calories consumed in kcal
     calories_out = models.IntegerField(
-        blank=True, null=True
+        blank=True,
+        null=True,
+        help_text="If you have a fitness tracker, total calories burned",
     )  # From fitness tracker e.g. apple watch, fitbit etc.
 
     choices = [
@@ -149,5 +164,9 @@ class Log(DateTimeFields, SafeDeleteModel):
     ]
 
     activity_lvl = models.CharField(
-        max_length=1, choices=choices, blank=True, null=True
+        max_length=1,
+        choices=choices,
+        blank=True,
+        null=True,
+        help_text="Estimate your relative activity level",
     )
