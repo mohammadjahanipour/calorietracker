@@ -75,6 +75,89 @@ class Profile(TemplateView):
 class Analytics(LoginRequiredMixin, TemplateView):
     template_name = "calorietracker/analytics.html"
 
+    def load_data(self, **kwargs):
+        self.query_set = (
+            Log.objects.all()
+            .filter(user=self.request.user)
+            .values("date", "weight", "calories_in")
+        )
+        df_query = pd.DataFrame(list(self.query_set))
+        settings_set = Setting.objects.all().filter(user=self.request.user).values()
+        df_settings = pd.DataFrame(list(settings_set))
+
+        # age, height, sex, activity, goaldate, goalweight
+        self.age = df_settings["age"]
+        self.height = df_settings["height"]
+        self.sex = df_settings["sex"].all()
+        self.activity = df_settings["activity"].all()
+        self.goaldate = df_settings["goal_date"][0].date()
+        self.goalweight = round(float(int(df_settings["goal_weight"])), 1)
+        self.goal = df_settings["goal"].all()
+
+        # weights, calories_in, dates
+        self.weights = df_query["weight"].tolist()
+        self.calories_in = df_query["calories_in"].tolist()
+        self.dates = df_query["date"].tolist()
+
+        if len(self.weights) < 5:
+            self.currentweight = self.weights[-1]
+        else:
+            self.currentweight = moving_average(self.weights)[-1]
+
+        # Load the date range as self.n
+        if self.request.method == "GET":
+            rangeDrop_option = self.request.GET.get("rangeDrop", False)
+            if rangeDrop_option in ["7", "14", "31"]:
+                self.n = int(rangeDrop_option)
+            else:
+                self.n = len(self.weights)
+
+        # Calculate TDEE
+        if len(self.weights) < 10:
+            # Not enough data to accurately calculate TDEE using weight changes vs calories in, so we use Harris-Benedict formula
+            self.TDEE = self.HarrisBenedict()
+        else:
+            # Enough data to accurately calculate TDEE using weight changes vs calories in
+            self.TDEE = calculate_TDEE(
+                self.calories_in, self.weights, n=self.n, smooth=True, window=3,
+            )
+
+        # Weight change
+        self.weightchangeraw = weight_change(self.weights, n=self.n, smooth=False)
+        self.weightchangesmooth = weight_change(self.weights, n=self.n, smooth=True)
+
+        # Weight change rate
+        self.dailyweightchange = round(self.weightchangesmooth / self.n, 2)
+        if len(self.weights) > 7:
+            self.weeklyweightchange = round(self.dailyweightchange * 7, 2)
+        else:
+            self.weeklyweightchange = "TBD"
+
+        # Progress timeleft, weight to go
+        self.timeleft = (self.goaldate - date.today()).days
+        self.weighttogo = round(self.goalweight - self.currentweight, 1)
+        self.weighttogoabs = abs(self.weighttogo)
+
+        # Targets
+        self.targetweeklydeficit = round((self.weighttogo / self.timeleft) * 7, 2)
+        self.targetdailycaldeficit = self.targetweeklydeficit * 3500 / 7
+        self.dailycaltarget = round(abs(self.TDEE) + self.targetdailycaldeficit)
+
+        # Time to goal
+        if len(self.weights) > 1:
+            self.currenttimetogoal = abs(
+                round((self.weighttogo) / (self.dailyweightchange), 0)
+            )
+        else:
+            self.currenttimetogoal = "TBD"
+        self.percenttogoal = round(
+            100 * (1 - abs(self.weighttogo / (self.weights[0] - self.goalweight)))
+        )
+        if self.percenttogoal < 0:
+            self.percenttogoal = 0
+        elif self.percenttogoal < 1.5:
+            self.percenttogoal = 100
+
     def dispatch(self, request):
 
         if not self.request.user.is_authenticated:
@@ -101,219 +184,117 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 return redirect(reverse_lazy("settings"))
         return super().dispatch(request)
 
+    def HarrisBenedict(self, **kwargs):
+        # Estimate TDEE in the absence of enouhg data
+        if self.sex == "M":
+            BMR = round(
+                -1
+                * float(
+                    88.362
+                    + (13.397 * unit_conv(self.weights[-1], "lbs"))
+                    + (4.799 * unit_conv(self.height, "in"))
+                    - (5.677 * self.age)
+                ),
+            )
+        elif self.sex == "F":
+            BMR = round(
+                -1
+                * float(
+                    447.593
+                    + (9.247 * unit_conv(self.weights[-1], "lbs"))
+                    + (3.098 * unit_conv(self.height, "in"))
+                    - (4.330 * self.age)
+                ),
+            )
+        if self.activity == "1":
+            TDEE = BMR * 1.2
+        elif self.activity == "2":
+            TDEE = BMR * 1.375
+        elif self.activity == "3":
+            TDEE = BMR * 1.55
+        elif self.activity == "4":
+            TDEE = BMR * 1.725
+        elif self.activity == "5":
+            TDEE = BMR * 1.9
+
+        return round(TDEE)
+
+    def get_pie_chart_data(self):
+        TDEE = abs(self.TDEE)
+        dailycaltarget = abs(self.dailycaltarget)
+        calories_in = self.calories_in[-self.n :]
+        if self.goal == "L" or self.goal == "M":
+            pie_labels = [
+                "Days Above TDEE",
+                "Days Below Target",
+                "Days Above Target but Below TDEE",
+            ]
+            pie_red = len([i for i in calories_in if (i > TDEE)])
+            pie_green = len([i for i in calories_in if i < dailycaltarget])
+            pie_yellow = len([i for i in calories_in if (dailycaltarget < i < TDEE)])
+
+        elif self.goal == "G":
+            pie_labels = [
+                "Days Below TDEE",
+                "Days Above Target",
+                "Days Above TDEE but Below Target",
+            ]
+            pie_red = len([i for i in calories_in if (i < TDEE)])
+            pie_green = len([i for i in calories_in if i > dailycaltarget])
+            pie_yellow = len([i for i in calories_in if (TDEE < i < dailycaltarget)])
+
+        return pie_labels, pie_red, pie_yellow, pie_green
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Load the user's logs as a DataFrame
-        query_set = (
-            Log.objects.all()
-            .filter(user=self.request.user)
-            .values("date", "weight", "calories_in", "calories_out")
-        )
-        df = pd.DataFrame(list(query_set))
-        settings_set = Setting.objects.all().filter(user=self.request.user).values()
-        df_settings = pd.DataFrame(list(settings_set))
-
-        # TODO: HANDLE UNITS CONVERSION FOR UI/FRONT END
-        context["units_weight"] = "lbs"
-
-        # Load the date range as n
-        if self.request.method == "GET":
-            rangeDrop_option = self.request.GET.get("rangeDrop", False)
-            if rangeDrop_option in ["7", "14", "31"]:
-                n = int(rangeDrop_option)
-            else:
-                n = len(df["weight"].tolist())
-            context["n"] = n
-
-        # Calculate TDEE, weight change, weight change rate
-        if len(df["weight"].tolist()) < 10:
-            # Not enough data to accurately calculate TDEE using weight changes vs calories in
-            # So we use Harris-Benedict formula:
-            # Men: BMR = 88.362 + (13.397 × weight in kg) + (4.799 × height in cm) - (5.677 × age in years)
-            # Women: BMR = 447.593 + (9.247 × weight in kg) + (3.098 × height in cm) - (4.330 × age in years)
-            if df_settings["sex"].all() == "M":
-                context["BMR"] = round(
-                    float(
-                        88.362
-                        + (13.397 * unit_conv(df["weight"].tolist()[-1], "lbs"))
-                        + (4.799 * unit_conv(df_settings["height"], "in"))
-                        - (5.677 * df_settings["age"])
-                    ),
-                )
-            elif df_settings["sex"].all() == "F":
-                context["BMR"] = round(
-                    float(
-                        447.593
-                        + (9.247 * unit_conv(df["weight"].tolist()[-1], "lbs"))
-                        + (3.098 * unit_conv(df_settings["height"], "in"))
-                        - (4.330 * df_settings["age"])
-                    ),
-                )
-            if df_settings["activity"].all() == "1":
-                context["TDEE"] = round(context["BMR"] * 1.2)
-            elif df_settings["activity"].all() == "2":
-                context["TDEE"] = round(context["BMR"] * 1.375)
-            elif df_settings["activity"].all() == "3":
-                context["TDEE"] = round(context["BMR"] * 1.55)
-            elif df_settings["activity"].all() == "4":
-                context["TDEE"] = round(context["BMR"] * 1.725)
-            elif df_settings["activity"].all() == "5":
-                context["TDEE"] = round(context["BMR"] * 1.9)
-        else:
-            # Enough data to accurately calculate TDEE using weight changes vs calories in
-            context["TDEE"] = round(
-                calculate_TDEE(
-                    df["calories_in"].tolist(),
-                    df["weight"].tolist(),
-                    n=n,
-                    smooth=True,
-                    window=3,
-                )
-            )
-
-        context["weight_change_raw"], context["weight_change_smooth"] = (
-            round(weight_change(df["weight"].tolist(), n=n, smooth=False), 1),
-            round(weight_change(df["weight"].tolist(), n=n, smooth=True), 1),
-        )
-        context["daily_weight_change"] = round(context["weight_change_smooth"] / n, 2)
-        if len(df["weight"].tolist()) > 7:
-            context["weekly_weight_change"] = round(
-                context["daily_weight_change"] * 7, 2
-            )
-        else:
-            context["weekly_weight_change"] = "TBD"
-
-        # Populate time to goal and summary stats.
-        context["goal_date"] = df_settings["goal_date"][0].date().strftime("%b-%-d")
-        context["time_left"] = (df_settings["goal_date"][0].date() - date.today()).days
-
-        context["goal_weight"] = round(float(int(df_settings["goal_weight"])), 1)
-        if len(df["weight"].tolist()) < 5:
-            context["current_weight"] = df["weight"].tolist()[-1]
-        else:
-            context["current_weight"] = moving_average(df["weight"].tolist())[-1]
-
-        context["weight_to_go"] = round(
-            context["goal_weight"] - context["current_weight"], 1
-        )
-        context["weight_to_go_abs"] = abs(context["weight_to_go"])
-        context["percent_to_goal"] = round(
-            100
-            * (
-                1
-                - abs(
-                    context["weight_to_go"]
-                    / (df["weight"].tolist()[0] - context["goal_weight"])
-                )
-            )
-        )
-        if context["percent_to_goal"] < 0:
-            context["percent_to_goal"] = 0
-        elif context["weight_to_go_abs"] < 1.5:
-            context["percent_to_goal"] = 100
-        print(context["weight_to_go"], context["time_left"])
-        context["target_deficit_per_week"] = round(
-            (context["weight_to_go"] / context["time_left"]) * 7, 2
-        )
-        context["target_deficit_per_day"] = context["target_deficit_per_week"] / 7
-        context["target_cal_deficit_per_day"] = context["target_deficit_per_day"] * 3500
-        print(context["target_cal_deficit_per_day"])
-
-        context["target_cal_in_per_day"] = round(
-            abs(context["TDEE"]) + context["target_cal_deficit_per_day"]
-        )
-
-        if abs(context["target_deficit_per_week"]) > 2:
+        self.load_data()
+        if abs(self.targetweeklydeficit) > 2:
             messages.info(
                 self.request,
                 "Warning: Your goal weight and/or date are very aggressive. We recommend setting goals that require between -2 to 2 lbs (-1 to 1 kgs) of weight change per week.",
             )
 
-        if len(df["weight"].tolist()) > 1:
-            context["current_time_to_goal"] = abs(
-                round(
-                    float(
-                        (context["current_weight"] - context["goal_weight"])
-                        / (context["daily_weight_change"])
-                    ),
-                    0,
-                )
-            )
-        else:
-            context["current_time_to_goal"] = "TBD"
+        # TODO: HANDLE UNITS CONVERSION FOR UI/FRONT END
 
-        # Populate data_weight, data_cal_in and data_date for charts
-        context["data_weight"] = df["weight"].tolist()[-n:]
-        context["data_cal_in"] = df["calories_in"].tolist()[-n:]
-        string_dates = [date.strftime("%b-%d") for date in df["date"].tolist()][-n:]
-        context["data_date"] = json.dumps(string_dates)
+        context = {
+            "units_weight": "lbs",
+            "n": self.n,
+            "TDEE": self.TDEE,
+            "weight_change_raw": self.weightchangeraw,
+            "weight_change_smooth": self.weightchangesmooth,
+            "daily_weight_change": self.dailyweightchange,
+            "weekly_weight_change": self.weeklyweightchange,
+            "goal_date": self.goaldate.strftime("%b-%-d"),
+            "time_left": self.timeleft,
+            "goal_weight": self.goalweight,
+            "current_weight": self.currentweight,
+            "weight_to_go": self.weighttogo,
+            "weight_to_go_abs": self.weighttogoabs,
+            "target_weekly_deficit": self.targetweeklydeficit,
+            "target_daily_cal_deficit": self.targetdailycaldeficit,
+            "daily_cal_target": self.dailycaltarget,
+            "current_time_to_goal": self.currenttimetogoal,
+            "percent_to_goal": self.percenttogoal,
+            "data_weight": self.weights[-self.n :],
+            "data_cal_in": self.calories_in[-self.n :],
+            "data_date": json.dumps(
+                [date.strftime("%b-%d") for date in self.dates][-self.n :]
+            ),
+            "json_data": json.dumps(
+                {"data": list(self.query_set)[-self.n :]},
+                sort_keys=True,
+                indent=1,
+                cls=DjangoJSONEncoder,
+            ),
+        }
 
         # Populate red, green, yellow for pie chart
-        if df_settings["goal"].all() == "L" or df_settings["goal"].all() == "M":
-            context["pie_labels"] = [
-                "Days Above TDEE",
-                "Days Below Target",
-                "Days Above Target but Below TDEE",
-            ]
-            context["pie_cal_in_red"] = len(
-                [
-                    i
-                    for i in df["calories_in"].tolist()[-n:]
-                    if (i > abs(context["TDEE"]))
-                ]
-            )
-            context["pie_cal_in_yellow"] = len(
-                [
-                    i
-                    for i in df["calories_in"].tolist()[-n:]
-                    if (context["target_cal_in_per_day"] < i < abs(context["TDEE"]))
-                ]
-            )
-            context["pie_cal_in_green"] = len(
-                [
-                    i
-                    for i in df["calories_in"].tolist()[-n:]
-                    if i < context["target_cal_in_per_day"]
-                ]
-            )
-        elif df_settings["goal"].all() == "G":
-            context["pie_labels"] = [
-                "Days Below TDEE",
-                "Days Above Target",
-                "Days Above TDEE but Below Target",
-            ]
-            context["pie_cal_in_red"] = len(
-                [
-                    i
-                    for i in df["calories_in"].tolist()[-n:]
-                    if (i < abs(context["TDEE"]))
-                ]
-            )
-            context["pie_cal_in_yellow"] = len(
-                [
-                    i
-                    for i in df["calories_in"].tolist()[-n:]
-                    if (context["TDEE"] < i < abs(context["target_cal_in_per_day"]))
-                ]
-            )
-            context["pie_cal_in_green"] = len(
-                [
-                    i
-                    for i in df["calories_in"].tolist()[-n:]
-                    if i > context["target_cal_in_per_day"]
-                ]
-            )
-
-        # Populate json_data from query for table
-        query_set = json.dumps(
-            {"data": list(query_set)[-n:]},
-            sort_keys=True,
-            indent=1,
-            cls=DjangoJSONEncoder,
-        )
-
-        context["json_data"] = query_set
+        (
+            context["pie_labels"],
+            context["pie_red"],
+            context["pie_yellow"],
+            context["pie_green"],
+        ) = self.get_pie_chart_data()
 
         return context
 

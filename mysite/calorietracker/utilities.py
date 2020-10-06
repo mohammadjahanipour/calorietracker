@@ -134,8 +134,8 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
 
     Returns
     -------
-    OLSResults
-        https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLSResults.html#statsmodels.regression.linear_model.OLSResults
+    TDEE
+        int
     """
 
     # print("Daily Caloric Intake", "\n", CI)
@@ -159,7 +159,7 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
     diff = delta_weight_calories - sum(CI)
     TDEE = diff / n
 
-    return TDEE
+    return round(TDEE)
 
 
 def moving_average(x, w=5):
@@ -202,7 +202,7 @@ def weight_change(weights, n, smooth=True):
         weights = moving_average(weights)
 
     weights = weights[-n:]
-    return weights[-1] - weights[0]
+    return round(weights[-1] - weights[0], 1)
 
 
 def unit_conv(x, unit):

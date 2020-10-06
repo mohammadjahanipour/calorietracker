@@ -158,7 +158,7 @@
               </tr>
               <tr>
               <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="targetweightchangeTT" data-toggle="tooltip" title=""> Goal Weight Change per Week</td>
-              <td><b>{{target_deficit_per_week}} {{units_weight}} / week</b></td>
+              <td><b>{{target_weekly_deficit}} {{units_weight}} / week</b></td>
               </tr>
               </tbody>
             </table>
@@ -171,7 +171,7 @@
               </thead>
               <tbody>
               <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="targetcalintakeTT" data-toggle="tooltip" title=""> Daily Caloric Intake Target</td>
-              <td><b>{{target_cal_in_per_day}} cal / day</b></td>
+              <td><b>{{daily_cal_target}} cal / day</b></td>
               </tr>
               </tbody>
             </table>
@@ -259,7 +259,7 @@ document.getElementById("timetogoalTT").title = "Days until you reach your goal 
 document.getElementById("currentrateofweightchangeTT").title = "How fast you're changing weight in your selected date range";
 document.getElementById("currentweightTT").title = "An average of your last several weights is the best way to account for day-to-day variation in body weight";
 document.getElementById("targetweightchangeTT").title = "The weight change needed per week to achieve your goals";
-document.getElementById("targetcalintakeTT").title = "How many calories you should eat each day to create a daily caloric balance of {{target_cal_deficit_per_day}} calories / day. This is how you get to your goals";
+document.getElementById("targetcalintakeTT").title = "How many calories you should eat each day to create a daily caloric balance of {{target_daily_cal_deficit}} calories / day. This is how you get to your goals";
 </script>
 <!-- Page level global data -->
 <script>
@@ -268,7 +268,7 @@ var weights = {{data_weight}}
 var calories_in = {{data_cal_in}}
 var goal_calories_in = [];
   for (var i = 0; i < calories_in.length; i++) {
-    goal_calories_in.push({{target_cal_in_per_day}});
+    goal_calories_in.push({{daily_cal_target}});
   }
 var estimated_TDEE = [];
   for (var i = 0; i < calories_in.length; i++) {
@@ -276,9 +276,9 @@ var estimated_TDEE = [];
   }
 var json = {{json_data | safe}}
 var pie_labels = {{pie_labels | safe}}
-var pie_cal_in_red = {{pie_cal_in_red}}
-var pie_cal_in_yellow = {{pie_cal_in_yellow}}
-var pie_cal_in_green = {{pie_cal_in_green}}
+var pie_cal_in_red = {{pie_red}}
+var pie_cal_in_yellow = {{pie_yellow}}
+var pie_cal_in_green = {{pie_green}}
 </script>
 
 
