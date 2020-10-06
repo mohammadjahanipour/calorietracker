@@ -34,7 +34,4 @@ for index, row in df.iterrows():
         weight=row["Weight"],
         calories_in=row["CI"],
         calories_out=row["CO"],
-        steps=row["Steps"],
-        exercise_time=0,
-        exercise_type="Cardio",
     )
