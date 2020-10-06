@@ -111,6 +111,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 self.n = int(rangeDrop_option)
             else:
                 self.n = len(self.weights)
+            self.units = self.request.GET.get("unitDrop")
 
         # Calculate TDEE
         if len(self.weights) < 10:
@@ -131,7 +132,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         if len(self.weights) > 7:
             self.weeklyweightchange = round(self.dailyweightchange * 7, 2)
         else:
-            self.weeklyweightchange = "TBD"
+            self.weeklyweightchange = 0.00
 
         # Progress timeleft, weight to go
         self.timeleft = (self.goaldate - date.today()).days
@@ -158,6 +159,19 @@ class Analytics(LoginRequiredMixin, TemplateView):
         elif self.percenttogoal < 1.5:
             self.percenttogoal = 100
 
+        # Unit control
+        if self.units == "Imperial":
+            self.unitsweight = "lbs"
+        else:
+            self.unitsweight = "kgs"
+            self.weightchangesmooth = unit_conv(self.weightchangesmooth, "lbs")
+            self.weightchangeraw = unit_conv(self.weightchangeraw, "lbs")
+            self.weeklyweightchange = unit_conv(self.weeklyweightchange, "lbs")
+            self.weighttogo = unit_conv(self.weighttogo, "lbs")
+            self.weighttogoabs = unit_conv(self.weighttogoabs, "lbs")
+            self.goalweight = unit_conv(self.goalweight, "lbs")
+            self.targetweeklydeficit = unit_conv(self.targetweeklydeficit, "lbs")
+
     def dispatch(self, request):
 
         if not self.request.user.is_authenticated:
@@ -176,7 +190,6 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "goal_date",
         ]
         for var in settings_vars:
-            print("checking for", var)
             if not (
                 list(Setting.objects.filter(user=self.request.user).values(var))[0][var]
             ):
@@ -257,7 +270,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
         # TODO: HANDLE UNITS CONVERSION FOR UI/FRONT END
 
         context = {
-            "units_weight": "lbs",
+            "units": self.units,
+            "units_weight": self.unitsweight,
             "n": self.n,
             "TDEE": self.TDEE,
             "weight_change_raw": self.weightchangeraw,

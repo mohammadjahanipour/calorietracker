@@ -222,7 +222,7 @@ def unit_conv(x, unit):
     float
     """
     if unit == "lbs":
-        return x * 0.453592
+        return round(x * 0.453592, 2)
     if unit == "kgs":
         return x * 2.20462
     if unit == "in":

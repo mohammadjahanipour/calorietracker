@@ -11,9 +11,18 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
 
+
+    <form action="" method="get">
+     <select name = "unitDrop" class="form-control" onchange="this.form.submit()">
+       <option value="" disabled selected>{{units}}</option>
+       <option value="Imperial">Imperial</option>
+       <option value="Metric">Metric</option>
+     </select>
+   </form>
+
    <form action="" method="get">
     <select name = "rangeDrop" class="form-control" onchange="this.form.submit()">
-      <option value="" disabled selected>Date Range</option>
+      <option value="" disabled selected>Last {{n}} days</option>
       <option value="7">Last 7 Days</option>
       <option value="14">Last 14 Days</option>
       <option value="31">Last 31 Days</option>
@@ -22,9 +31,6 @@
   </form>
 
   </div>
-
-
-
 
   <!-- Content Row -->
   <div class="row">
