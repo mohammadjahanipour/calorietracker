@@ -144,7 +144,7 @@ class Log(DateTimeFields, SafeDeleteModel):
         get_user_model(), blank=False, null=False, on_delete=models.CASCADE,
     )
 
-    date = models.DateField(blank=False)  # Log the date
+    date = models.DateField(blank=False, unique=True)  # Log the date
     weight = models.FloatField(
         blank=False, help_text="Try to weigh yourself at the same time every day"
     )  # TODO: Handle unit conversion kg vs lbs
