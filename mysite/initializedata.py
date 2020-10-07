@@ -14,6 +14,7 @@ django.setup()
 
 from calorietracker.models import Log
 from django.contrib.auth import get_user_model
+from measurement.measures import Distance, Weight
 
 data = pd.read_csv("sampledata.csv")
 
@@ -31,7 +32,7 @@ for index, row in df.iterrows():
     Log.objects.create(
         user=user,
         date=row["Date"],
-        weight=row["Weight"],
+        weight=Weight(lb=row["Weight"]),
         calories_in=row["CI"],
         calories_out=row["CO"],
     )

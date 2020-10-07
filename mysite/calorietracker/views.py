@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
-from .forms import RegisterForm, LoginForm, LogForm
+from .forms import RegisterForm, LoginForm
 from .models import Log, Setting
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,6 +17,9 @@ from .utilities import *
 from datetime import date
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+
+from django_measurement.forms import MeasurementField
+from measurement.measures import Distance, Weight
 
 
 class UpdateLogData(LoginRequiredMixin, UpdateView):
@@ -42,10 +45,48 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
         return form
 
 
+class LogData(LoginRequiredMixin, CreateView):
+    model = Log
+    fields = (
+        "date",
+        "weight",
+        "calories_in",
+        "calories_out",
+        "activity_lvl",
+    )
+    template_name = "calorietracker/logdata.html"
+
+    success_url = reverse_lazy("analytics")
+
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["date"].widget = DatePickerInput()
+        form.fields["weight"] = MeasurementField(
+            measurement=Weight, unit_choices=(("lb", "lbs"), ("kg", "kgs"))
+        )
+        return form
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
 class Settings(LoginRequiredMixin, UpdateView):
 
     model = Setting
-    fields = ["age", "sex", "height", "activity", "goal", "goal_weight", "goal_date"]
+    fields = [
+        "age",
+        "sex",
+        "height",
+        "activity",
+        "goal",
+        "goal_weight",
+        "goal_date",
+        "unit_preference",
+    ]
     template_name = "calorietracker/settings.html"
     success_url = reverse_lazy("settings")
 
@@ -54,7 +95,13 @@ class Settings(LoginRequiredMixin, UpdateView):
 
     def get_form(self):
         form = super().get_form()
-        form.fields["goal_date"].widget = DateTimePickerInput()
+        form.fields["height"] = MeasurementField(
+            measurement=Distance, unit_choices=(("inch", "in"), ("cm", "cm")),
+        )
+        form.fields["goal_weight"] = MeasurementField(
+            measurement=Weight, unit_choices=(("lb", "lbs"), ("kg", "kgs"))
+        )
+        form.fields["goal_date"].widget = DatePickerInput()
         return form
 
 
@@ -87,22 +134,20 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         # age, height, sex, activity, goaldate, goalweight
         self.age = df_settings["age"]
-        self.height = df_settings["height"]
+        self.height = df_settings["height"].all().cm
         self.sex = df_settings["sex"].all()
         self.activity = df_settings["activity"].all()
         self.goaldate = df_settings["goal_date"][0].date()
-        self.goalweight = round(float(int(df_settings["goal_weight"])), 1)
+        self.goalweight = round(float(df_settings["goal_weight"].all().lb), 1)
         self.goal = df_settings["goal"].all()
+        self.units = df_settings["unit_preference"].all()
 
         # weights, calories_in, dates
+        self.rawweights = df_query["weight"].tolist()
         self.weights = df_query["weight"].tolist()
+        self.weights = [round(x.lb, 2) for x in self.weights]
         self.calories_in = df_query["calories_in"].tolist()
         self.dates = df_query["date"].tolist()
-
-        if len(self.weights) < 5:
-            self.currentweight = self.weights[-1]
-        else:
-            self.currentweight = moving_average(self.weights)[-1]
 
         # Load the date range as self.n
         if self.request.method == "GET":
@@ -111,7 +156,11 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 self.n = int(rangeDrop_option)
             else:
                 self.n = len(self.weights)
-            self.units = self.request.GET.get("unitDrop")
+
+        if len(self.weights) < 5:
+            self.currentweight = self.weights[-1]
+        else:
+            self.currentweight = moving_average(self.weights)[-1]
 
         # Calculate TDEE
         if len(self.weights) < 10:
@@ -151,19 +200,26 @@ class Analytics(LoginRequiredMixin, TemplateView):
             )
         else:
             self.currenttimetogoal = "TBD"
-        self.percenttogoal = round(
-            100 * (1 - abs(self.weighttogo / (self.weights[0] - self.goalweight)))
-        )
+        if (self.weights[0] - self.goalweight) != 0:
+            self.percenttogoal = round(
+                100 * (1 - abs(self.weighttogo / (self.weights[0] - self.goalweight)))
+            )
+        else:
+            self.percenttogoal = 0
         if self.percenttogoal < 0:
             self.percenttogoal = 0
         elif self.percenttogoal < 1.5:
             self.percenttogoal = 100
 
         # Unit control
-        if self.units == "Imperial":
+        # NOTE: all initial calculations above are done in imperial.
+        # We convert to metric as needed at the very end here.
+        if self.units == "I":
             self.unitsweight = "lbs"
-        else:
+        elif self.units == "M":
             self.unitsweight = "kgs"
+            self.weights = [round(x.kg, 2) for x in self.rawweights]
+            self.currentweight = unit_conv(self.currentweight, "lbs")
             self.weightchangesmooth = unit_conv(self.weightchangesmooth, "lbs")
             self.weightchangeraw = unit_conv(self.weightchangeraw, "lbs")
             self.weeklyweightchange = unit_conv(self.weeklyweightchange, "lbs")
@@ -188,6 +244,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "goal",
             "goal_weight",
             "goal_date",
+            "unit_preference",
         ]
         for var in settings_vars:
             if not (
@@ -199,13 +256,15 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
     def HarrisBenedict(self, **kwargs):
         # Estimate TDEE in the absence of enouhg data
+        weight = unit_conv(self.currentweight, "lbs")
+
         if self.sex == "M":
             BMR = round(
                 -1
                 * float(
                     88.362
-                    + (13.397 * unit_conv(self.weights[-1], "lbs"))
-                    + (4.799 * unit_conv(self.height, "in"))
+                    + (13.397 * weight)
+                    + (4.799 * self.height)
                     - (5.677 * self.age)
                 ),
             )
@@ -214,8 +273,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 -1
                 * float(
                     447.593
-                    + (9.247 * unit_conv(self.weights[-1], "lbs"))
-                    + (3.098 * unit_conv(self.height, "in"))
+                    + (9.247 * weight)
+                    + (3.098 * self.height)
                     - (4.330 * self.age)
                 ),
             )
@@ -267,7 +326,13 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 "Warning: Your goal weight and/or date are very aggressive. We recommend setting goals that require between -2 to 2 lbs (-1 to 1 kgs) of weight change per week.",
             )
 
-        # TODO: HANDLE UNITS CONVERSION FOR UI/FRONT END
+        tabledata = []
+        for i in range(len(self.weights)):
+            entry = {}
+            entry["date"] = self.dates[i]
+            entry["weight"] = self.weights[i]
+            entry["calories_in"] = self.calories_in[i]
+            tabledata.append(entry)
 
         context = {
             "units": self.units,
@@ -295,7 +360,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 [date.strftime("%b-%d") for date in self.dates][-self.n :]
             ),
             "json_data": json.dumps(
-                {"data": list(self.query_set)[-self.n :]},
+                {"data": tabledata[-self.n :]},
                 sort_keys=True,
                 indent=1,
                 cls=DjangoJSONEncoder,
@@ -319,20 +384,6 @@ class LineChartJSONView(BaseLineChartView):
 
 line_chart = TemplateView.as_view(template_name="line_chart.html")
 line_chart_json = LineChartJSONView.as_view()
-
-
-class LogData(LoginRequiredMixin, CreateView):
-    model = Log
-    form_class = LogForm
-    template_name = "calorietracker/logdata.html"
-    success_url = reverse_lazy("analytics")
-
-    login_url = "/login/"
-    redirect_field_name = "redirect_to"
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
 
 
 class Register(CreateView):

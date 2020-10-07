@@ -2,6 +2,8 @@ from django.db import models
 from .base_models import DateTimeFields
 from django.contrib.auth import get_user_model
 from safedelete.models import SafeDeleteModel
+from django_measurement.models import MeasurementField
+from measurement.measures import Distance, Weight
 
 
 class Feedback(DateTimeFields, SafeDeleteModel):
@@ -97,7 +99,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
     ]
 
     sex = models.CharField(max_length=1, choices=sex_choices, blank=True, null=True)
-    height = models.IntegerField(blank=True, null=True)
+    height = MeasurementField(measurement=Distance, null=True, blank=True)
     # this should represent a range from 0 - 100 # TODO: add min max value validation
 
     activity_choices = [
@@ -127,8 +129,21 @@ class Setting(DateTimeFields, SafeDeleteModel):
         null=True,
         help_text="Do you want to lose, maintain, or gain weight?",
     )
-    goal_weight = models.IntegerField(blank=True, null=True)
+
+    goal_weight = MeasurementField(measurement=Weight, null=True, blank=True)
     goal_date = models.DateTimeField(blank=True, null=True)
+
+    unit_choices = [
+        ("I", "Imperial"),
+        ("M", "Metric"),
+    ]
+    unit_preference = models.CharField(
+        max_length=1,
+        choices=unit_choices,
+        blank=True,
+        null=True,
+        help_text="Display metric or imperial units on analytics page",
+    )
 
 
 class Log(DateTimeFields, SafeDeleteModel):
@@ -145,12 +160,13 @@ class Log(DateTimeFields, SafeDeleteModel):
     )
 
     date = models.DateField(blank=False, unique=True)  # Log the date
-    weight = models.FloatField(
-        blank=False, help_text="Try to weigh yourself at the same time every day"
-    )  # TODO: Handle unit conversion kg vs lbs
+
+    weight = MeasurementField(measurement=Weight, null=True, blank=False)
+
     calories_in = models.IntegerField(
         blank=False, help_text="Total calories consumed",
     )  # Calories consumed in kcal
+
     calories_out = models.IntegerField(
         blank=True,
         null=True,

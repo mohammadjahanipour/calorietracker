@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     "actstream",
     "chartjs",
+    "measurement",
 ]
 
 SITE_ID = 1  # comes from actstream
