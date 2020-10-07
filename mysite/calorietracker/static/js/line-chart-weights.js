@@ -43,6 +43,10 @@ async function createWeightChart() {
               display: false,
               drawBorder: false
             },
+            scaleLabel: {
+              display: false,
+              labelString: 'Date'
+            },
             ticks: {
               maxTicksLimit: 15
             }
@@ -52,7 +56,7 @@ async function createWeightChart() {
             position: 'left',
             scaleLabel: {
               display: true,
-              labelString: 'Weight'
+              labelString: 'Weight' + units_weight
             },
             ticks: {
               maxTicksLimit: 10,
@@ -85,6 +89,11 @@ async function createWeightChart() {
           displayColors: false,
           intersect: false,
           mode: 'index',
+          callbacks: {
+                    label: function(tooltipItems, data) {
+                        return tooltipItems.yLabel + units_weight;
+                    },
+                  },
           caretPadding: 10,
         }
       }

@@ -79,7 +79,11 @@ async function createCalorieChart() {
             },
             ticks: {
               maxTicksLimit: 15
-            }
+            },
+            scaleLabel: {
+              display: false,
+              labelString: 'Date'
+            },
           }],
           yAxes: [{
             id: 'A',
