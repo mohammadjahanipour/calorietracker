@@ -14,14 +14,14 @@ from bootstrap_datepicker_plus import DateTimePickerInput, DatePickerInput
 from chartjs.views.lines import BaseLineChartView
 
 from .utilities import *
-from datetime import date
+from datetime import date, timedelta
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
 from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
 
-from . models import Feedback
+from .models import Feedback
 
 
 class Feedback(LoginRequiredMixin, CreateView):
@@ -31,7 +31,7 @@ class Feedback(LoginRequiredMixin, CreateView):
     fields = (
         "comment",
         "contact_email",
-        )
+    )
 
 
 class UpdateLogData(LoginRequiredMixin, UpdateView):
@@ -108,7 +108,8 @@ class Settings(LoginRequiredMixin, UpdateView):
     def get_form(self):
         form = super().get_form()
         form.fields["height"] = MeasurementField(
-            measurement=Distance, unit_choices=(("inch", "in"), ("cm", "cm")),
+            measurement=Distance,
+            unit_choices=(("inch", "in"), ("cm", "cm")),
         )
         form.fields["goal_weight"] = MeasurementField(
             measurement=Weight, unit_choices=(("lb", "lbs"), ("kg", "kgs"))
@@ -181,7 +182,11 @@ class Analytics(LoginRequiredMixin, TemplateView):
         else:
             # Enough data to accurately calculate TDEE using weight changes vs calories in
             self.TDEE = calculate_TDEE(
-                self.calories_in, self.weights, n=self.n, smooth=True, window=3,
+                self.calories_in,
+                self.weights,
+                n=self.n,
+                smooth=True,
+                window=3,
             )
 
         # Weight change
@@ -210,8 +215,12 @@ class Analytics(LoginRequiredMixin, TemplateView):
             self.currenttimetogoal = abs(
                 round((self.weighttogo) / (self.dailyweightchange), 0)
             )
+            self.currentgoaldate = (
+                date.today() + timedelta(days=self.currenttimetogoal)
+            ).strftime("%b. %-d")
         else:
             self.currenttimetogoal = "TBD"
+
         if (self.weights[0] - self.goalweight) != 0:
             self.percenttogoal = round(
                 100 * (1 - abs(self.weighttogo / (self.weights[0] - self.goalweight)))
@@ -306,7 +315,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_pie_chart_data(self):
         TDEE = abs(self.TDEE)
         dailycaltarget = abs(self.dailycaltarget)
-        calories_in = self.calories_in[-self.n:]
+        calories_in = self.calories_in[-self.n :]
         if self.goal == "L" or self.goal == "M":
             pie_labels = [
                 "Days Above TDEE",
@@ -365,14 +374,15 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "target_daily_cal_deficit": self.targetdailycaldeficit,
             "daily_cal_target": self.dailycaltarget,
             "current_time_to_goal": self.currenttimetogoal,
+            "current_goal_date": self.currentgoaldate,
             "percent_to_goal": self.percenttogoal,
-            "data_weight": self.weights[-self.n:],
-            "data_cal_in": self.calories_in[-self.n:],
+            "data_weight": self.weights[-self.n :],
+            "data_cal_in": self.calories_in[-self.n :],
             "data_date": json.dumps(
-                [date.strftime("%b-%d") for date in self.dates][-self.n:]
+                [date.strftime("%b-%d") for date in self.dates][-self.n :]
             ),
             "json_data": json.dumps(
-                {"data": tabledata[-self.n:]},
+                {"data": tabledata[-self.n :]},
                 sort_keys=True,
                 indent=1,
                 cls=DjangoJSONEncoder,
