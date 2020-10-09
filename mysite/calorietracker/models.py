@@ -9,7 +9,7 @@ from measurement.measures import Distance, Weight
 class Feedback(DateTimeFields, SafeDeleteModel):
     """docstring for Feedback."""
 
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     comment = models.TextField()
     contact_email = models.EmailField()
 

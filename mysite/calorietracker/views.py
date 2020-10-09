@@ -33,6 +33,13 @@ class Feedback(LoginRequiredMixin, CreateView):
         "contact_email",
     )
 
+    success_url = reverse_lazy("feedback")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        messages.success(self.request, "Feedback Submited")
+        return super().form_valid(form)
+
 
 class UpdateLogData(LoginRequiredMixin, UpdateView):
     """docstring for UpdateLogData."""
@@ -315,7 +322,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_pie_chart_data(self):
         TDEE = abs(self.TDEE)
         dailycaltarget = abs(self.dailycaltarget)
-        calories_in = self.calories_in[-self.n :]
+        calories_in = self.calories_in[-self.n:]
         if self.goal == "L" or self.goal == "M":
             pie_labels = [
                 "Days Above TDEE",
@@ -376,13 +383,13 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "current_time_to_goal": self.currenttimetogoal,
             "current_goal_date": self.currentgoaldate,
             "percent_to_goal": self.percenttogoal,
-            "data_weight": self.weights[-self.n :],
-            "data_cal_in": self.calories_in[-self.n :],
+            "data_weight": self.weights[-self.n:],
+            "data_cal_in": self.calories_in[-self.n:],
             "data_date": json.dumps(
-                [date.strftime("%b-%d") for date in self.dates][-self.n :]
+                [date.strftime("%b-%d") for date in self.dates][-self.n:]
             ),
             "json_data": json.dumps(
-                {"data": tabledata[-self.n :]},
+                {"data": tabledata[-self.n:]},
                 sort_keys=True,
                 indent=1,
                 cls=DjangoJSONEncoder,
