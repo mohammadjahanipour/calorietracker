@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from .base_models import DateTimeFields
 from django.contrib.auth import get_user_model
@@ -91,16 +92,15 @@ class Setting(DateTimeFields, SafeDeleteModel):
         get_user_model(), unique=True, blank=False, null=False, on_delete=models.CASCADE
     )
 
-    age = models.IntegerField(blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True, default=30)
 
     sex_choices = [
         ("M", "Male"),
         ("F", "Female"),
     ]
 
-    sex = models.CharField(max_length=1, choices=sex_choices, blank=True, null=True)
-    height = MeasurementField(measurement=Distance, null=True, blank=True)
-    # this should represent a range from 0 - 100 # TODO: add min max value validation
+    sex = models.CharField(max_length=1, choices=sex_choices, blank=True, null=True, default="M")
+    height = MeasurementField(measurement=Distance, null=True, blank=True, default=1.75)  # height in metres
 
     activity_choices = [
         ("1", "Sedentary (little or no exercise)"),
@@ -115,6 +115,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Used to estimate your total daily energy expenditure until we have enough data to calculate it",
+        default="3"
     )
 
     goal_choices = [
@@ -128,11 +129,11 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Do you want to lose, maintain, or gain weight?",
+        default="M"
     )
 
-    goal_weight = MeasurementField(measurement=Weight, null=True, blank=True)
-    goal_date = models.DateTimeField(blank=True, null=True)
-
+    goal_weight = MeasurementField(measurement=Weight, null=True, blank=True, default=80)  # default weight is in kg
+    goal_date = models.DateTimeField(blank=True, null=True, default=datetime.datetime.now)
     unit_choices = [
         ("I", "Imperial"),
         ("M", "Metric"),
@@ -143,6 +144,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Display metric or imperial units on analytics page",
+        default="M"
     )
 
 

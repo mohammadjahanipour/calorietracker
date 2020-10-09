@@ -95,6 +95,8 @@ class LogData(LoginRequiredMixin, CreateView):
 
 class Settings(LoginRequiredMixin, UpdateView):
 
+    # TODO: do rounding on outputed height
+
     model = Setting
     fields = [
         "age",
