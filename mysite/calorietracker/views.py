@@ -14,7 +14,7 @@ from bootstrap_datepicker_plus import DateTimePickerInput, DatePickerInput
 from chartjs.views.lines import BaseLineChartView
 
 from .utilities import *
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, timezone
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -215,6 +215,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
         self.weighttogoabs = abs(self.weighttogo)
 
         # Targets
+        if self.timeleft == 0:
+            self.timeleft = 1
         self.targetweeklydeficit = round((self.weighttogo / self.timeleft) * 7, 2)
         self.targetdailycaldeficit = self.targetweeklydeficit * 3500 / 7
         self.dailycaltarget = round(abs(self.TDEE) + self.targetdailycaldeficit)
@@ -228,18 +230,18 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 date.today() + timedelta(days=self.currenttimetogoal)
             ).strftime("%b. %-d")
         else:
+            self.currentgoaldate = "TBD"
             self.currenttimetogoal = "TBD"
 
         if (self.weights[0] - self.goalweight) != 0:
             self.percenttogoal = round(
-                100 * (1 - abs(self.weighttogo / (self.weights[0] - self.goalweight)))
+                100 * (1 - abs(self.weighttogo / (self.weights[0] - self.goalweight))),
+                1,
             )
         else:
             self.percenttogoal = 0
         if self.percenttogoal < 0:
             self.percenttogoal = 0
-        elif self.percenttogoal < 1.5:
-            self.percenttogoal = 100
 
         # Unit control
         # NOTE: all initial calculations above are done in imperial.
@@ -282,6 +284,17 @@ class Analytics(LoginRequiredMixin, TemplateView):
             ):
                 messages.info(request, "Please fill out your settings. Missing: " + var)
                 return redirect(reverse_lazy("settings"))
+
+        # Check goal date is in the future
+        x = list(Setting.objects.filter(user=self.request.user).values("goal_date"))[0][
+            "goal_date"
+        ]
+        if (x - datetime.now(timezone.utc)).days < 0:
+            messages.info(
+                request,
+                "Please edit your goal date as it is not far enough into the future",
+            )
+            return redirect(reverse_lazy("settings"))
         return super().dispatch(request)
 
     def HarrisBenedict(self, **kwargs):
@@ -324,7 +337,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_pie_chart_data(self):
         TDEE = abs(self.TDEE)
         dailycaltarget = abs(self.dailycaltarget)
-        calories_in = self.calories_in[-self.n:]
+        calories_in = self.calories_in[-self.n :]
         if self.goal == "L" or self.goal == "M":
             pie_labels = [
                 "Days Above TDEE",
@@ -347,15 +360,22 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         return pie_labels, pie_red, pie_yellow, pie_green
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        self.load_data()
+    def warning_catches(self):
         if abs(self.targetweeklydeficit) > 2:
-            messages.info(
+            messages.warning(
                 self.request,
                 "Warning: Your goal weight and/or date are very aggressive. We recommend setting goals that require between -2 to 2 lbs (-1 to 1 kgs) of weight change per week.",
             )
+        if len(self.weights) < 10:
+            messages.info(
+                self.request,
+                "Note: For accuracy, your targets & predictions will be formula based until you have more than 10 log entries",
+            )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.load_data()
+        self.warning_catches()
         tabledata = []
         for i in range(len(self.weights)):
             entry = {}
@@ -385,13 +405,13 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "current_time_to_goal": self.currenttimetogoal,
             "current_goal_date": self.currentgoaldate,
             "percent_to_goal": self.percenttogoal,
-            "data_weight": self.weights[-self.n:],
-            "data_cal_in": self.calories_in[-self.n:],
+            "data_weight": self.weights[-self.n :],
+            "data_cal_in": self.calories_in[-self.n :],
             "data_date": json.dumps(
-                [date.strftime("%b-%d") for date in self.dates][-self.n:]
+                [date.strftime("%b-%d") for date in self.dates][-self.n :]
             ),
             "json_data": json.dumps(
-                {"data": tabledata[-self.n:]},
+                {"data": tabledata[-self.n :]},
                 sort_keys=True,
                 indent=1,
                 cls=DjangoJSONEncoder,
@@ -424,7 +444,10 @@ class Register(CreateView):
 
     def form_valid(self, form):
         # flash message assumes that the registration view redirects directly to a relavent page or that the flash message wont be retrieved in the login view
-        messages.info(self.request, "Predictions may be inaccurate until you update your settings")
+        messages.info(
+            self.request,
+            "Predictions will be inaccurate until you update your settings",
+        )
         return super().form_valid(form)
 
 
