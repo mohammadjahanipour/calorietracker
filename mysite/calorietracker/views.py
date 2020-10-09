@@ -424,7 +424,7 @@ class Register(CreateView):
 
     def form_valid(self, form):
         # flash message assumes that the registration view redirects directly to a relavent page or that the flash message wont be retrieved in the login view
-        messages.info(self.request, "Predictions may be inaccurete until you update your settings")
+        messages.info(self.request, "Predictions may be inaccurate until you update your settings")
         return super().form_valid(form)
 
 
