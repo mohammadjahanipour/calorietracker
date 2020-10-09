@@ -15,7 +15,7 @@ from pathlib import Path
 import os
 
 # Custom settings
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 
