@@ -35,7 +35,7 @@ class Subscription(DateTimeFields, SafeDeleteModel):
 
 class Streak(DateTimeFields, SafeDeleteModel):
     """
-        Represents the user streaks
+    Represents the user streaks
     """
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
@@ -79,13 +79,13 @@ class Streak(DateTimeFields, SafeDeleteModel):
 
 class Setting(DateTimeFields, SafeDeleteModel):
     """
-      - Age
-      - Sex/gender
-      - Height
-      - Perceived activity level
-      - Goal - maintain, lose, gain
-      - Goal weight
-      - Goal date - by when?
+    - Age
+    - Sex/gender
+    - Height
+    - Perceived activity level
+    - Goal - maintain, lose, gain
+    - Goal weight
+    - Goal date - by when?
     """
 
     user = models.OneToOneField(
@@ -99,8 +99,12 @@ class Setting(DateTimeFields, SafeDeleteModel):
         ("F", "Female"),
     ]
 
-    sex = models.CharField(max_length=1, choices=sex_choices, blank=True, null=True, default="M")
-    height = MeasurementField(measurement=Distance, null=True, blank=True, default=1.75)  # height in metres
+    sex = models.CharField(
+        max_length=1, choices=sex_choices, blank=True, null=True, default="M"
+    )
+    height = MeasurementField(
+        measurement=Distance, null=True, blank=True, default=1.75
+    )  # height in metres
 
     activity_choices = [
         ("1", "Sedentary (little or no exercise)"),
@@ -115,7 +119,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Used to estimate your total daily energy expenditure until we have enough data to calculate it",
-        default="3"
+        default="3",
     )
 
     goal_choices = [
@@ -129,11 +133,15 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Do you want to lose, maintain, or gain weight?",
-        default="M"
+        default="M",
     )
 
-    goal_weight = MeasurementField(measurement=Weight, null=True, blank=True, default=80)  # default weight is in kg
-    goal_date = models.DateTimeField(blank=True, null=True, default=datetime.datetime.now)
+    goal_weight = MeasurementField(
+        measurement=Weight, null=True, blank=True, default=80
+    )  # default weight is in kg
+    goal_date = models.DateTimeField(
+        blank=True, null=True, default=datetime.datetime.now
+    )
     unit_choices = [
         ("I", "Imperial"),
         ("M", "Metric"),
@@ -144,29 +152,36 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Display metric or imperial units on analytics page",
-        default="M"
+        default="M",
     )
 
 
 class Log(DateTimeFields, SafeDeleteModel):
     """
-      - Date
-      - Weight
-      - Calories In
-      - Calories Out
-      - Activity LVL
+    - Date
+    - Weight
+    - Calories In
+    - Calories Out
+    - Activity LVL
     """
 
+    class Meta:
+        unique_together = ("user", "date")
+
     user = models.ForeignKey(
-        get_user_model(), blank=False, null=False, on_delete=models.CASCADE,
+        get_user_model(),
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
     )
 
-    date = models.DateField(blank=False, unique=True)  # Log the date
+    date = models.DateField(blank=False)  # Log the date
 
     weight = MeasurementField(measurement=Weight, null=True, blank=False)
 
     calories_in = models.IntegerField(
-        blank=False, help_text="Total calories consumed",
+        blank=False,
+        help_text="Total calories consumed",
     )  # Calories consumed in kcal
 
     calories_out = models.IntegerField(
