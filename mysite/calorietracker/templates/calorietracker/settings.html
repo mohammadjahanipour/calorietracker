@@ -17,11 +17,98 @@
     <h1 class="h3 mb-0 text-gray-800">Settings</h1>
   </div>
 
-  <form class="" method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" name="button" class="btn btn-primary">Save</button>
+
+  <form class="form" method="post">{% csrf_token %}
+    <div class="control-group">
+        <label class="control-label">{{ form.goal.label }} </label>
+        <div class="controls" style="width:75%">{{ form.goal }}
+          {% if form.goal.help_text %}
+          <span class="help-inline"><small>{{ form.goal.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.goal_date.label }} </label>
+        <div class="controls" style="width:75%">{{ form.goal_date }}
+          {% if form.goal_date.help_text %}
+          <span class="help-inline"><small>{{ form.goal_date.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.goal_weight.label }} </label>
+        <div class="controls">{{ form.goal_weight }}
+          {% if form.goal_weight.help_text %}
+          <span class="help-inline"><small>{{ form.goal_weight.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.unit_preference.label }} </label>
+        <div class="controls"style="width:75%">{{ form.unit_preference }}
+          {% if form.unit_preference.help_text %}
+          <span class="help-inline"><small>{{ form.unit_preference.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.age.label }} </label>
+        <div class="controls"style="width:75%">{{ form.age }}
+          {% if form.age.help_text %}
+          <span class="help-inline"><small>{{ form.age.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.sex.label }} </label>
+        <div class="controls"style="width:75%">{{ form.sex }}
+          {% if form.sex.help_text %}
+          <span class="help-inline"><small>{{ form.sex.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.height.label }} </label>
+        <div class="controls">{{ form.height }}
+          {% if form.height.help_text %}
+          <span class="help-inline"><small>{{ form.aheightge.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.activity.label }} </label>
+        <div class="controls"style="width:75%">{{ form.activity }}
+          {% if form.activity.help_text %}
+          <span class="help-inline"><small>{{ form.activity.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
   </form>
+
+  {% comment %} {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ error }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p> {{ error }} </p>
+        {% endfor %}
+    {% endif %} {% endcomment %}
+
 </div>
 <!-- /.container-fluid -->
 

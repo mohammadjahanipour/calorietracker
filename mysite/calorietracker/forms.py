@@ -3,9 +3,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Field, Button
-from .models import Log
+from .models import Log, Setting
 from django_measurement.forms import MeasurementField
-from measurement.measures import Weight
+from measurement.measures import Weight, Distance
 
 from django.forms.widgets import DateInput
 from bootstrap_datepicker_plus import DatePickerInput
@@ -157,7 +157,6 @@ class LogDataForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "style": "display: inline-block;",
-                "placeholder": "2000",
             }
         ),
         required=False,
@@ -170,12 +169,103 @@ class LogDataForm(forms.ModelForm):
                 "style": "display: inline-block;",
             },
         ),
-        choices=[
-            ("L", "Low"),
-            ("M", "Moderate"),
-            ("H", "High"),
-        ],
+        choices=Log.choices,
         required=False,
+    )
+
+
+class SettingForm(forms.ModelForm):
+    class Meta:
+        model = Setting
+        fields = [
+            "age",
+            "sex",
+            "height",
+            "activity",
+            "goal",
+            "goal_weight",
+            "goal_date",
+            "unit_preference",
+        ]
+
+    goal_weight = MeasurementField(
+        widget=MeasurementWidget(
+            unit_choices=(("lb", "lbs"), ("kg", "kgs")),
+        ),
+        measurement=Weight,
+        required=True,
+    )
+
+    goal_date = forms.DateField(
+        widget=DatePickerInput(
+            attrs={
+                "style": "display: inline-block;",
+            },
+        ),
+        required=True,
+    )
+
+    goal = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=Setting.goal_choices,
+        required=True,
+    )
+
+    unit_preference = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=Setting.unit_choices,
+        required=True,
+    )
+
+    age = forms.CharField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+                "placeholder": "30",
+            }
+        ),
+        required=True,
+    )
+
+    sex = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=Setting.sex_choices,
+        required=True,
+    )
+
+    height = MeasurementField(
+        widget=MeasurementWidget(
+            unit_choices=(("inch", "in"), ("cm", "cm")),
+        ),
+        measurement=Distance,
+        required=True,
+    )
+
+    activity = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=Setting.activity_choices,
+        required=True,
     )
 
 

@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
-from .forms import RegisterForm, LoginForm, LogDataForm
+from .forms import RegisterForm, LoginForm, LogDataForm, MeasurementWidget, SettingForm
 from .models import Log, Setting
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -91,17 +91,10 @@ class Settings(LoginRequiredMixin, UpdateView):
     # TODO: do rounding on outputed height
 
     model = Setting
-    fields = [
-        "age",
-        "sex",
-        "height",
-        "activity",
-        "goal",
-        "goal_weight",
-        "goal_date",
-        "unit_preference",
-    ]
+    form_class = SettingForm
+
     template_name = "calorietracker/settings.html"
+
     success_url = reverse_lazy("settings")
 
     def get_object(self):
@@ -109,14 +102,6 @@ class Settings(LoginRequiredMixin, UpdateView):
 
     def get_form(self):
         form = super().get_form()
-        form.fields["height"] = MeasurementField(
-            measurement=Distance,
-            unit_choices=(("inch", "in"), ("cm", "cm")),
-        )
-        form.fields["goal_weight"] = MeasurementField(
-            measurement=Weight, unit_choices=(("lb", "lbs"), ("kg", "kgs"))
-        )
-        form.fields["goal_date"].widget = DatePickerInput()
         return form
 
 
