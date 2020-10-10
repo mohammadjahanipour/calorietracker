@@ -149,6 +149,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             Log.objects.all()
             .filter(user=self.request.user)
             .values("date", "weight", "calories_in")
+            .order_by("date")
         )
         df_query = pd.DataFrame(list(self.query_set))
         settings_set = Setting.objects.all().filter(user=self.request.user).values()
@@ -226,9 +227,12 @@ class Analytics(LoginRequiredMixin, TemplateView):
             self.currenttimetogoal = abs(
                 round((self.weighttogo) / (self.dailyweightchange), 0)
             )
-            self.currentgoaldate = (
-                date.today() + timedelta(days=self.currenttimetogoal)
-            ).strftime("%b. %-d")
+            if self.currenttimetogoal != float("inf"):
+                self.currentgoaldate = (
+                    date.today() + timedelta(days=self.currenttimetogoal)
+                ).strftime("%b. %-d")
+            else:
+                self.currentgoaldate = "TBD"
         else:
             self.currentgoaldate = "TBD"
             self.currenttimetogoal = "TBD"
