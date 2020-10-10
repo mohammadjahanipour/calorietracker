@@ -141,7 +141,7 @@ class LogDataForm(forms.ModelForm):
         required=True,
     )
 
-    calories_in = forms.CharField(
+    calories_in = forms.IntegerField(
         widget=forms.NumberInput(
             attrs={
                 "class": "form-control",
@@ -152,7 +152,7 @@ class LogDataForm(forms.ModelForm):
         required=True,
     )
 
-    calories_out = forms.CharField(
+    calories_out = forms.IntegerField(
         widget=forms.NumberInput(
             attrs={
                 "class": "form-control",
@@ -227,7 +227,7 @@ class SettingForm(forms.ModelForm):
         required=True,
     )
 
-    age = forms.CharField(
+    age = forms.IntegerField(
         widget=forms.NumberInput(
             attrs={
                 "class": "form-control",
