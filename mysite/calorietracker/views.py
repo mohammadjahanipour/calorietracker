@@ -5,7 +5,7 @@ from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, LogDataForm
 from .models import Log, Setting
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -65,14 +65,11 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
 
 
 class LogData(LoginRequiredMixin, CreateView):
+
+    # TODO: check if date does not overlap with existing log
+
     model = Log
-    fields = (
-        "date",
-        "weight",
-        "calories_in",
-        "calories_out",
-        "activity_lvl",
-    )
+    form_class = LogDataForm
     template_name = "calorietracker/logdata.html"
 
     success_url = reverse_lazy("analytics")
@@ -82,10 +79,6 @@ class LogData(LoginRequiredMixin, CreateView):
 
     def get_form(self):
         form = super().get_form()
-        form.fields["date"].widget = DatePickerInput()
-        form.fields["weight"] = MeasurementField(
-            measurement=Weight, unit_choices=(("lb", "lbs"), ("kg", "kgs"))
-        )
         return form
 
     def form_valid(self, form):

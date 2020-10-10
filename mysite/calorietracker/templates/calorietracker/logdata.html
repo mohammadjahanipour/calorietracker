@@ -17,11 +17,59 @@
     <h1 class="h3 mb-0 text-gray-800">Log Data</h1>
   </div>
 
-  <form class="" method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" name="button" class="btn btn-primary">Submit</button>
+
+  <form class="form" method="post">{% csrf_token %}
+    <div class="control-group">
+        <label class="control-label">{{ form.date.label }} </label>
+        <div class="controls" style="width:75%">{{ form.date }}
+          {% if form.date.help_text %}
+          <span class="help-inline"><small>{{ form.date.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.weight.label }} </label>
+        <div class="controls">{{ form.weight }}
+          {% if form.weight.help_text %}
+          <span class="help-inline"><small>{{ form.weight.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.calories_in.label }} </label>
+        <div class="controls"style="width:75%">{{ form.calories_in }}
+          {% if form.calories_in.help_text %}
+          <span class="help-inline"><small>{{ form.calories_in.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.calories_out.label }} </label>
+        <div class="controls"style="width:75%">{{ form.calories_out }}
+          {% if form.calories_out.help_text %}
+          <span class="help-inline"><small>{{ form.calories_out.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.activity_lvl.label }} </label>
+        <div class="controls"style="width:75%">{{ form.activity_lvl }}
+          {% if form.activity_lvl.help_text %}
+          <span class="help-inline"><small>{{ form.activity_lvl.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
   </form>
+
 </div>
 <!-- /.container-fluid -->
 

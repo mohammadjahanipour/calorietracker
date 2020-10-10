@@ -4,8 +4,59 @@ from django.contrib.auth import get_user_model
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, Field, Button
 from .models import Log
+from django_measurement.forms import MeasurementField
+from measurement.measures import Weight
 
 from django.forms.widgets import DateInput
+from bootstrap_datepicker_plus import DatePickerInput
+
+
+class MeasurementWidget(forms.MultiWidget):
+    def __init__(
+        self,
+        float_widget=None,
+        unit_choices_widget=None,
+        unit_choices=None,
+        *args,
+        **kwargs
+    ):
+
+        self.unit_choices = unit_choices
+
+        if not float_widget:
+            float_widget = forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "style": "width: 55%; display: inline-block;",
+                    "placeholder": "160",
+                }
+            )
+
+        if not unit_choices_widget:
+            unit_choices_widget = forms.Select(
+                attrs={
+                    "class": "form-control",
+                    "style": "width: 20%; display: inline-block;",
+                    "placeholder": "160",
+                },
+                choices=unit_choices,
+            )
+
+        widgets = (float_widget, unit_choices_widget)
+        super(MeasurementWidget, self).__init__(widgets)
+
+    def decompress(self, value):
+        if value:
+            choice_units = set([u for u, n in self.unit_choices])
+
+            unit = value.STANDARD_UNIT
+            if unit not in choice_units:
+                unit = choice_units.pop()
+
+            magnitude = getattr(value, unit)
+            return [magnitude, unit]
+
+        return [None, None]
 
 
 class RegisterForm(UserCreationForm):
@@ -59,6 +110,72 @@ class LoginForm(AuthenticationForm):
         widget=forms.PasswordInput(
             attrs={"class": "form-control form-control-user", "placeholder": "Password"}
         )
+    )
+
+
+class LogDataForm(forms.ModelForm):
+    class Meta:
+        model = Log
+        fields = (
+            "date",
+            "weight",
+            "calories_in",
+            "calories_out",
+            "activity_lvl",
+        )
+
+    date = forms.DateField(
+        widget=DatePickerInput(
+            attrs={
+                "style": "display: inline-block;",
+            },
+        ),
+        required=True,
+    )
+
+    weight = MeasurementField(
+        widget=MeasurementWidget(
+            unit_choices=(("lb", "lbs"), ("kg", "kgs")),
+        ),
+        measurement=Weight,
+        required=True,
+    )
+
+    calories_in = forms.CharField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+                "placeholder": "2000",
+            }
+        ),
+        required=True,
+    )
+
+    calories_out = forms.CharField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+                "placeholder": "2000",
+            }
+        ),
+        required=False,
+    )
+
+    activity_lvl = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=[
+            ("L", "Low"),
+            ("M", "Moderate"),
+            ("H", "High"),
+        ],
+        required=False,
     )
 
 
