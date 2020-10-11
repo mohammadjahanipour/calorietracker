@@ -1567,8 +1567,10 @@ pre code {
 }
 
 .table-hover tbody tr:hover {
-  color: #858796;
+  color: #6b78d6;
   background-color: rgba(0, 0, 0, 0.075);
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 .table-primary,
@@ -1851,6 +1853,7 @@ pre code {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  cursor: pointer
 }
 
 .table-responsive > .table-bordered {
