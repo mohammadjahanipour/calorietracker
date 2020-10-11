@@ -9,21 +9,89 @@
 
 {% block content %}
 
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Update Log</h1>
+    <h1 class="h3 mb-0 text-gray-800">Edit Log Entry</h1>
   </div>
 
-  <form class="" method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" name="button" class="btn btn-primary">Update</button>
+
+  <form class="form" method="post">{% csrf_token %}
+    <div class="control-group">
+        <label class="control-label">{{ form.date.label }} </label>
+        <div class="controls" style="width:75%">{{ form.date }}
+          {% if form.date.help_text %}
+          <span class="help-inline"><small>{{ form.date.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.weight.label }} </label>
+        <i id="weightTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls">{{ form.weight }}
+          {% if form.weight.help_text %}
+          <span class="help-inline"><small>{{ form.weight.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.calories_in.label }} </label>
+        <i id="calories_inTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls"style="width:75%">{{ form.calories_in }}
+          {% if form.calories_in.help_text %}
+          <span class="help-inline"><small>{{ form.calories_in.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.calories_out.label }} </label>
+        <i id="calories_outTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls"style="width:75%">{{ form.calories_out }}
+          {% if form.calories_out.help_text %}
+          <span class="help-inline"><small>{{ form.calories_out.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.activity_lvl.label }} </label>
+        <i id="activity_lvlTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls"style="width:75%">{{ form.activity_lvl }}
+          {% if form.activity_lvl.help_text %}
+          <span class="help-inline"><small>{{ form.activity_lvl.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
   </form>
+
+  {% comment %} {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ error }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p> {{ error }} </p>
+        {% endfor %}
+    {% endif %} {% endcomment %}
+
 </div>
 <!-- /.container-fluid -->
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
 
 
 <!-- Page level custom scripts -->

@@ -45,23 +45,22 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
     """docstring for UpdateLogData."""
 
     # TODO: check if date does not overlap with existing log
-
-    template_name = "calorietracker/update_logdata.html"
     model = Log
-    fields = (
-        "date",
-        "weight",
-        "calories_in",
-        "calories_out",
-        "activity_lvl",
-    )
+    form_class = LogDataForm
+    template_name = "calorietracker/update_logdata.html"
 
     success_url = reverse_lazy("analytics")
 
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
+
     def get_form(self):
         form = super().get_form()
-        form.fields["date"].widget = DatePickerInput()
         return form
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class LogData(LoginRequiredMixin, CreateView):
@@ -126,7 +125,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         self.query_set = (
             Log.objects.all()
             .filter(user=self.request.user)
-            .values("date", "weight", "calories_in")
+            .values("id", "date", "weight", "calories_in")
             .order_by("date")
         )
         df_query = pd.DataFrame(list(self.query_set))
@@ -149,6 +148,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         self.weights = [round(x.lb, 2) for x in self.weights]
         self.calories_in = df_query["calories_in"].tolist()
         self.dates = df_query["date"].tolist()
+        self.ids = df_query["id"].tolist()
 
         # Load the date range as self.n
         if self.request.method == "GET":
@@ -361,6 +361,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         tabledata = []
         for i in range(len(self.weights)):
             entry = {}
+            entry["id"] = self.ids[i]
             entry["date"] = self.dates[i]
             entry["weight"] = self.weights[i]
             entry["calories_in"] = self.calories_in[i]
