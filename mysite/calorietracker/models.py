@@ -119,7 +119,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True,
         null=True,
         help_text="Used to estimate your total daily energy expenditure until we have enough data to calculate it",
-        default="3",
+        default="1",
     )
 
     goal_choices = [
