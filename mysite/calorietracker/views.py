@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
@@ -20,6 +21,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
+from django.core.exceptions import ValidationError
+
 
 from .models import Feedback
 
@@ -82,6 +85,29 @@ class LogData(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+
+        query_set = Log.objects.filter(user=self.request.user).filter(
+            date=form.cleaned_data.get("date")
+        )
+        if query_set:
+            pk = str(
+                (
+                    Log.objects.filter(user=self.request.user)
+                    .filter(date=form.cleaned_data.get("date"))
+                    .values_list("id", flat=True)
+                )[0]
+            )
+            messages.warning(
+                self.request,
+                mark_safe(
+                    "A log for "
+                    + str(form.cleaned_data.get("date"))
+                    + " already exists. You can edit <a href='/logdata/"
+                    + pk
+                    + "/edit'>this entry here</a>"
+                ),
+            )
+            return super().form_invalid(form)
         return super().form_valid(form)
 
 
