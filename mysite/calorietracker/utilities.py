@@ -96,7 +96,7 @@ def sm_multiple_regression(x, y):
 
 
 # TDEE Calculator
-def calculate_TDEE(CI, weights, n, smooth=True, window=5):
+def calculate_TDEE(CI, weights, n, units="lbs", smooth=True, window=5):
     """
     Total daily energy expenditure (TDEE) is an estimate of daily caloric expenditure.
     This is a combination of one's basal metabolic rate (BMR) + numerous other factors like non-exercise activity thermogenesis, activity calories etc.
@@ -127,6 +127,8 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
         list
     n : last number of days to calculate TDEE over
         int
+    units : unit of weights
+        string: "lbs" or "kgs"
     smooth : If true, will use moving_average() to smooth the daily weights, reducing day-to-day variation
         bool, default = True
     window : If smooth is true, the window over which averages will be computed
@@ -153,11 +155,14 @@ def calculate_TDEE(CI, weights, n, smooth=True, window=5):
 
     #  Calculate weight change and convert to calories
     # TODO: Handle units here for pounds vs kgs
-    delta_weight_calories = (weights[-1] - weights[0]) * 3500
+    if units == "lbs":
+        delta_weight_calories = (weights[-1] - weights[0]) * 3500
+    elif units == "kgs":
+        delta_weight_calories = (weights[-1] - weights[0]) * 7700
 
     # Find difference of sum of caloric intake & raw weight lost in calories
     diff = delta_weight_calories - sum(CI)
-    TDEE = diff / n
+    TDEE = diff / len(weights)
 
     return round(TDEE)
 
@@ -267,7 +272,11 @@ if __name__ == "__main__":
     print("Summary Analytics for user", username, "over last", n, "days")
 
     TDEE = calculate_TDEE(
-        df["calories_in"].tolist(), df["weight"].tolist(), n=n, smooth=True, window=3,
+        df["calories_in"].tolist(),
+        df["weight"].tolist(),
+        n=n,
+        smooth=True,
+        window=3,
     )
     print("\nEstimated TDEE:", TDEE)
     weight_change_raw, weight_change_smooth = (

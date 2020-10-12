@@ -213,6 +213,40 @@
     </div>
   </div>
 
+    <!-- Content Row -->
+  <div class="row">
+    <!-- Logs -->
+    <div class="col-xl-12 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Weekly Summaries</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered"id="weeklydataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th>Dates</th>
+                  <th>Daily Calories In</th>
+                  <th>Total Calories In</th>
+                  <th>TDEE (cal / day)</th>
+                  <th>Median Weight ({{units_weight}})</th>
+                  <th>Weekly Weight Change ({{units_weight}} / week)</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <!-- Content Row -->
   <div class="row">
     <!-- Logs -->
@@ -271,12 +305,15 @@ var estimated_TDEE = [];
   for (var i = 0; i < calories_in.length; i++) {
     estimated_TDEE.push(Math.abs({{ TDEE }}));
   }
-var json = {{json_data | safe}}
+var logjson = {{logjson_data | safe}}
 var pie_labels = {{pie_labels | safe}}
 var pie_cal_in_red = {{pie_red}}
 var pie_cal_in_yellow = {{pie_yellow}}
 var pie_cal_in_green = {{pie_green}}
 var units_weight = " ({{units_weight}})"
+var weeklyjson = {{weeklyjson_data | safe}}
+var daily_cal_target = {{daily_cal_target}}
+var goal = "{{goal}}"
 </script>
 
 
@@ -288,12 +325,59 @@ $(".dropdown-menu li a").click(function(){
 });
 </script>
 
+<!-- Page level weeklydataTable -->
+<script>
 
-<!-- Page level datatable -->
+$(document).ready(function() {
+  $('#weeklydataTable').DataTable( {
+    "data": weeklyjson.data,
+    "columns": [
+    { "data": "week_number" },
+    { "data": "weeks" },
+    { "data": "weeklycalories_in_mean" },
+    { "data": "weeklycalories_in_total" },
+    { "data": "TDEE" },
+    { "data": "weeklyweights" },
+    { "data": "weeklyweightchange" },
+  ],
+  rowCallback: function(row, data, index) {
+      console.log(goal)
+      $("td", row).css('font-weight','bold');
+      if (goal == "L") {
+        if (data.weeklycalories_in_mean <= daily_cal_target) {
+        $("td:eq(2)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(2)", row).css('color','#DC143C');
+        }
+        if (data.weeklyweightchange <= 0) {
+          $("td:eq(6)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(6)", row).css('color','#DC143C');
+        }
+      }
+      if (goal == "G") {
+        if (data.weeklycalories_in_mean >= daily_cal_target) {
+        $("td:eq(2)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(2)", row).css('color','#DC143C');
+        }
+        if (data.weeklyweightchange >= 0) {
+          $("td:eq(6)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(6)", row).css('color','#DC143C');
+        }
+      }
+      
+    }
+  });
+})
+</script>
+
+<!-- Page level log entries datatable -->
 <script>
 $(document).ready(function() {
   $('#dataTable').DataTable( {
-    "data": json.data,
+    "data": logjson.data,
     "columns": [
     { "data": "date" },
     { "data": "weight" },

@@ -268,6 +268,9 @@ class Analytics(LoginRequiredMixin, TemplateView):
             self.goalweight = unit_conv(self.goalweight, "lbs")
             self.targetweeklydeficit = unit_conv(self.targetweeklydeficit, "lbs")
 
+        self.logtabledata = self.get_logtabledata()
+        self.weeklytabledata = self.get_weeklytabledata()
+
     def dispatch(self, request):
 
         if not self.request.user.is_authenticated:
@@ -380,23 +383,79 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 "Note: For accuracy, your targets & predictions will be formula based until you have more than 10 log entries",
             )
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        self.load_data()
-        self.warning_catches()
-        tabledata = []
+    def get_logtabledata(self):
+        logtabledata = []
         for i in range(len(self.weights)):
             entry = {}
             entry["id"] = self.ids[i]
             entry["date"] = self.dates[i]
             entry["weight"] = self.weights[i]
             entry["calories_in"] = self.calories_in[i]
-            tabledata.append(entry)
+            logtabledata.append(entry)
+        return logtabledata
+
+    def get_weeklytabledata(self):
+        df = pd.DataFrame(list(self.query_set))
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        if self.units == "I":
+            df["weight"] = df["weight"].apply(lambda x: round(x.lb, 2))
+        else:
+            df["weight"] = df["weight"].apply(lambda x: round(x.kg, 2))
+
+        weeklycalories_in_mean = (
+            df.groupby(df.date.dt.strftime("%W")).calories_in.mean().tolist()
+        )
+        weeklycalories_in_total = (
+            df.groupby(df.date.dt.strftime("%W")).calories_in.sum().tolist()
+        )
+        weeklyweights = df.groupby(df.date.dt.strftime("%W")).weight.mean().tolist()
+        weeklydates = df.groupby(df.date.dt.strftime("%W")).date.agg(["first", "last"])
+        weeklydatestarts = weeklydates["first"].tolist()
+        weeklydateends = weeklydates["last"].tolist()
+
+        weeklytabledata = []
+        for i in range(len(weeklyweights)):
+            entry = {}
+            entry["week_number"] = i
+            entry["weeks"] = (
+                weeklydatestarts[i].strftime("%b-%-d")
+                + " - "
+                + weeklydateends[i].strftime("%b-%-d")
+            )
+            entry["weeklycalories_in_mean"] = round(weeklycalories_in_mean[i])
+            entry["weeklycalories_in_total"] = round(weeklycalories_in_total[i])
+            entry["weeklyweights"] = round(weeklyweights[i], 2)
+            if i == 0:
+                entry["weeklyweightchange"] = 0.00
+                entry["TDEE"] = "N/A"
+            else:
+                entry["weeklyweightchange"] = round(
+                    weeklyweights[i] - weeklyweights[i - 1], 2
+                )
+                entry["TDEE"] = calculate_TDEE(
+                    self.calories_in[(i - 1) * 7 : (i + 1) * 7],
+                    self.weights[(i - 1) * 7 : (i + 1) * 7],
+                    n=len(self.weights),
+                    units=self.unitsweight,
+                    smooth=True,
+                    window=3,
+                )
+            if i == len(weeklyweights) - 1:
+                entry["TDEE"] = self.TDEE
+            weeklytabledata.append(entry)
+
+        return weeklytabledata
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.load_data()
+        self.warning_catches()
 
         context = {
             "units": self.units,
             "units_weight": self.unitsweight,
             "n": self.n,
+            # "chartVar": self.chartVar,
             "TDEE": self.TDEE,
             "weight_change_raw": self.weightchangeraw,
             "weight_change_smooth": self.weightchangesmooth,
@@ -404,6 +463,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "weekly_weight_change": self.weeklyweightchange,
             "goal_date": self.goaldate.strftime("%b-%-d"),
             "time_left": self.timeleft,
+            "goal": self.goal,
             "goal_weight": self.goalweight,
             "current_weight": self.currentweight,
             "weight_to_go": self.weighttogo,
@@ -419,8 +479,14 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "data_date": json.dumps(
                 [date.strftime("%b-%d") for date in self.dates][-self.n :]
             ),
-            "json_data": json.dumps(
-                {"data": tabledata[-self.n :]},
+            "logjson_data": json.dumps(
+                {"data": self.logtabledata},
+                sort_keys=True,
+                indent=1,
+                cls=DjangoJSONEncoder,
+            ),
+            "weeklyjson_data": json.dumps(
+                {"data": self.weeklytabledata},
                 sort_keys=True,
                 indent=1,
                 cls=DjangoJSONEncoder,
