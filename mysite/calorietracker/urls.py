@@ -4,7 +4,7 @@ from .views import line_chart, line_chart_json
 
 
 urlpatterns = [
-    path("", views.HomePage.as_view(), name="home"),
+    path("", views.Analytics.as_view(), name="home"),
     path("profile/", views.Profile.as_view(), name="profile"),
     path("logdata/", views.LogData.as_view(), name="logdata"),
     path("logs/", views.ViewLogs.as_view(), name="logs"),
