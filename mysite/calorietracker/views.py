@@ -57,6 +57,9 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
     login_url = "/login/"
     redirect_field_name = "redirect_to"
 
+    def get_queryset(self):
+        return Log.objects.filter(user=self.request.user)
+
     def get_form(self):
         form = super().get_form()
         return form
