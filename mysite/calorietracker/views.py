@@ -144,6 +144,79 @@ class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
 
 
+class ViewLogs(TemplateView):
+    template_name = "calorietracker/logstable.html"
+
+    def load_data(self, **kwargs):
+        self.query_set = (
+            Log.objects.all()
+            .filter(user=self.request.user)
+            .values("id", "date", "weight", "calories_in")
+            .order_by("date")
+        )
+        df_query = pd.DataFrame(list(self.query_set))
+        settings_set = Setting.objects.all().filter(user=self.request.user).values()
+        df_settings = pd.DataFrame(list(settings_set))
+
+        self.units = df_settings["unit_preference"].all()
+
+        # weights, calories_in, dates
+        self.rawweights = df_query["weight"].tolist()
+        self.weights = df_query["weight"].tolist()
+        self.weights = [round(x.lb, 2) for x in self.weights]
+        self.calories_in = df_query["calories_in"].tolist()
+        self.dates = df_query["date"].tolist()
+        self.ids = df_query["id"].tolist()
+
+        # Unit control
+        # NOTE: all initial calculations above are done in imperial.
+        # We convert to metric as needed at the very end here.
+        if self.units == "I":
+            self.unitsweight = "lbs"
+        elif self.units == "M":
+            self.unitsweight = "kgs"
+            self.weights = [round(x.kg, 2) for x in self.rawweights]
+
+        self.logtabledata = self.get_logtabledata()
+
+    def dispatch(self, request):
+
+        if not self.request.user.is_authenticated:
+            return redirect(reverse_lazy("login"))
+        if not Log.objects.filter(user=self.request.user).exists():
+            messages.info(request, "You need to have made at least one log entry")
+            return redirect(reverse_lazy("logdata"))
+
+        return super().dispatch(request)
+
+    def get_logtabledata(self):
+        logtabledata = []
+        for i in range(len(self.weights)):
+            entry = {}
+            entry["id"] = self.ids[i]
+            entry["date"] = self.dates[i]
+            entry["weight"] = self.weights[i]
+            entry["calories_in"] = self.calories_in[i]
+            logtabledata.append(entry)
+        return logtabledata
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.load_data()
+
+        context = {
+            "units": self.units,
+            "units_weight": self.unitsweight,
+            "logjson_data": json.dumps(
+                {"data": self.logtabledata},
+                sort_keys=True,
+                indent=1,
+                cls=DjangoJSONEncoder,
+            ),
+        }
+        return context
+
+
 class Analytics(LoginRequiredMixin, TemplateView):
     template_name = "calorietracker/analytics.html"
 
@@ -268,7 +341,6 @@ class Analytics(LoginRequiredMixin, TemplateView):
             self.goalweight = unit_conv(self.goalweight, "lbs")
             self.targetweeklydeficit = unit_conv(self.targetweeklydeficit, "lbs")
 
-        self.logtabledata = self.get_logtabledata()
         self.weeklytabledata = self.get_weeklytabledata()
 
     def dispatch(self, request):
@@ -383,17 +455,6 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 "Note: For accuracy, your targets & predictions will be formula based until you have more than 10 log entries",
             )
 
-    def get_logtabledata(self):
-        logtabledata = []
-        for i in range(len(self.weights)):
-            entry = {}
-            entry["id"] = self.ids[i]
-            entry["date"] = self.dates[i]
-            entry["weight"] = self.weights[i]
-            entry["calories_in"] = self.calories_in[i]
-            logtabledata.append(entry)
-        return logtabledata
-
     def get_weeklytabledata(self):
         df = pd.DataFrame(list(self.query_set))
         df["date"] = pd.to_datetime(df["date"], errors="coerce")
@@ -478,12 +539,6 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "data_cal_in": self.calories_in[-self.n :],
             "data_date": json.dumps(
                 [date.strftime("%b-%d") for date in self.dates][-self.n :]
-            ),
-            "logjson_data": json.dumps(
-                {"data": self.logtabledata},
-                sort_keys=True,
-                indent=1,
-                cls=DjangoJSONEncoder,
             ),
             "weeklyjson_data": json.dumps(
                 {"data": self.weeklytabledata},

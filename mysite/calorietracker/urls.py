@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.HomePage.as_view(), name="home"),
     path("profile/", views.Profile.as_view(), name="profile"),
     path("logdata/", views.LogData.as_view(), name="logdata"),
+    path("logs/", views.ViewLogs.as_view(), name="logs"),
     path("logdata/<pk>/edit", views.UpdateLogData.as_view(), name="UpdateLogData"),
     path("analytics/", views.Analytics.as_view(), name="analytics"),
     path("chartJSON", line_chart_json, name="line_chart_json"),
