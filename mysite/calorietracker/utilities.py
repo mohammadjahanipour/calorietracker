@@ -145,12 +145,15 @@ def calculate_TDEE(CI, weights, n, units="lbs", smooth=True, window=5):
     # print("Number of previous days to caclulate TDEE over", "\n", n)
     # print("Are we smoothing the data?", "\n", smooth)
 
+    if len(weights) < 3:
+        return "Insufficient data"
+
     if smooth == True:
         # Use smoothed or EMWA weights as input or calculate them here to reduce daily variation effects. Not doing so can result in much poorer accuracy
         weights = moving_average(weights, window)
 
     # Trim the data so we only look at last n days.
-    CI = CI[-n:]
+    CI = CI[-n + 1 : -2]
     weights = weights[-n:]
 
     #  Calculate weight change and convert to calories
@@ -162,6 +165,7 @@ def calculate_TDEE(CI, weights, n, units="lbs", smooth=True, window=5):
 
     # Find difference of sum of caloric intake & raw weight lost in calories
     diff = delta_weight_calories - sum(CI)
+
     TDEE = diff / len(weights)
 
     return round(TDEE)
@@ -183,6 +187,9 @@ def moving_average(x, w=5):
     -------
     array
     """
+
+    if len(x) < w:
+        return x
     return np.convolve(x, np.ones(w), "valid") / w
 
 
