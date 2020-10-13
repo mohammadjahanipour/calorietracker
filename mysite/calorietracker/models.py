@@ -143,8 +143,8 @@ class Setting(DateTimeFields, SafeDeleteModel):
         blank=True, null=True, default=datetime.datetime.now
     )
     unit_choices = [
-        ("I", "Imperial"),
-        ("M", "Metric"),
+        ("I", "Imperial (pounds, feet, inches etc.)"),
+        ("M", "Metric (kgs, meters, centimeters etc.)"),
     ]
     unit_preference = models.CharField(
         max_length=1,
