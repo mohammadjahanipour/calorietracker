@@ -310,7 +310,8 @@ $(document).ready(function() {
     { "data": "TDEE" },
     { "data": "weeklyweights" },
     { "data": "weeklyweightchange" },
-  ],
+    ],
+    "order": [[ 0, "desc" ]],
   rowCallback: function(row, data, index) {
       console.log(goal)
       $("td", row).css('font-weight','bold');
