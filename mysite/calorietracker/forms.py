@@ -127,7 +127,7 @@ class ImportForm(forms.Form):
     )
     mfp_password = forms.CharField(
         label="Your MFP Password",
-        widget=forms.TextInput(
+        widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
                 "style": "display: inline-block;",

@@ -155,6 +155,47 @@ class Profile(TemplateView):
 class Import(FormView):
     template_name = "calorietracker/importdata.html"
     form_class = ImportForm
+    success_url = reverse_lazy("logs")
+
+    def form_valid(self, form):
+        if self.request.method == "POST":
+            print(form.cleaned_data)
+            # process form data
+            # todo: this needs a lot of api response handling back to the user
+            if form.cleaned_data["mfp_data_select"] == "Weights":
+                client = myfitnesspal.Client(
+                    form.cleaned_data["mfp_username"],
+                    password=form.cleaned_data["mfp_password"],
+                    unit_aware=True,
+                )
+                weights_dict = get_weights_by_range(
+                    client,
+                    form.cleaned_data["mfp_start_date"],
+                    form.cleaned_data["mfp_end_date"],
+                )
+                merge_mfp_weights(
+                    user=self.request.user,
+                    overwrite=form.cleaned_data["mfp_overwrite"],
+                    weights_dict=weights_dict,
+                )
+            elif form.cleaned_data["mfp_data_select"] == "CI":
+                client = myfitnesspal.Client(
+                    form.cleaned_data["mfp_username"],
+                    password=form.cleaned_data["mfp_password"],
+                    unit_aware=True,
+                )
+                days_dict = get_days_by_range(
+                    client,
+                    form.cleaned_data["mfp_start_date"],
+                    form.cleaned_data["mfp_end_date"],
+                )
+                merge_mfp_calories_in(
+                    user=self.request.user,
+                    overwrite=form.cleaned_data["mfp_overwrite"],
+                    days_dict=days_dict,
+                )
+
+        return super().form_valid(form)
 
 
 class ViewLogs(TemplateView):
