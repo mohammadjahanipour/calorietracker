@@ -14,40 +14,47 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Log Data</h1>
+    <h1 class="h3 mb-0 text-gray-800">New Log Entry</h1>
   </div>
 
 
   <form class="form" method="post">{% csrf_token %}
     <div class="control-group">
-        <label class="control-label">{{ form.date.label }} </label>
-        <div class="controls" style="width:75%">{{ form.date }}
-          {% if form.date.help_text %}
-          <span class="help-inline"><small>{{ form.date.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
+      <label class="control-label">{{ form.date.label }} </label>
+      <div class="controls" style="width:75%">{{ form.date }}
+        {% if form.date.help_text %}
+        <span class="help-inline"><small>{{ form.date.help_text }}</small></span>
+        {% endif %}
       </div>
-      <div class="control-group">
-        <label class="control-label">{{ form.weight.label }} </label>
-        <i id="weightTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
-        <div class="controls">{{ form.weight }}
-          {% if form.weight.help_text %}
-          <span class="help-inline"><small>{{ form.weight.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
+      </p>
+    </div>
+    <div class="control-group">
+      <label class="control-label">{{ form.weight.label }} </label>
+      <i id="weightTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+      <div class="controls">{{ form.weight }}
+        {% if form.weight.help_text %}
+        <span class="help-inline"><small>{{ form.weight.help_text }}</small></span>
+        {% endif %}
       </div>
-      <div class="control-group">
-        <label class="control-label">{{ form.calories_in.label }} </label>
-        <i id="calories_inTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
-        <div class="controls"style="width:75%">{{ form.calories_in }}
-          {% if form.calories_in.help_text %}
-          <span class="help-inline"><small>{{ form.calories_in.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
+      </p>
+    </div>
+    <div class="control-group">
+      <label class="control-label">{{ form.calories_in.label }} </label>
+      <i id="calories_inTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+      <div class="controls"style="width:75%">{{ form.calories_in }}
+        {% if form.calories_in.help_text %}
+        <span class="help-inline"><small>{{ form.calories_in.help_text }}</small></span>
+        {% endif %}
       </div>
+      </p>
+    </div>
+
+    <button type="button" id="toggleOptionalFields" class="btn btn-info btn-sm">
+      <span class="text">Optional Data</span>
+    </button>
+    <div class="my-2"></div>
+
+    <div id="OptionalFields" style="display:none;">
       <div class="control-group">
         <label class="control-label">{{ form.calories_out.label }} </label>
         <i id="calories_outTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
@@ -68,10 +75,43 @@
         </div>
         </p>
       </div>
-
-    <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Submit</button>
     </div>
+    
+    <button type="button" id="toggleMFPForm" class="btn btn-secondary btn-sm">Pull from MyFitnessPal</button>
+    <div class="my-2"></div>
+    
+    <div id="MFPForm" style="display:none;">
+      <div class="control-group">
+        <label class="control-label">{{ form.mfp_username.label }} </label>
+        <i id="mfp_usernameTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls"style="width:75%">{{ form.mfp_username }}
+          {% if form.mfp_username.help_text %}
+          <span class="help-inline"><small>{{ form.mfp_username.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.mfp_password.label }} </label>
+        <i id="mfp_passwordTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls"style="width:75%">{{ form.mfp_password }}
+          {% if form.mfp_password.help_text %}
+          <span class="help-inline"><small>{{ form.mfp_password.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+    </div>
+
+    <div class="my-2"></div>
+    <button type="submit" class="btn btn-primary btn-icon-split btn-sm">
+        <i class="fas fa-check"></i>
+      <span class="text">Submit</span>
+    </button>
+    <button type="reset" class="btn btn-danger btn-icon-split btn-sm">
+        <i class="fas fa-trash"></i>
+      <span class="text">Clear</span>
+    </button>
   </form>
 
   {% comment %} {% if form.errors %}
@@ -95,5 +135,16 @@ document.getElementById("weightTT").title = "Try to weigh yourself at the same t
 document.getElementById("calories_inTT").title = "Your caloric intake for the day in calories";
 document.getElementById("calories_outTT").title = "Optional: Your total caloric expenditure, per your fitness tracker";
 document.getElementById("activity_lvlTT").title = "Optional: An estimate of your relative activity level for the day";
+document.getElementById("mfp_usernameTT").title = "Your MFP username";
+document.getElementById("mfp_passwordTT").title = "Your MFP password";
+
+$('#toggleMFPForm').click(function() {
+   $('#MFPForm').toggle('fast');
+});
+
+$('#toggleOptionalFields').click(function() {
+   $('#OptionalFields').toggle('fast');
+});
+
 </script>
 {% endblock %}

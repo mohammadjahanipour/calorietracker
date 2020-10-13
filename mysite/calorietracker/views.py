@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
 from .forms import RegisterForm, LoginForm, LogDataForm, MeasurementWidget, SettingForm
-from .models import Log, Setting
+from .models import Log, Setting, Feedback
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bootstrap_datepicker_plus import DateTimePickerInput, DatePickerInput
@@ -15,6 +15,7 @@ from bootstrap_datepicker_plus import DateTimePickerInput, DatePickerInput
 from chartjs.views.lines import BaseLineChartView
 
 from .utilities import *
+from .mfpintegration import *
 from datetime import date, timedelta, datetime, timezone
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -22,9 +23,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
 from django.core.exceptions import ValidationError
-
-
-from .models import Feedback
 
 
 class Feedback(LoginRequiredMixin, CreateView):
