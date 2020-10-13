@@ -6,7 +6,14 @@ from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView
 from django.urls import reverse_lazy
-from .forms import RegisterForm, LoginForm, LogDataForm, MeasurementWidget, SettingForm
+from .forms import (
+    RegisterForm,
+    LoginForm,
+    LogDataForm,
+    MeasurementWidget,
+    SettingForm,
+    ImportForm,
+)
 from .models import Log, Setting, Feedback
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -143,6 +150,11 @@ class HomePage(TemplateView):
 
 class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
+
+
+class Import(FormView):
+    template_name = "calorietracker/importdata.html"
+    form_class = ImportForm
 
 
 class ViewLogs(TemplateView):

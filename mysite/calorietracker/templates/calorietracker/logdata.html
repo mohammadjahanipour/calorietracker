@@ -77,31 +77,8 @@
       </div>
     </div>
     
-    <button type="button" id="toggleMFPForm" class="btn btn-secondary btn-sm">Pull from MyFitnessPal</button>
     <div class="my-2"></div>
-    
-    <div id="MFPForm" style="display:none;">
-      <div class="control-group">
-        <label class="control-label">{{ form.mfp_username.label }} </label>
-        <i id="mfp_usernameTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
-        <div class="controls"style="width:75%">{{ form.mfp_username }}
-          {% if form.mfp_username.help_text %}
-          <span class="help-inline"><small>{{ form.mfp_username.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
-      <div class="control-group">
-        <label class="control-label">{{ form.mfp_password.label }} </label>
-        <i id="mfp_passwordTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
-        <div class="controls"style="width:75%">{{ form.mfp_password }}
-          {% if form.mfp_password.help_text %}
-          <span class="help-inline"><small>{{ form.mfp_password.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
-    </div>
+
 
     <div class="my-2"></div>
     <button type="submit" class="btn btn-primary btn-icon-split btn-sm">
@@ -135,12 +112,6 @@ document.getElementById("weightTT").title = "Try to weigh yourself at the same t
 document.getElementById("calories_inTT").title = "Your caloric intake for the day in calories";
 document.getElementById("calories_outTT").title = "Optional: Your total caloric expenditure, per your fitness tracker";
 document.getElementById("activity_lvlTT").title = "Optional: An estimate of your relative activity level for the day";
-document.getElementById("mfp_usernameTT").title = "Your MFP username";
-document.getElementById("mfp_passwordTT").title = "Your MFP password";
-
-$('#toggleMFPForm').click(function() {
-   $('#MFPForm').toggle('fast');
-});
 
 $('#toggleOptionalFields').click(function() {
    $('#OptionalFields').toggle('fast');

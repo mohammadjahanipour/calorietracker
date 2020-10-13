@@ -113,6 +113,76 @@ class LoginForm(AuthenticationForm):
     )
 
 
+class ImportForm(forms.Form):
+
+    mfp_username = forms.CharField(
+        label="Your MFP Username",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            }
+        ),
+        required=True,
+    )
+    mfp_password = forms.CharField(
+        label="Your MFP Password",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            }
+        ),
+        required=True,
+    )
+    mfp_start_date = forms.DateField(
+        label="Please select your import START date",
+        widget=DatePickerInput(
+            attrs={
+                "style": "display: inline-block;",
+            },
+        ),
+        required=True,
+    )
+    mfp_end_date = forms.DateField(
+        label="Please select your import END date",
+        widget=DatePickerInput(
+            attrs={
+                "style": "display: inline-block;",
+            },
+        ),
+        required=True,
+    )
+    mfp_data_select = forms.ChoiceField(
+        label="Which data would you like to import?",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=[
+            ("Weights", "MFP Weight Entries"),
+            ("CI", "MFP Caloric Intake Logs"),
+        ],
+        required=True,
+    )
+    mfp_overwrite = forms.ChoiceField(
+        label="Overwrite existing log entries?",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=[
+            ("True", "Yes, overwrite any log entries I have"),
+            ("CI", "No, don't overwrite my log entries"),
+        ],
+        required=True,
+    )
+
+
 class LogDataForm(forms.ModelForm):
     class Meta:
         model = Log
