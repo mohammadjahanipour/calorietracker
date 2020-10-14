@@ -5,6 +5,15 @@ from django.contrib.auth import get_user_model
 from safedelete.models import SafeDeleteModel
 from django_measurement.models import MeasurementField
 from measurement.measures import Distance, Weight
+from django_cryptography.fields import encrypt
+
+
+class MFPCredentials(DateTimeFields, SafeDeleteModel):
+    """docstring for Feedback."""
+
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    username = models.CharField(max_length=255)
+    password = encrypt(models.CharField(max_length=255))
 
 
 class Feedback(DateTimeFields, SafeDeleteModel):
