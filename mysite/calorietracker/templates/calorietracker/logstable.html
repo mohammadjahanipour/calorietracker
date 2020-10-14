@@ -75,7 +75,7 @@ $('#dataTable').on('click', 'tbody > tr > td', function (e) {
     var table = $('#dataTable').DataTable();
     var data = table.row($(this).closest('tr')).data();
 
-    url = "/logdata/" + String(data.id) + "/edit"
+    url = "/logdata/" + String(data.id) + "/update"
     location.href=url 
   });
 </script>

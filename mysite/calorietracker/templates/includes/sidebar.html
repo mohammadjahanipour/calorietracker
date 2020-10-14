@@ -39,11 +39,19 @@
       <span>View / Edit Logs</span></a>
   </li>
 
-  <!-- Nav Item - Import Logs -->
+
+  <!-- Nav Item - Import Logs Collapse Menu -->
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'import' %}">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
       <i class="far fa-plus-square"></i>
-      <span>Import Logs</span></a>
+      <span>Import Logs</span>
+    </a>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 class="collapse-header">Integrations:</h6>
+        <a class="collapse-item" href="{% url 'importmfp' %}">MyFitnessPal</a>
+      </div>
+    </div>
   </li>
 
   <!-- Nav Item - Anayltics -->

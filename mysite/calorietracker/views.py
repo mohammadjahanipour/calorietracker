@@ -31,7 +31,7 @@ from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
 from django.core.exceptions import ValidationError
 
-from . models import MFPCredentials
+from .models import MFPCredentials
 from django import forms
 
 
@@ -50,7 +50,7 @@ class ImportMFPCredentials(RedirectView):
 
     permanent = False
     query_string = False
-    pattern_name = 'import-credentials-mfp-create'
+    pattern_name = "import-credentials-mfp-create"
 
     def get_redirect_url(self, *args, **kwargs):
 
@@ -83,12 +83,12 @@ class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        messages.success(self.request, "Credentials Submited")
+        messages.success(self.request, "MyFitnessPal Credentials Saved")
         return super().form_valid(form)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['password'].widget = forms.PasswordInput()
+        form.fields["password"].widget = forms.PasswordInput()
         return form
 
 
@@ -111,16 +111,58 @@ class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        messages.success(self.request, "Credentials Updated")
+        messages.success(self.request, "MyFitnessPal Credentials Updated")
         return super().form_valid(form)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['password'].widget = forms.PasswordInput()
+        form.fields["password"].widget = forms.PasswordInput()
         return form
 
     def get_object(self):
         return self.request.user.mfpcredentials
+
+
+class ImportMFP(FormView):
+    template_name = "calorietracker/importdata.html"
+    form_class = ImportForm
+    success_url = reverse_lazy("logs")
+
+    def form_valid(self, form):
+        if self.request.method == "POST":
+            print(form.cleaned_data)
+            # process form data
+            # todo: this needs a lot of api response handling back to the user
+            # Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
+            client = myfitnesspal.Client(
+                form.cleaned_data["mfp_username"],
+                password=form.cleaned_data["mfp_password"],
+                unit_aware=True,
+            )
+            if form.cleaned_data["mfp_data_select"] == "Weights":
+                weights_dict = get_weights_by_range(
+                    client,
+                    form.cleaned_data["mfp_start_date"],
+                    form.cleaned_data["mfp_end_date"],
+                )
+                merge_mfp_weights(
+                    user=self.request.user,
+                    overwrite=form.cleaned_data["mfp_overwrite"],
+                    weights_dict=weights_dict,
+                )
+            elif form.cleaned_data["mfp_data_select"] == "CI":
+                days_dict = get_days_by_range(
+                    client,
+                    form.cleaned_data["mfp_start_date"],
+                    form.cleaned_data["mfp_end_date"],
+                )
+                merge_mfp_calories_in(
+                    user=self.request.user,
+                    overwrite=form.cleaned_data["mfp_overwrite"],
+                    days_dict=days_dict,
+                )
+
+        return super().form_valid(form)
 
 
 class Feedback(LoginRequiredMixin, CreateView):
@@ -201,9 +243,9 @@ class LogData(LoginRequiredMixin, CreateView):
                 mark_safe(
                     "A log for "
                     + str(form.cleaned_data.get("date"))
-                    + " already exists. You can edit <a href='/logdata/"
+                    + " already exists. You can update <a href='/logdata/"
                     + pk
-                    + "/edit'>this entry here</a>"
+                    + "/update'>this entry here</a>"
                 ),
             )
             return super().form_invalid(form)
@@ -230,7 +272,6 @@ class Settings(LoginRequiredMixin, UpdateView):
 
 
 class HomePage(TemplateView):
-
     def get(self, request, *args, **kwargs):
         """
         method only servers to run code for testing
@@ -242,52 +283,6 @@ class HomePage(TemplateView):
 
 class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
-
-
-class Import(FormView):
-    template_name = "calorietracker/importdata.html"
-    form_class = ImportForm
-    success_url = reverse_lazy("logs")
-
-    def form_valid(self, form):
-        if self.request.method == "POST":
-            print(form.cleaned_data)
-            # process form data
-            # todo: this needs a lot of api response handling back to the user
-            if form.cleaned_data["mfp_data_select"] == "Weights":
-                client = myfitnesspal.Client(
-                    form.cleaned_data["mfp_username"],
-                    password=form.cleaned_data["mfp_password"],
-                    unit_aware=True,
-                )
-                weights_dict = get_weights_by_range(
-                    client,
-                    form.cleaned_data["mfp_start_date"],
-                    form.cleaned_data["mfp_end_date"],
-                )
-                merge_mfp_weights(
-                    user=self.request.user,
-                    overwrite=form.cleaned_data["mfp_overwrite"],
-                    weights_dict=weights_dict,
-                )
-            elif form.cleaned_data["mfp_data_select"] == "CI":
-                client = myfitnesspal.Client(
-                    form.cleaned_data["mfp_username"],
-                    password=form.cleaned_data["mfp_password"],
-                    unit_aware=True,
-                )
-                days_dict = get_days_by_range(
-                    client,
-                    form.cleaned_data["mfp_start_date"],
-                    form.cleaned_data["mfp_end_date"],
-                )
-                merge_mfp_calories_in(
-                    user=self.request.user,
-                    overwrite=form.cleaned_data["mfp_overwrite"],
-                    days_dict=days_dict,
-                )
-
-        return super().form_valid(form)
 
 
 class ViewLogs(TemplateView):
@@ -521,7 +516,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         if (x - datetime.now(timezone.utc)).days < 0:
             messages.info(
                 request,
-                "Please edit your goal date as it is not far enough into the future",
+                "Please update your goal date as it is not far enough into the future",
             )
             return redirect(reverse_lazy("settings"))
         return super().dispatch(request)
@@ -566,7 +561,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_pie_chart_data(self):
         TDEE = abs(self.TDEE)
         dailycaltarget = abs(self.dailycaltarget)
-        calories_in = self.calories_in[-self.n:]
+        calories_in = self.calories_in[-self.n :]
         if self.goal == "L" or self.goal == "M":
             pie_labels = [
                 "Days Above TDEE",
@@ -640,8 +635,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
                     weeklyweights[i] - weeklyweights[i - 1], 2
                 )
                 entry["TDEE"] = calculate_TDEE(
-                    self.calories_in[(i - 1) * 7: (i + 1) * 7],
-                    self.weights[(i - 1) * 7: (i + 1) * 7],
+                    self.calories_in[(i - 1) * 7 : (i + 1) * 7],
+                    self.weights[(i - 1) * 7 : (i + 1) * 7],
                     n=len(self.weights),
                     units=self.unitsweight,
                     smooth=True,
@@ -681,10 +676,10 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "current_time_to_goal": self.currenttimetogoal,
             "current_goal_date": self.currentgoaldate,
             "percent_to_goal": self.percenttogoal,
-            "data_weight": self.weights[-self.n:],
-            "data_cal_in": self.calories_in[-self.n:],
+            "data_weight": self.weights[-self.n :],
+            "data_cal_in": self.calories_in[-self.n :],
             "data_date": json.dumps(
-                [date.strftime("%b-%d") for date in self.dates][-self.n:]
+                [date.strftime("%b-%d") for date in self.dates][-self.n :]
             ),
             "weeklyjson_data": json.dumps(
                 {"data": self.weeklytabledata},
