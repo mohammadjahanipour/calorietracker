@@ -595,7 +595,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         smoothed_weights = []
 
         if method == "lerp":
-            # first get all weight, dates as list of tuplesall_weights = list(
+            # first get all weight, dates as list of tuples
             all_logs = (
                 Log.objects.filter(user=self.request.user)
                 .values_list("date", "weight")
@@ -630,23 +630,11 @@ class Analytics(LoginRequiredMixin, TemplateView):
                             next_search_index += 1
 
                     if not (next_found and previous_found):
-                        # print("ERROR, failed to find a valid bounding weight entry")
-                        # print("next_found", next_found)
-                        # print("previous_found", previous_found)
                         smoothed_weights.append(weights[i])
                         continue
                     else:
                         interpolated_weight = interpolate(w1, w2, y1, y2, dates[i])
-                        # print(w1.lb, w2.lb, y1, y2, dates[i])
-                        # print("interpolated as", interpolated_weight.lb)
-                        # update this entry with interpolated_weight
                         smoothed_weights.append(interpolated_weight)
-                        # print(
-                        #     "Updated",
-                        #     dates[i].strftime("%m/%d/%Y"),
-                        #     "with weight",
-                        #     interpolated_weight,
-                        # )
                 else:
                     smoothed_weights.append(weights[i])
             return smoothed_weights
@@ -658,32 +646,29 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 .order_by("date")
             )  # list of tuples (date, weight)
 
+            n = 11
             for i in range(len(all_weights)):
                 entry = all_weights[i]  # (date, weight)
                 if entry[1] == Weight(g=0.0):
-                    # get last 10 weights
-                    previous = all_weights[i - 11 : i - 1]
-                    # print("previous 10 weights", previous)
-
-                    # remove entries where weight is 0
+                    # get last n weights
+                    previous = all_weights[i - n : i - 1]
                     previous = [
                         value[1] for value in previous if value[1] != Mass(g=0.0)
                     ]
-
-                    # calculate average. if there is no elements in previous, set average to 0
+                    # calculate average.
                     if len((previous)):
                         average = sum([value.lb for value in previous]) / len(previous)
                     else:
-                        average = Weight(g=0.0)
-
-                    # update this entry with average
+                        # if there is no elements in previous, set average to last 10 elements of nonzeroweights
+                        nonzeroweights = [
+                            value[1].lb
+                            for value in all_weights
+                            if value[1] != Mass(g=0.0)
+                        ]
+                        average = sum(nonzeroweights[-10:-1]) / len(
+                            nonzeroweights[-10:-1]
+                        )
                     smoothed_weights.append(Weight(lb=average))
-                    # print(
-                    #     "Updated",
-                    #     entry[0].strftime("%m/%d/%Y"),
-                    #     "with weight",
-                    #     Weight(lb=average),
-                    # )
                 else:
                     smoothed_weights.append(entry[1])
             return smoothed_weights
