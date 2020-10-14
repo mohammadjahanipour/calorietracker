@@ -474,7 +474,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_pie_chart_data(self):
         TDEE = abs(self.TDEE)
         dailycaltarget = abs(self.dailycaltarget)
-        calories_in = self.calories_in[-self.n :]
+        calories_in = self.calories_in[-self.n:]
         if self.goal == "L" or self.goal == "M":
             pie_labels = [
                 "Days Above TDEE",
@@ -548,8 +548,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
                     weeklyweights[i] - weeklyweights[i - 1], 2
                 )
                 entry["TDEE"] = calculate_TDEE(
-                    self.calories_in[(i - 1) * 7 : (i + 1) * 7],
-                    self.weights[(i - 1) * 7 : (i + 1) * 7],
+                    self.calories_in[(i - 1) * 7: (i + 1) * 7],
+                    self.weights[(i - 1) * 7: (i + 1) * 7],
                     n=len(self.weights),
                     units=self.unitsweight,
                     smooth=True,
@@ -589,10 +589,10 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "current_time_to_goal": self.currenttimetogoal,
             "current_goal_date": self.currentgoaldate,
             "percent_to_goal": self.percenttogoal,
-            "data_weight": self.weights[-self.n :],
-            "data_cal_in": self.calories_in[-self.n :],
+            "data_weight": self.weights[-self.n:],
+            "data_cal_in": self.calories_in[-self.n:],
             "data_date": json.dumps(
-                [date.strftime("%b-%d") for date in self.dates][-self.n :]
+                [date.strftime("%b-%d") for date in self.dates][-self.n:]
             ),
             "weeklyjson_data": json.dumps(
                 {"data": self.weeklytabledata},
@@ -649,3 +649,7 @@ class PasswordChange(PasswordChangeView):
 
     success_url = reverse_lazy("home")
     template_name = "calorietracker/change-password.html"
+
+
+class Purchase(LoginRequiredMixin):
+    """docstring for Purchase."""
