@@ -6,6 +6,28 @@
   Pipenv by default loads in a .env file automatically see .env.example for examples
 
 
+### Dokku
+
+**Postgres**
+
+    dokku postgres:unlink djangodb calorietracker
+    dokku postgres:destroy djangodb
+    dokku postgres:create djangodb
+    dokku postgres:link djangodb calorietracker
+
+    To create superuser:
+
+    dokku run calorietracker python mysite/manage.py createsuperuser
+
+    To initialize test3 sampledata:
+
+    dokku enter calorietracker
+    cd mysite/
+    python initializedata.py
+
+    You will have to set test3 password via admin panel to login as test3.
+
+
 ### Package Documentation
 
 <br>
