@@ -31,6 +31,97 @@ from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
 from django.core.exceptions import ValidationError
 
+from . models import MFPCredentials
+from django import forms
+
+
+from django.views.generic.base import RedirectView
+from django.core.exceptions import ObjectDoesNotExist
+
+
+class ImportMFPCredentials(RedirectView):
+
+    """
+    Redirects either to create or updateview
+    """
+
+    # OPTIMIZE: users can go to both update and create mfp views
+    # they should be redirected in those views also or that case should be handled
+
+    permanent = False
+    query_string = False
+    pattern_name = 'import-credentials-mfp-create'
+
+    def get_redirect_url(self, *args, **kwargs):
+
+        try:
+            self.request.user.mfpcredentials
+            self.pattern_name = "import-credentials-mfp-update"
+
+        except ObjectDoesNotExist:
+            pass
+
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
+    """docstring for MFPCredentials."""
+
+    model = MFPCredentials
+    fields = (
+        "username",
+        "password",
+    )
+
+    success_url = reverse_lazy("import")
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        messages.success(self.request, "Credentials Submited")
+        return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['password'].widget = forms.PasswordInput()
+        return form
+
+
+class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
+    """docstring for MFPCredentials."""
+
+    model = MFPCredentials
+    fields = (
+        "username",
+        "password",
+    )
+
+    success_url = reverse_lazy("import")
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        messages.success(self.request, "Credentials Updated")
+        return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['password'].widget = forms.PasswordInput()
+        return form
+
+    def get_object(self):
+        return self.request.user.mfpcredentials
+
 
 class Feedback(LoginRequiredMixin, CreateView):
     """docstring for Feedback."""
@@ -139,6 +230,7 @@ class Settings(LoginRequiredMixin, UpdateView):
 
 
 class HomePage(TemplateView):
+
     def get(self, request, *args, **kwargs):
         """
         method only servers to run code for testing
