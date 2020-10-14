@@ -444,7 +444,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         if Weight(lb=0) in self.weights:
             messages.info(
                 self.request,
-                "Found some log entries where weight is 0; We use smoothing to extrapolate your correct weight for these logs.",
+                "Found some log entries weight is 0. We use smoothing to extrapolate your correct weight for these logs.",
             )
             self.smoothed_weights = self.smooth_zero_weights(method="lerp")
             self.smoothed_weights = self.smooth_zero_weights(method="previous_avg")
@@ -452,6 +452,11 @@ class Analytics(LoginRequiredMixin, TemplateView):
         # we do all calculations in weight = pounds, calories in = caloires. We convert to unit preference later.
         self.weights = [round(x.lb, 2) for x in self.smoothed_weights]
         self.calories_in = df_query["calories_in"].tolist()
+        if 0 in self.calories_in:
+            messages.info(
+                self.request,
+                "Found log entries where caloric intake is 0. We recommend updating these entries for to maintain accuracy.",
+            )
         self.dates = df_query["date"].tolist()
         self.ids = df_query["id"].tolist()
 
