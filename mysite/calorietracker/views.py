@@ -439,7 +439,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         # weights, calories_in, dates
         self.rawweights = df_query["weight"].tolist()
-        self.weights = df_query["weight"].tolist()
+        self.weights = self.smoothed_weights = df_query["weight"].tolist()
         # replace any weight entries that are not smoothed with smoothed weight
         if Weight(lb=0) in self.weights:
             messages.info(
