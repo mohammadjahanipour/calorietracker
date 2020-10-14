@@ -21,6 +21,7 @@ django-chartjs = "*"
 stripe = "*"
 django-measurement = "*"
 myfitnesspal = "*"
+django-cryptography = "*"
 
 [requires]
 python_version = "3.7"

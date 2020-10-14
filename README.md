@@ -43,3 +43,9 @@
 **django-activity-stream**
 
   - https://django-activity-stream.readthedocs.io/en/latest
+
+<br>
+
+**Django encrypted model fields**
+
+ - https://github.com/georgemarshall/django-cryptography
