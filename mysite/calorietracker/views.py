@@ -440,7 +440,17 @@ class Analytics(LoginRequiredMixin, TemplateView):
         # weights, calories_in, dates
         self.rawweights = df_query["weight"].tolist()
         self.weights = df_query["weight"].tolist()
-        self.weights = [round(x.lb, 2) for x in self.weights]
+        # replace any weight entries that are not smoothed with smoothed weight
+        if Weight(lb=0) in self.weights:
+            messages.info(
+                self.request,
+                "Found some log entries where weight is 0; We use smoothing to extrapolate your correct weight for these logs.",
+            )
+            self.smoothed_weights = self.smooth_zero_weights(method="lerp")
+            self.smoothed_weights = self.smooth_zero_weights(method="previous_avg")
+
+        # we do all calculations in weight = pounds, calories in = caloires. We convert to unit preference later.
+        self.weights = [round(x.lb, 2) for x in self.smoothed_weights]
         self.calories_in = df_query["calories_in"].tolist()
         self.dates = df_query["date"].tolist()
         self.ids = df_query["id"].tolist()
@@ -576,6 +586,103 @@ class Analytics(LoginRequiredMixin, TemplateView):
             return redirect(reverse_lazy("settings"))
         return super().dispatch(request)
 
+    def smooth_zero_weights(self, method="lerp"):
+        smoothed_weights = []
+
+        if method == "lerp":
+            # first get all weight, dates as list of tuplesall_weights = list(
+            all_logs = (
+                Log.objects.filter(user=self.request.user)
+                .values_list("date", "weight")
+                .order_by("date")
+            )  # list of tuples (date, weight)
+            dates, weights = [e[0] for e in all_logs], [e[1] for e in all_logs]
+            nonzeroweight_indices = [
+                i for i, e in enumerate(weights) if e != Weight(g=0)
+            ]
+
+            for i in range(len(dates)):
+                if weights[i] == Weight(g=0):
+                    # print("index", i, "has weight 0")
+                    # find previous date and weight that is non zero
+                    previous_found = next_found = False
+                    prev_search_index = next_search_index = i
+                    while prev_search_index >= 0 and previous_found == False:
+                        if prev_search_index in nonzeroweight_indices:
+                            w1 = weights[prev_search_index]
+                            y1 = dates[prev_search_index]
+                            previous_found = True
+                        else:
+                            prev_search_index -= 1
+
+                    # find next date and weight that is non zero
+                    while next_search_index < len(weights) and next_found == False:
+                        if next_search_index in nonzeroweight_indices:
+                            w2 = weights[next_search_index]
+                            y2 = dates[next_search_index]
+                            next_found = True
+                        else:
+                            next_search_index += 1
+
+                    if not (next_found and previous_found):
+                        # print("ERROR, failed to find a valid bounding weight entry")
+                        # print("next_found", next_found)
+                        # print("previous_found", previous_found)
+                        smoothed_weights.append(weights[i])
+                        continue
+                    else:
+                        interpolated_weight = interpolate(w1, w2, y1, y2, dates[i])
+                        # print(w1.lb, w2.lb, y1, y2, dates[i])
+                        # print("interpolated as", interpolated_weight.lb)
+                        # update this entry with interpolated_weight
+                        smoothed_weights.append(interpolated_weight)
+                        # print(
+                        #     "Updated",
+                        #     dates[i].strftime("%m/%d/%Y"),
+                        #     "with weight",
+                        #     interpolated_weight,
+                        # )
+                else:
+                    smoothed_weights.append(weights[i])
+            return smoothed_weights
+
+        if method == "previous_avg":
+            all_weights = list(
+                Log.objects.filter(user=self.request.user)
+                .values_list("date", "weight")
+                .order_by("date")
+            )  # list of tuples (date, weight)
+
+            for i in range(len(all_weights)):
+                entry = all_weights[i]  # (date, weight)
+                if entry[1] == Weight(g=0.0):
+                    # get last 10 weights
+                    previous = all_weights[i - 11 : i - 1]
+                    # print("previous 10 weights", previous)
+
+                    # remove entries where weight is 0
+                    previous = [
+                        value[1] for value in previous if value[1] != Mass(g=0.0)
+                    ]
+
+                    # calculate average. if there is no elements in previous, set average to 0
+                    if len((previous)):
+                        average = sum([value.lb for value in previous]) / len(previous)
+                    else:
+                        average = Weight(g=0.0)
+
+                    # update this entry with average
+                    smoothed_weights.append(Weight(lb=average))
+                    # print(
+                    #     "Updated",
+                    #     entry[0].strftime("%m/%d/%Y"),
+                    #     "with weight",
+                    #     Weight(lb=average),
+                    # )
+                else:
+                    smoothed_weights.append(entry[1])
+            return smoothed_weights
+
     def HarrisBenedict(self, **kwargs):
         # Estimate TDEE in the absence of enouhg data
         weight = unit_conv(self.currentweight, "lbs")
@@ -654,6 +761,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_weeklytabledata(self):
         df = pd.DataFrame(list(self.query_set))
         df["date"] = pd.to_datetime(df["date"], errors="coerce")
+        df["weight"] = self.smoothed_weights
         if self.units == "I":
             df["weight"] = df["weight"].apply(lambda x: round(x.lb, 2))
         else:
@@ -722,7 +830,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "time_left": self.timeleft,
             "goal": self.goal,
             "goal_weight": self.goalweight,
-            "current_weight": self.currentweight,
+            "current_weight": round(self.currentweight, 1),
             "weight_to_go": self.weighttogo,
             "weight_to_go_abs": self.weighttogoabs,
             "target_weekly_deficit": self.targetweeklydeficit,
