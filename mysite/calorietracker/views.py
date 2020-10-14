@@ -12,7 +12,7 @@ from .forms import (
     LogDataForm,
     MeasurementWidget,
     SettingForm,
-    ImportForm,
+    ImportMFPForm,
 )
 from .models import Log, Setting, Feedback
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -67,13 +67,15 @@ class ImportMFPCredentials(RedirectView):
 class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
     """docstring for MFPCredentials."""
 
+    # Todo: Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
+
     model = MFPCredentials
     fields = (
         "username",
         "password",
     )
 
-    success_url = reverse_lazy("import")
+    success_url = reverse_lazy("importmfp")
 
     def get(self, request, *args, **kwargs):
         """
@@ -83,6 +85,20 @@ class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        try:
+            client = myfitnesspal.Client(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+                unit_aware=True,
+            )
+
+        except myfitnesspal.exceptions.MyfitnesspalLoginError:
+            messages.info(
+                self.request,
+                "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
+            )
+            return super().form_invalid(form)
+
         messages.success(self.request, "MyFitnessPal Credentials Saved")
         return super().form_valid(form)
 
@@ -95,13 +111,15 @@ class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
 class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
     """docstring for MFPCredentials."""
 
+    # Todo: Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
+
     model = MFPCredentials
     fields = (
         "username",
         "password",
     )
 
-    success_url = reverse_lazy("import")
+    success_url = reverse_lazy("importmfp")
 
     def get(self, request, *args, **kwargs):
         """
@@ -111,6 +129,20 @@ class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        try:
+            client = myfitnesspal.Client(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+                unit_aware=True,
+            )
+
+        except myfitnesspal.exceptions.MyfitnesspalLoginError:
+            messages.info(
+                self.request,
+                "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
+            )
+            return super().form_invalid(form)
+
         messages.success(self.request, "MyFitnessPal Credentials Updated")
         return super().form_valid(form)
 
@@ -125,20 +157,43 @@ class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
 
 class ImportMFP(FormView):
     template_name = "calorietracker/importdata.html"
-    form_class = ImportForm
+    form_class = ImportMFPForm
     success_url = reverse_lazy("logs")
+
+    def dispatch(self, request):
+
+        if not self.request.user.is_authenticated:
+            return redirect(reverse_lazy("login"))
+        if not MFPCredentials.objects.filter(user=self.request.user).exists():
+            messages.info(request, "Please enter your MyFitnessPal credentials")
+            return redirect(reverse_lazy("import-credentials-mfp"))
+
+        return super().dispatch(request)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["integration_name"] = "MyFitnessPal"
+
+        return context
 
     def form_valid(self, form):
         if self.request.method == "POST":
-            print(form.cleaned_data)
-            # process form data
-            # todo: this needs a lot of api response handling back to the user
-            # Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
-            client = myfitnesspal.Client(
-                form.cleaned_data["mfp_username"],
-                password=form.cleaned_data["mfp_password"],
-                unit_aware=True,
-            )
+            # todo: potentially this needs a lot of api response handling back to the user
+            # todo: create a loading animation/page on form submission so that user does not spam click submit
+
+            try:
+                client = myfitnesspal.Client(
+                    username=self.request.user.mfpcredentials.username,
+                    password=self.request.user.mfpcredentials.password,
+                    unit_aware=True,
+                )
+            except myfitnesspal.exceptions.MyfitnesspalLoginError:
+                messages.info(
+                    self.request,
+                    "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
+                )
+                return redirect(reverse_lazy("import-credentials-mfp"))
+
             if form.cleaned_data["mfp_data_select"] == "Weights":
                 weights_dict = get_weights_by_range(
                     client,

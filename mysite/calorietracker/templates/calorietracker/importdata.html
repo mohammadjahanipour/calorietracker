@@ -14,33 +14,12 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Import Logs</h1>
+    <h1 class="h3 mb-0 text-gray-800">Import Logs from {{integration_name}}</h1>
   </div>
 
-  <button type="button" id="toggleMFPForm" class="btn btn-secondary ">MyFitnessPal</button>
   <div class="my-2"></div>
   <form id="MFPForm" style="display:;" class="form" method="post">{% csrf_token %}
     <div >
-      <div class="control-group">
-        <label class="control-label">{{ form.mfp_username.label }} </label>
-        <i id="mfp_usernameTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
-        <div class="controls"style="width:75%">{{ form.mfp_username }}
-          {% if form.mfp_username.help_text %}
-          <span class="help-inline"><small>{{ form.mfp_username.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
-      <div class="control-group">
-        <label class="control-label">{{ form.mfp_password.label }} </label>
-        <i id="mfp_passwordTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
-        <div class="controls"style="width:75%">{{ form.mfp_password }}
-          {% if form.mfp_password.help_text %}
-          <span class="help-inline"><small>{{ form.mfp_password.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
       <div class="control-group">
         <label class="control-label">{{ form.mfp_start_date.label }} </label>
         <div class="controls" style="width:75%">{{ form.mfp_start_date }}
@@ -80,7 +59,7 @@
     </div>
 
     <div class="my-2"></div>
-    <button type="submit" class="btn btn-primary btn-icon-split btn-sm">
+    <button id="submitButton" type="submit" class="btn btn-primary btn-icon-split btn-sm">
         <i class="fas fa-check"></i>
       <span class="text">Submit</span>
     </button>
@@ -107,12 +86,7 @@
 
 <!-- Page level custom scripts -->
 <script>
-document.getElementById("mfp_usernameTT").title = "Your MFP username";
-document.getElementById("mfp_passwordTT").title = "Your MFP password";
 
-$('#toggleMFPForm').click(function() {
-   $('#MFPForm').toggle('fast');
-});
 
 
 </script>

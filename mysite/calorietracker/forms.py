@@ -113,28 +113,7 @@ class LoginForm(AuthenticationForm):
     )
 
 
-class ImportForm(forms.Form):
-
-    mfp_username = forms.CharField(
-        label="Your MFP Username",
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "style": "display: inline-block;",
-            }
-        ),
-        required=True,
-    )
-    mfp_password = forms.CharField(
-        label="Your MFP Password",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "style": "display: inline-block;",
-            }
-        ),
-        required=True,
-    )
+class ImportMFPForm(forms.Form):
     mfp_start_date = forms.DateField(
         label="Please select your import START date",
         widget=DatePickerInput(
