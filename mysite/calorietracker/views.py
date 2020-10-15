@@ -37,6 +37,44 @@ from django import forms
 
 from django.views.generic.base import RedirectView
 from django.core.exceptions import ObjectDoesNotExist
+from threading import Thread
+from django.db import connection
+
+
+def start_new_thread(function):
+    def decorator(*args, **kwargs):
+        t = Thread(target=function, args=args, kwargs=kwargs)
+        t.daemon = True
+        t.start()
+
+    return decorator
+
+
+@start_new_thread
+def merge_helper(user, form, client):
+    connection.close()
+    if form.cleaned_data["mfp_data_select"] == "Weights":
+        weights_dict = get_weights_by_range(
+            client,
+            form.cleaned_data["mfp_start_date"],
+            form.cleaned_data["mfp_end_date"],
+        )
+        merge_mfp_weights(
+            user=user,
+            overwrite=form.cleaned_data["mfp_overwrite"],
+            weights_dict=weights_dict,
+        )
+    elif form.cleaned_data["mfp_data_select"] == "CI":
+        days_dict = get_days_by_range(
+            client,
+            form.cleaned_data["mfp_start_date"],
+            form.cleaned_data["mfp_end_date"],
+        )
+        merge_mfp_calories_in(
+            user=user,
+            overwrite=form.cleaned_data["mfp_overwrite"],
+            days_dict=days_dict,
+        )
 
 
 class ImportMFPCredentials(RedirectView):
@@ -193,31 +231,13 @@ class ImportMFP(FormView):
                     "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
                 )
                 return redirect(reverse_lazy("import-credentials-mfp"))
+            merge_helper(user=self.request.user, form=form, client=client)
+            messages.info(
+                self.request,
+                "Importing! For large imports, this may take some time. Thank you for your patience!",
+            )
 
-            if form.cleaned_data["mfp_data_select"] == "Weights":
-                weights_dict = get_weights_by_range(
-                    client,
-                    form.cleaned_data["mfp_start_date"],
-                    form.cleaned_data["mfp_end_date"],
-                )
-                merge_mfp_weights(
-                    user=self.request.user,
-                    overwrite=form.cleaned_data["mfp_overwrite"],
-                    weights_dict=weights_dict,
-                )
-            elif form.cleaned_data["mfp_data_select"] == "CI":
-                days_dict = get_days_by_range(
-                    client,
-                    form.cleaned_data["mfp_start_date"],
-                    form.cleaned_data["mfp_end_date"],
-                )
-                merge_mfp_calories_in(
-                    user=self.request.user,
-                    overwrite=form.cleaned_data["mfp_overwrite"],
-                    days_dict=days_dict,
-                )
-
-        return super().form_valid(form)
+            return super().form_valid(form)
 
 
 class Feedback(LoginRequiredMixin, CreateView):
