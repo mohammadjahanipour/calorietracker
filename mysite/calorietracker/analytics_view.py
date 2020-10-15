@@ -286,9 +286,12 @@ class Analytics(LoginRequiredMixin, TemplateView):
                             for value in all_weights
                             if value[1] != Mass(g=0.0)
                         ]
-                        average = sum(nonzeroweights[-10:-1]) / len(
-                            nonzeroweights[-10:-1]
-                        )
+                        if len(nonzeroweights[-10:-1]) != 0:
+                            average = sum(nonzeroweights[-10:-1]) / len(
+                                nonzeroweights[-10:-1]
+                            )
+                        else:
+                            average = 0
                     smoothed_weights.append(Weight(lb=average))
                 else:
                     smoothed_weights.append(entry[1])
