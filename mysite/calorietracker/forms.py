@@ -1,14 +1,11 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import get_user_model
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, Field, Button
-from .models import Log, Setting
-from django_measurement.forms import MeasurementField
-from measurement.measures import Weight, Distance
-
-from django.forms.widgets import DateInput
 from bootstrap_datepicker_plus import DatePickerInput
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django_measurement.forms import MeasurementField
+from measurement.measures import Distance, Weight
+
+from .models import Log, Setting
 
 
 class MeasurementWidget(forms.MultiWidget):
@@ -316,7 +313,3 @@ class SettingForm(forms.ModelForm):
         choices=Setting.activity_choices,
         required=True,
     )
-
-
-class DateInput(forms.DateInput):
-    input_type = "date"

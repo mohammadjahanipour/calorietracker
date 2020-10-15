@@ -1,11 +1,13 @@
 import datetime
-from django.db import models
-from .base_models import DateTimeFields
+
 from django.contrib.auth import get_user_model
-from safedelete.models import SafeDeleteModel
+from django.db import models
+from django_cryptography.fields import encrypt
 from django_measurement.models import MeasurementField
 from measurement.measures import Distance, Weight
-from django_cryptography.fields import encrypt
+from safedelete.models import SafeDeleteModel
+
+from .base_models import DateTimeFields
 
 
 class MFPCredentials(DateTimeFields, SafeDeleteModel):

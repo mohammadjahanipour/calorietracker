@@ -1,9 +1,10 @@
-from django.dispatch import receiver
+from actstream import action
+from django.contrib.auth import get_user_model
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save
-from django.contrib.auth import get_user_model
-from .models import Streak, Setting
-from actstream import action
+from django.dispatch import receiver
+
+from .models import Setting, Streak
 
 
 @receiver(post_save, sender=get_user_model())

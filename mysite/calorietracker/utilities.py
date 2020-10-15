@@ -1,9 +1,11 @@
+import os
+import sys
+
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-import os, sys
+from sklearn.linear_model import LinearRegression
 
 
 # Regression - Single Variable
@@ -252,8 +254,9 @@ if __name__ == "__main__":
 
     django.setup()
 
-    from calorietracker.models import Log, Setting
     from django.contrib.auth import get_user_model
+
+    from calorietracker.models import Log, Setting
 
     username = "test3"
     df = pd.DataFrame(

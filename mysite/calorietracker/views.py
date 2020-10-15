@@ -5,7 +5,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -218,10 +218,6 @@ class ViewLogs(TemplateView):
 
 class LineChartJSONView(BaseLineChartView):
     pass
-
-
-line_chart = TemplateView.as_view(template_name="line_chart.html")
-line_chart_json = LineChartJSONView.as_view()
 
 
 class Register(CreateView):
