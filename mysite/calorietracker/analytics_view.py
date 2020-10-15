@@ -163,7 +163,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
             self.unitsweight = "lbs"
         elif self.units == "M":
             self.unitsweight = "kgs"
-            self.weights = [round(x.kg, 2) for x in self.rawweights]
+            self.weights = [round(x.kg, 2) for x in self.smoothed_weights]
             self.currentweight = unit_conv(self.currentweight, "lbs")
             self.weightchangesmooth = unit_conv(self.weightchangesmooth, "lbs")
             self.weightchangeraw = unit_conv(self.weightchangeraw, "lbs")
