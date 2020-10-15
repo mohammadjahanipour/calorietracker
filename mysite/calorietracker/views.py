@@ -1,237 +1,26 @@
-from django.urls import reverse_lazy
-from django.contrib import messages
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.serializers.json import DjangoJSONEncoder
-from django.db import connection
-from django.utils.safestring import mark_safe
-from django.shortcuts import redirect, render, get_object_or_404
-from django import forms
-from django.views.generic import (
-    TemplateView,
-    CreateView,
-    FormView,
-    UpdateView,
-    RedirectView,
-)
-from .forms import (
-    RegisterForm,
-    LoginForm,
-    LogDataForm,
-    MeasurementWidget,
-    SettingForm,
-    ImportMFPForm,
-)
-from .models import Log, Setting, Feedback, MFPCredentials
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-
+import json
+import pandas as pd
 from chartjs.views.lines import BaseLineChartView
-
-from .mfpintegration import *
-import json, pandas as pd
-
-from threading import Thread
+from django import forms
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
+from django.views.generic import CreateView, FormView, TemplateView, UpdateView
 
 from .analytics_view import Analytics
-
-
-def start_new_thread(function):
-    def decorator(*args, **kwargs):
-        t = Thread(target=function, args=args, kwargs=kwargs)
-        t.daemon = True
-        t.start()
-
-    return decorator
-
-
-@start_new_thread
-def merge_helper(user, form, client):
-    connection.close()
-    if form.cleaned_data["mfp_data_select"] == "Weights":
-        weights_dict = get_weights_by_range(
-            client,
-            form.cleaned_data["mfp_start_date"],
-            form.cleaned_data["mfp_end_date"],
-        )
-        merge_mfp_weights(
-            user=user,
-            overwrite=form.cleaned_data["mfp_overwrite"],
-            weights_dict=weights_dict,
-        )
-    elif form.cleaned_data["mfp_data_select"] == "CI":
-        days_dict = get_days_by_range(
-            client,
-            form.cleaned_data["mfp_start_date"],
-            form.cleaned_data["mfp_end_date"],
-        )
-        merge_mfp_calories_in(
-            user=user,
-            overwrite=form.cleaned_data["mfp_overwrite"],
-            days_dict=days_dict,
-        )
-
-
-class ImportMFPCredentials(RedirectView):
-
-    """
-    Redirects either to create or updateview
-    """
-
-    # OPTIMIZE: users can go to both update and create mfp views
-    # they should be redirected in those views also or that case should be handled
-
-    permanent = False
-    query_string = False
-    pattern_name = "import-credentials-mfp-create"
-
-    def get_redirect_url(self, *args, **kwargs):
-
-        try:
-            self.request.user.mfpcredentials
-            self.pattern_name = "import-credentials-mfp-update"
-
-        except ObjectDoesNotExist:
-            pass
-
-        return super().get_redirect_url(*args, **kwargs)
-
-
-class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
-    """docstring for MFPCredentials."""
-
-    # Todo: Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
-
-    model = MFPCredentials
-    fields = (
-        "username",
-        "password",
-    )
-
-    success_url = reverse_lazy("importmfp")
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        try:
-            client = myfitnesspal.Client(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"],
-                unit_aware=True,
-            )
-
-        except myfitnesspal.exceptions.MyfitnesspalLoginError:
-            messages.info(
-                self.request,
-                "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
-            )
-            return super().form_invalid(form)
-
-        messages.success(self.request, "MyFitnessPal Credentials Saved")
-        return super().form_valid(form)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["password"].widget = forms.PasswordInput()
-        return form
-
-
-class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
-    """docstring for MFPCredentials."""
-
-    # Todo: Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
-
-    model = MFPCredentials
-    fields = (
-        "username",
-        "password",
-    )
-
-    success_url = reverse_lazy("importmfp")
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        try:
-            client = myfitnesspal.Client(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"],
-                unit_aware=True,
-            )
-
-        except myfitnesspal.exceptions.MyfitnesspalLoginError:
-            messages.info(
-                self.request,
-                "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
-            )
-            return super().form_invalid(form)
-
-        messages.success(self.request, "MyFitnessPal Credentials Updated")
-        return super().form_valid(form)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["password"].widget = forms.PasswordInput()
-        return form
-
-    def get_object(self):
-        return self.request.user.mfpcredentials
-
-
-class ImportMFP(FormView):
-    template_name = "calorietracker/importdata.html"
-    form_class = ImportMFPForm
-    success_url = reverse_lazy("logs")
-
-    def dispatch(self, request):
-
-        if not self.request.user.is_authenticated:
-            return redirect(reverse_lazy("login"))
-        if not MFPCredentials.objects.filter(user=self.request.user).exists():
-            messages.info(request, "Please enter your MyFitnessPal credentials")
-            return redirect(reverse_lazy("import-credentials-mfp"))
-
-        return super().dispatch(request)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["integration_name"] = "MyFitnessPal"
-
-        return context
-
-    def form_valid(self, form):
-        if self.request.method == "POST":
-            # todo: potentially this needs a lot of api response handling back to the user
-            # todo: create a loading animation/page on form submission so that user does not spam click submit
-
-            try:
-                client = myfitnesspal.Client(
-                    username=self.request.user.mfpcredentials.username,
-                    password=self.request.user.mfpcredentials.password,
-                    unit_aware=True,
-                )
-            except myfitnesspal.exceptions.MyfitnesspalLoginError:
-                messages.info(
-                    self.request,
-                    "Error connecting to MyFitnessPal with the provided information. Please check your MyFitnessPal account settings and try again.",
-                )
-                return redirect(reverse_lazy("import-credentials-mfp"))
-            merge_helper(user=self.request.user, form=form, client=client)
-            messages.info(
-                self.request,
-                "Importing! For large imports, this may take some time. Thank you for your patience!",
-            )
-
-            return super().form_valid(form)
+from .forms import LogDataForm, LoginForm, MeasurementWidget, RegisterForm, SettingForm
+from .mfpimport_views import (
+    ImportMFP,
+    ImportMFPCredentials,
+    ImportMFPCredentialsCreate,
+    ImportMFPCredentialsUpdate,
+)
+from .models import Feedback, Log, MFPCredentials, Setting
 
 
 class Feedback(LoginRequiredMixin, CreateView):

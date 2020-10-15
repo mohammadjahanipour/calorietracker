@@ -1,17 +1,37 @@
-from django.shortcuts import redirect
+import json
+from datetime import date, datetime, timedelta, timezone
+import pandas as pd
+
 from django.contrib import messages
-from django.views.generic import TemplateView
-from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView
 from django_measurement.forms import MeasurementField
+from measurement.measures import Distance, Mass, Weight
 
 from .models import Log, Setting
-from datetime import date, timedelta, datetime, timezone
-import json, pandas as pd
-from measurement.measures import Distance, Weight, Mass
-from .mfpintegration import interpolate
 from .utilities import calculate_TDEE, moving_average, unit_conv, weight_change
+
+
+def rate(x1, x2, y1, y2):
+    # x1, x2 are measruement objects for which we calculate the change
+    # y1, y2 are date objects for which we calculate the time delta in days
+    weight_change = x2 - x1
+    time_delta = int((y2 - y1).days)
+    # print("weight_change", weight_change.lb)
+    # print("time_delta", time_delta, "days")
+    return weight_change / time_delta
+
+
+def interpolate(x1, x2, y1, y2, y):
+
+    slope = rate(x1, x2, y1, y2)
+    days_since_x1 = int((y - y1).days)
+    output = x1 + (slope * days_since_x1)
+
+    return output
 
 
 class Analytics(LoginRequiredMixin, TemplateView):
