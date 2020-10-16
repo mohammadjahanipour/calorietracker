@@ -100,10 +100,14 @@ class Analytics(LoginRequiredMixin, TemplateView):
             self.TDEE = self.HarrisBenedict()
         else:
             # Enough data to accurately calculate TDEE using weight changes vs calories in
+            if self.n < 10:
+                n = 10
+            else:
+                n = self.n
             self.TDEE = calculate_TDEE(
                 self.calories_in,
                 self.weights,
-                n=self.n,
+                n=n,
                 smooth=True,
                 window=3,
             )
