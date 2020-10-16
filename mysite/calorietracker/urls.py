@@ -34,4 +34,6 @@ urlpatterns = [
         views.ImportMFPCredentialsUpdate.as_view(),
         name="import-credentials-mfp-update",
     ),
+
+    path("referral-programm", views.Referral.as_view(), name="referall-programm")
 ]

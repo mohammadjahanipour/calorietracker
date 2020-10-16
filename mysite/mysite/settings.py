@@ -19,6 +19,7 @@ LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,6 +34,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False) == "True"
 
+PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
+
+
 ALLOWED_HOSTS = []
 
 
@@ -45,6 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',  # needed by pinax.referrals
+
     "calorietracker",
     # third party packages/apps
     "safedelete",
@@ -53,9 +59,13 @@ INSTALLED_APPS = [
     "actstream",
     "chartjs",
     "measurement",
+    "pinax.referrals",
+
 ]
 
-SITE_ID = 1  # comes from actstream
+# 1 == dev domaine and sitename
+# 2 == production domaine and sitename
+SITE_ID = 1 if DEBUG else 2  # see migration 0008_Configure_Site_Names for more info
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
@@ -67,6 +77,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "pinax.referrals.middleware.SessionJumpingMiddleware",
 ]
 
 ROOT_URLCONF = "mysite.urls"

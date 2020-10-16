@@ -1,0 +1,52 @@
+{% extends "extends/base.html" %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Referral Program </h1>
+  </div>
+
+
+
+<div class="card w-75">
+  <div class="card-body">
+    <h5 class="card-title">IDK some title?</h5>
+    <p class="card-text">
+      Our goal is to build the best clean energy products and help Calorietracker owners share their excitement and experiences with others. As an owner, with the Referral Program you’ll earn awards every time your referral link is used by your friends and family when they transition to sustainable energy and grow our community.
+
+    Orders for a Calorietracker car, solar panels and Solar Roof are eligible for the Referral Program and will need to be placed by accessing the Design Studio through your unique referral link for you both to earn referral awards. Note that referrals cannot be added after an order is placed or at time of delivery and is not a code that is entered at time of purchase.
+
+    </p>
+
+  <p class="card-text">
+
+  Cars
+  You and anyone using your referral link can each earn 1,000 miles of free Supercharging with the purchase of a new Calorietracker car — designed to be some of the safest cars on the road. Each car referral also gives you a chance to win a Model Y monthly or Roadster supercar quarterly. Owners who already have free Supercharging get two chances to win.
+</p>
+
+<p class="card-text">
+Solar
+Anyone using your referral link can earn a $100 award after system activation for solar panels or Solar Roof to reduce reliance on the grid and produce clean solar energy. You will earn a $400 award for each solar referral. Additionally, you will earn one Powerwall for 10 or more solar referrals, limited to one award.
+</p>
+  <div class="text-center">
+    <h6 class="text-muted">{{ referral.url }}</h6s>
+
+      <a href="#" class="btn btn-primary">Copy to Clipboard</a>
+  </div>
+
+  </div>
+</div>
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Page level custom scripts -->
+{% endblock %}

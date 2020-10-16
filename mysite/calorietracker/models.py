@@ -9,6 +9,12 @@ from safedelete.models import SafeDeleteModel
 
 from .base_models import DateTimeFields
 
+from pinax.referrals.models import Referral as PinaxRefferal
+
+
+class Referral(PinaxRefferal):
+    """docstring for Referral"""
+
 
 class MFPCredentials(DateTimeFields, SafeDeleteModel):
     """docstring for Feedback."""
