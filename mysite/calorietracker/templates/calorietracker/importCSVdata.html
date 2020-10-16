@@ -1,0 +1,105 @@
+{% extends "extends/base.html" %}
+
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Import Logs from {{integration_name}}</h1>
+  </div>
+  <div class="h6 mb-0 text-gray-800">
+      <p>For advanced users only. This feature is very experimental. Please follow the instructions closely.<br>
+      Double check that:</p>
+      <ul>
+      <li>CSV headers match (case sensitive!):<br>
+      &nbsp;  &nbsp;  &nbsp; &nbsp; Required: Date, Weight, Calories_In</li>
+      <li>Dates are in a consistent date format</li>
+      <li>Weights are in lbs or kgs, and your caloric intake is in calories</li>
+      {% comment %} &nbsp;  &nbsp;  &nbsp; Optional: Calories_Out, Activity_Level<br>  {% endcomment %}
+      </ul>
+  </div>
+
+  <div class="my-2"></div>
+  <form enctype="multipart/form-data" id="CSVForm" style="display:;" class="form" method="post">{% csrf_token %}
+    <div>
+      <div class="control-group">
+        <label class="control-label">{{ form.data_file.label }} </label>
+        <div class="controls" style="width:75%">{{ form.data_file }}
+          {% if form.data_file.help_text %}
+          <span class="help-inline"><small>{{ form.data_file.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.weight_units.label }} </label>
+        <div class="controls" style="width:75%">{{ form.weight_units }}
+          {% if form.weight_units.help_text %}
+          <span class="help-inline"><small>{{ form.weight_units.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">{{ form.date_format.label }} </label>
+        <div class="controls" style="width:75%">{{ form.date_format }}
+          {% if form.date_format.help_text %}
+          <span class="help-inline"><small>{{ form.date_format.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.csv_overwrite.label }} </label>
+        <div class="controls" style="width:75%">{{ form.csv_overwrite }}
+          {% if form.csv_overwrite.help_text %}
+          <span class="help-inline"><small>{{ form.csv_overwrite.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+    </div>
+
+    <div class="my-2"></div>
+    <button id="submitButton" type="submit" class="btn btn-primary btn-icon-split btn-sm">
+        <i class="fas fa-check"></i>
+      <span class="text">Submit</span>
+    </button>
+    <button type="reset" class="btn btn-danger btn-icon-split btn-sm">
+        <i class="fas fa-trash"></i>
+      <span class="text">Clear</span>
+    </button>
+  </form>
+
+  {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ error }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p> {{ error }} </p>
+        {% endfor %}
+    {% endif %} 
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Page level custom scripts -->
+<script>
+
+
+
+</script>
+{% endblock %}

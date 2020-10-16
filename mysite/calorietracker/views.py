@@ -1,7 +1,6 @@
 import json
 import pandas as pd
 from chartjs.views.lines import BaseLineChartView
-from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -20,6 +19,7 @@ from .mfpimport_views import (
     ImportMFPCredentialsCreate,
     ImportMFPCredentialsUpdate,
 )
+from .csvimport_view import ImportCSV
 from .models import Feedback, Log, MFPCredentials, Setting
 
 

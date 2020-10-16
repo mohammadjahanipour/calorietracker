@@ -1,7 +1,10 @@
+import csv
+
 from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
 
@@ -110,6 +113,64 @@ class LoginForm(AuthenticationForm):
     )
 
 
+class ImportCSVForm(forms.Form):
+
+    data_file = forms.FileField(
+        label="",
+        widget=forms.FileInput(
+            attrs={
+                "style": "display: inline-block;",
+                "accept": ".csv",
+            },
+        ),
+        required=True,
+    )
+
+    weight_units = forms.ChoiceField(
+        label="What unit is your weight data in?",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=(("lb", "lbs"), ("kg", "kgs")),
+        required=True,
+    )
+
+    date_format = forms.ChoiceField(
+        label="Please specify your date format (Year is optional; will default to the current year)",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=[
+            ("MDY", "Month, Day, Year"),
+            ("DMY", "Day, Month, Year"),
+            ("YMD", "Year, Month, Day"),
+            ("YDM", "Year, Day, Month"),
+        ],
+        required=True,
+    )
+
+    csv_overwrite = forms.ChoiceField(
+        label="Overwrite existing log entries?",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "display: inline-block;",
+            },
+        ),
+        choices=[
+            ("True", "Yes, overwrite any log entries I have"),
+            ("False", "No, don't overwrite my log entries"),
+        ],
+        required=True,
+    )
+
+
 class ImportMFPForm(forms.Form):
     mfp_start_date = forms.DateField(
         label="Please select your import START date",
@@ -153,7 +214,7 @@ class ImportMFPForm(forms.Form):
         ),
         choices=[
             ("True", "Yes, overwrite any log entries I have"),
-            ("CI", "No, don't overwrite my log entries"),
+            ("False", "No, don't overwrite my log entries"),
         ],
         required=True,
     )

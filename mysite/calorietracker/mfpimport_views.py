@@ -6,7 +6,6 @@ import myfitnesspal
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import connection
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -297,7 +296,7 @@ class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
 
 
 class ImportMFP(FormView):
-    template_name = "calorietracker/importdata.html"
+    template_name = "calorietracker/importMFPdata.html"
     form_class = ImportMFPForm
     success_url = reverse_lazy("logs")
 

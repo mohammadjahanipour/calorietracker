@@ -16,6 +16,8 @@ urlpatterns = [
     path("change-password/", views.PasswordChange.as_view(), name="change-password"),
     path("settings/", views.Settings.as_view(), name="settings"),
     path("feedback/", views.Feedback.as_view(), name="feedback"),
+    # IMPORT
+    path("import/csv", views.ImportCSV.as_view(), name="importcsv"),
     path("import/mfp", views.ImportMFP.as_view(), name="importmfp"),
     path(
         "import/credentials/mfp/",
