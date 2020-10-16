@@ -22,6 +22,7 @@ stripe = "*"
 django-measurement = "*"
 myfitnesspal = "*"
 django-cryptography = "*"
+pinax-referrals = "*"
 
 [requires]
 python_version = "3.7"

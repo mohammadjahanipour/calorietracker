@@ -1,3 +1,4 @@
+from . import models
 import json
 import pandas as pd
 from chartjs.views.lines import BaseLineChartView
@@ -21,6 +22,23 @@ from .mfpimport_views import (
     ImportMFPCredentialsUpdate,
 )
 from .models import Feedback, Log, MFPCredentials, Setting
+
+
+class Referral(LoginRequiredMixin, TemplateView):
+    """docstring for Referral."""
+
+    template_name = "calorietracker/referral.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        referral = models.Referral.create(
+            user=self.request.user,
+            redirect_to=reverse_lazy("settings")
+            )
+
+        context["referral"] = referral
+        return context
 
 
 class Feedback(LoginRequiredMixin, CreateView):
@@ -120,6 +138,12 @@ class Settings(LoginRequiredMixin, UpdateView):
     template_name = "calorietracker/settings.html"
 
     success_url = reverse_lazy("settings")
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
 
     def get_object(self):
         return self.request.user.setting
