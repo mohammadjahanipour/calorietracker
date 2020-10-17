@@ -8,12 +8,7 @@ from measurement.measures import Distance, Weight
 from safedelete.models import SafeDeleteModel
 
 from .base_models import DateTimeFields
-
-from pinax.referrals.models import Referral as PinaxRefferal
-
-
-class Referral(PinaxRefferal):
-    """docstring for Referral"""
+from pinax.referrals.models import Referral
 
 
 class MFPCredentials(DateTimeFields, SafeDeleteModel):
