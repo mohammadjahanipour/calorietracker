@@ -4,6 +4,7 @@
 ### Enviroment
 
   Pipenv by default loads in a .env file automatically see .env.example for examples
+  This needs to be mirrord on deployment on Dokku
 
 
 ### Dokku
@@ -26,6 +27,16 @@
     python initializedata.py
 
     You will have to set test3 password via admin panel to login as test3.
+
+
+### Backup
+
+**Cronjobs**
+
+    Hourly DB backups
+    
+    * 1 * * * dokku postgres:export djangodb > djangodb.db
+
 
 
 ### Package Documentation
