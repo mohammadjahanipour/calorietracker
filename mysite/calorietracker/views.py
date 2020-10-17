@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from . import models
 import json
 import pandas as pd
@@ -246,7 +247,7 @@ class LineChartJSONView(BaseLineChartView):
 
 class Register(CreateView):
     form_class = RegisterForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("settings")
     template_name = "calorietracker/register.html"
 
     def form_valid(self, form):
@@ -255,7 +256,16 @@ class Register(CreateView):
             self.request,
             "Predictions will be inaccurate until you update your settings",
         )
+
         return super().form_valid(form)
+
+    def get_success_url(self):
+
+        user = authenticate(self.request, username=self.object.username, password=self.object.password)
+        if user is not None:
+            login(self.request, self.object.user)
+
+        return super().get_success_url()
 
 
 class Login(LoginView):
