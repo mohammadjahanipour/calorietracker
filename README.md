@@ -49,3 +49,13 @@
 **Django encrypted model fields**
 
  - https://github.com/georgemarshall/django-cryptography
+
+
+<br>
+
+**Pinax-referrals**
+
+
+  There is some funny business going on with the 004 Migration file
+
+- https://github.com/pinax/pinax-referrals
