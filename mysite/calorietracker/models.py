@@ -11,6 +11,13 @@ from .base_models import DateTimeFields
 from pinax.referrals.models import Referral
 
 
+class Wallet(DateTimeFields, SafeDeleteModel):
+    """docstring for Feedback."""
+
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    coins = models.IntegerField(default=0)
+
+
 class MFPCredentials(DateTimeFields, SafeDeleteModel):
     """docstring for Feedback."""
 
