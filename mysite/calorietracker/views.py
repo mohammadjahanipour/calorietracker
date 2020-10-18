@@ -261,9 +261,8 @@ class Register(CreateView):
 
     def get_success_url(self):
 
-        user = authenticate(self.request, username=self.object.username, password=self.object.password)
-        if user is not None:
-            login(self.request, self.object.user)
+        # Log user in so he can be redirect to the settings page without having to login manually
+        login(self.request, self.object)
 
         return super().get_success_url()
 
