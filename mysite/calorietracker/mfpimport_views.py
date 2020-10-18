@@ -6,11 +6,13 @@ import myfitnesspal
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, RedirectView, UpdateView
 from measurement.measures import Distance, Mass, Weight
+
 
 from .forms import ImportMFPForm
 from .models import Log, MFPCredentials
