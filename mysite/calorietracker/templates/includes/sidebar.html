@@ -6,10 +6,10 @@
 
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
-    <div class="sidebar-brand-icon rotate-n-15">
-      <i class=></i>
+    <div class="sidebar-brand-icon">
+      {% comment %} <img src="{% static 'favicon/favicon.ico' %}" width="20" height="20"></img> {% endcomment %}
     </div>
-    <div class="sidebar-brand-text mx-3">CalorieTracker.io</div>
+    <div class="sidebar-brand-text mx-1">CalorieTracker.io</div>
   </a>
 
   <!-- Divider -->
@@ -97,7 +97,7 @@
 
   <!-- Nav Item - Registration -->
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'logout' %}">
+    <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
       <i class="fas fa-sign-out-alt"></i>
       <span>Logout</span></a>
   </li>
