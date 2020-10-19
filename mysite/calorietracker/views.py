@@ -278,7 +278,7 @@ class Register(CreateView):
             message,
             "calorietrackerio@gmail.com",
             ["calorietrackerio@gmail.com"],
-            fail_silently=True,
+            fail_silently=False,
         )
 
         return super().get_success_url()
