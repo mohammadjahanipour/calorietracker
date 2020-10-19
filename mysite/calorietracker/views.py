@@ -1,3 +1,4 @@
+import logging
 from django.contrib.auth import authenticate, login
 from . import models
 import json
@@ -23,6 +24,10 @@ from .mfpimport_views import (
 )
 from .csvimport_view import ImportCSV
 from .models import Feedback, Log, MFPCredentials, Setting
+
+
+# Get an instance of a logger
+logger = logging.getLogger("PrimaryLogger")
 
 
 class Referral(LoginRequiredMixin, TemplateView):
