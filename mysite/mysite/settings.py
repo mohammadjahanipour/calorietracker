@@ -14,55 +14,6 @@ import django_heroku
 from pathlib import Path
 import os
 
-
-# Email Configuration ==========================================================
-ADMINS = [("CT", "calorietrackerio@gmail.com")]
-
-DEFAULT_FROM_EMAIL = "calorietrackerio@gmail.com"
-SERVER_EMAIL = "calorietrackerio@gmail.com"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "calorietrackerio@gmail.com"
-EMAIL_HOST_PASSWORD = "pgvfozvkbjldhkwq"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-
-# Logging Configuration ========================================================
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
-        },
-        "simple": {"format": "%(levelname)s %(message)s"},
-    },
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": os.path.join("~", "my_logs", "debug.log"),
-            "formatter": "verbose",
-        },
-        "mail_admins": {
-            "level": "DEBUG",
-            "class": "django.utils.log.AdminEmailHandler",
-            "formatter": "simple",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file", "mail_admins"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-        "django.request": {
-            "handlers": ["file", "mail_admins"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-    },
-}
-
 # Custom settings
 LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
@@ -98,7 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",  # needed by pinax.referrals
+    'django.contrib.sites',  # needed by pinax.referrals
+
     "calorietracker",
     # third party packages/apps
     "safedelete",
@@ -108,6 +60,7 @@ INSTALLED_APPS = [
     "chartjs",
     "measurement",
     "pinax.referrals",
+
 ]
 
 # 1 == dev domaine and sitename
