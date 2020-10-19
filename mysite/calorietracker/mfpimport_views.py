@@ -118,7 +118,7 @@ def get_day_by_date(client, date):
         https://github.com/coddingtonbear/python-myfitnesspal/blob/master/myfitnesspal/day.py
     """
 
-    day = client.get_date(start_date)
+    day = client.get_date(date)
     return day
 
 
