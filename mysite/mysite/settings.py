@@ -14,6 +14,19 @@ import django_heroku
 from pathlib import Path
 import os
 
+
+# # Email Configuration ========================================================
+ADMINS = [("CT", "calorietrackerio@gmail.com")]
+MANAGERS = ADMINS
+
+DEFAULT_FROM_EMAIL = "calorietrackerio@gmail.com"
+SERVER_EMAIL = "calorietrackerio@gmail.com"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "calorietrackerio@gmail.com"
+EMAIL_HOST_PASSWORD = "pgvfozvkbjldhkwq"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 # Custom settings
 LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
