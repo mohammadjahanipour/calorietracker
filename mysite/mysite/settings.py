@@ -15,6 +15,7 @@ from pathlib import Path
 import os
 import logging.config
 
+
 # Custom settings
 LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
@@ -79,8 +80,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django.contrib.sites',  # needed by pinax.referrals
-
+    "django.contrib.sites",  # needed by pinax.referrals
     "calorietracker",
     # third party packages/apps
     "safedelete",
@@ -90,7 +90,6 @@ INSTALLED_APPS = [
     "chartjs",
     "measurement",
     "pinax.referrals",
-
 ]
 
 # 1 == dev domaine and sitename

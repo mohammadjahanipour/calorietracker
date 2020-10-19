@@ -2,9 +2,12 @@ import logging
 from django.contrib.auth import authenticate, login
 from . import models
 import json
+from datetime import datetime, timezone
+
 import pandas as pd
 from chartjs.views.lines import BaseLineChartView
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.core.exceptions import ValidationError
@@ -14,7 +17,9 @@ from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.views.generic import CreateView, FormView, TemplateView, UpdateView
 
+from . import models
 from .analytics_view import Analytics
+from .csvimport_view import ImportCSV
 from .forms import LogDataForm, LoginForm, MeasurementWidget, RegisterForm, SettingForm
 from .mfpimport_views import (
     ImportMFP,
@@ -22,7 +27,6 @@ from .mfpimport_views import (
     ImportMFPCredentialsCreate,
     ImportMFPCredentialsUpdate,
 )
-from .csvimport_view import ImportCSV
 from .models import Feedback, Log, MFPCredentials, Setting
 
 
@@ -39,9 +43,8 @@ class Referral(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         referral = models.Referral.create(
-            user=self.request.user,
-            redirect_to=reverse_lazy("settings")
-            )
+            user=self.request.user, redirect_to=reverse_lazy("settings")
+        )
 
         context["referral"] = referral
         return context
@@ -268,6 +271,21 @@ class Register(CreateView):
 
         # Log user in so he can be redirect to the settings page without having to login manually
         login(self.request, self.object)
+
+        # Logging
+        # user = self.request.user.username
+        # message = (
+        #     user
+        #     + " just registered on CalorieTracker.io! on "
+        #     + datetime.now(timezone.utc).strftime("%A, %B %e, %Y %I:%M %p")
+        # )
+        # send_mail(
+        #     message,
+        #     message,
+        #     "calorietrackerio@gmail.com",
+        #     ["calorietrackerio@gmail.com"],
+        #     fail_silently=False,
+        # )
 
         return super().get_success_url()
 
