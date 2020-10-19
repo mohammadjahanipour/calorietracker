@@ -308,3 +308,7 @@ class PasswordChange(PasswordChangeView):
 
 class Purchase(LoginRequiredMixin):
     """docstring for Purchase."""
+
+
+class PrivacyPolicy(TemplateView):
+    template_name = "calorietracker/privacy-policy.html"
