@@ -39,6 +39,9 @@ STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
 
 
+DJSTRIPE_WEBHOOK_SECRET = "whsec_KUP1grnFwbYo9O7PFG2SO5rlHjs9n1iz"  # TODO: move to env or we get hacked!!!!!
+
+
 # Custom settings
 LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"

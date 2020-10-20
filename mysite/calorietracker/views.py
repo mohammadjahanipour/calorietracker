@@ -1,3 +1,5 @@
+import djstripe
+from djstripe.models import Plan, Customer
 import json
 import logging
 from datetime import datetime, timezone
@@ -36,8 +38,43 @@ from .mfpimport_views import (
 )
 from .models import Feedback, Log, MFPCredentials, Setting
 
+import json
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import stripe
+
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
+
+
+@csrf_exempt
+def my_webhook_view(request):
+
+  payload = request.body
+  event = None
+
+  try:
+    event = stripe.Event.construct_from(
+      json.loads(payload), stripe.api_key
+    )
+  except ValueError as e:
+    # Invalid payload
+    return HttpResponse(status=400)
+
+  # Handle the event
+  if event.type == 'payment_intent.succeeded':
+    payment_intent = event.data.object  # contains a stripe.PaymentIntent
+    # Then define and call a method to handle the successful payment intent.
+    # handle_payment_intent_succeeded(payment_intent)
+  elif event.type == 'payment_method.attached':
+    payment_method = event.data.object  # contains a stripe.PaymentMethod
+    # Then define and call a method to handle the successful attachment of a PaymentMethod.
+    # handle_payment_method_attached(payment_method)
+  # ... handle other event types
+  else:
+    print('Unhandled event type {}'.format(event.type))
+
+  return HttpResponse(status=200)
 
 
 class Subscription(LoginRequiredMixin, TemplateView):
@@ -46,8 +83,32 @@ class Subscription(LoginRequiredMixin, TemplateView):
     template_name = "calorietracker/subscription.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+
+        # Create the stripe Customer, by default subscriber Model is User,
+      # this can be overridden with settings.DJSTRIPE_SUBSCRIBER_MODEL
+      customer, created = djstripe.models.Customer.get_or_create(subscriber=self.request.user)
+
+      # Add the source as the customer's default card
+      customer.add_card(4242424242424242)
+
+      # Using the Stripe API, create a subscription for this customer,
+      # using the customer's default payment source
+      stripe_subscription = stripe.Subscription.create(
+          customer=customer.id,
+          items=[{"price": "price_1HajOeHK82X25fQF96b7Bbwr"}],
+          collection_method="charge_automatically",
+          # tax_percent=15,
+          api_key=djstripe.settings.STRIPE_SECRET_KEY,
+      )
+
+      # Sync the Stripe API return data to the database,
+      # this way we don't need to wait for a webhook-triggered sync
+      subscription = djstripe.models.Subscription.sync_from_stripe_data(
+          stripe_subscription
+      )
+
+      context = super().get_context_data(**kwargs)
+      return context
 
 
 class Referral(LoginRequiredMixin, TemplateView):

@@ -6,6 +6,10 @@
   Pipenv by default loads in a .env file automatically see .env.example for examples
   This needs to be mirrord on deployment on Dokku
 
+### Stripe
+
+    locale webhook for testing assuming localhost 8000
+    stripe listen --forward-to http://127.0.0.1:8000/stripe/webhook/
 
 ### Dokku
 
@@ -34,7 +38,7 @@
 **Cronjobs**
 
     Hourly DB backups
-    
+
     * 1 * * * dokku postgres:export djangodb > djangodb.db
 
 
