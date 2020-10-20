@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
@@ -273,19 +274,19 @@ class Register(CreateView):
         login(self.request, self.object)
 
         # Logging
-        # user = self.request.user.username
-        # message = (
-        #     user
-        #     + " just registered on CalorieTracker.io! on "
-        #     + datetime.now(timezone.utc).strftime("%A, %B %e, %Y %I:%M %p")
-        # )
-        # send_mail(
-        #     message,
-        #     message,
-        #     "calorietrackerio@gmail.com",
-        #     ["calorietrackerio@gmail.com"],
-        #     fail_silently=False,
-        # )
+        user = self.request.user.username
+        message = (
+            user
+            + " just registered on CalorieTracker.io! on "
+            + datetime.now(timezone.utc).strftime("%A, %B %e, %Y %I:%M %p")
+        )
+        send_mail(
+            message,
+            message,
+            "calorietrackerio@gmail.com",
+            ["calorietrackerio@gmail.com"],
+            fail_silently=False,
+        )
 
         return super().get_success_url()
 
