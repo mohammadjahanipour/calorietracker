@@ -7,7 +7,8 @@ urlpatterns = [
     path("profile/", views.Profile.as_view(), name="profile"),
     path("logdata/", views.LogData.as_view(), name="logdata"),
     path("logs/", views.ViewLogs.as_view(), name="logs"),
-    path("logdata/<pk>/update", views.UpdateLogData.as_view(), name="UpdateLogData"),
+    path("logdata/<pk>/update/", views.UpdateLogData.as_view(), name="UpdateLogData"),
+    path("logdata/<pk>/delete/", views.DeleteLogData.as_view(), name="DeleteLogData"),
     path("analytics/", views.Analytics.as_view(), name="analytics"),
     # AUTH
     path("register/", views.Register.as_view(), name="register"),
@@ -34,6 +35,6 @@ urlpatterns = [
         views.ImportMFPCredentialsUpdate.as_view(),
         name="import-credentials-mfp-update",
     ),
-    path("referral-programm", views.Referral.as_view(), name="referall-programm"),
-    path("privacy-policy", views.PrivacyPolicy.as_view(), name="privacy-policy"),
+    path("referral-program/", views.Referral.as_view(), name="referral-program"),
+    path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
 ]

@@ -1,22 +1,28 @@
-import logging
-from django.contrib.auth import authenticate, login
-from . import models
 import json
+import logging
 from datetime import datetime, timezone
-
 import pandas as pd
+
 from chartjs.views.lines import BaseLineChartView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.core.exceptions import ValidationError
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core.mail import send_mail
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
-from django.views.generic import CreateView, FormView, TemplateView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    FormView,
+    TemplateView,
+    UpdateView,
+)
+from safedelete.models import HARD_DELETE
 
 from . import models
 from .analytics_view import Analytics
@@ -29,7 +35,6 @@ from .mfpimport_views import (
     ImportMFPCredentialsUpdate,
 )
 from .models import Feedback, Log, MFPCredentials, Setting
-
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
@@ -91,6 +96,23 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+class DeleteLogData(LoginRequiredMixin, DeleteView):
+    model = Log
+    success_url = reverse_lazy("logs")
+
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
+
+    def get_queryset(self):
+        return Log.objects.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete(force_policy=HARD_DELETE)
+        return HttpResponseRedirect(success_url)
 
 
 class LogData(LoginRequiredMixin, CreateView):

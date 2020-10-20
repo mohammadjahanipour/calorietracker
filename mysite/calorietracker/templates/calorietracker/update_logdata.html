@@ -19,7 +19,7 @@
   </div>
 
 
-  <form class="form" method="post">{% csrf_token %}
+  <form class="form" id = "updateForm" method="post">{% csrf_token %}
     <div class="control-group">
         <label class="control-label">{{ form.date.label }} </label>
         <div class="controls" style="width:75%">{{ form.date }}
@@ -71,9 +71,42 @@
       </div>
 
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button form="updateForm" type="submit" class="btn btn-primary">Submit</button>
     </div>
   </form>
+
+
+  <div class="mt-2"></div>
+
+  <button type="button" href="#" data-toggle="modal" data-target="#logdeletemodal" class="btn btn-danger btn-icon-split btn-sm">
+      <i class="fas fa-trash"></i>
+    <span class="text">Delete Log</span>
+  </button>
+
+  <!-- Deletion Modal-->
+  <div class="modal fade" id="logdeletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">Log Deletion Confirmation</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Are you sure you want to delete this log? This action is irreversible.</div>
+        <div class="modal-footer">
+          <form id="deleteForm" method="post" action="{% url "DeleteLogData" object.id%}">{% csrf_token %}
+            <button form="deleteForm" type="submit" class="btn btn-danger btn-sm" value="DELETE">
+              <span class="text">Confirm</span>
+            </button>
+            <button type="button" data-dismiss="modal" class="btn btn-secondary btn-sm">
+              <span class="text">Cancel</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   {% comment %} {% if form.errors %}
         {% for field in form %}
