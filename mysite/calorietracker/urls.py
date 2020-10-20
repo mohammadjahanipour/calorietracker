@@ -37,4 +37,5 @@ urlpatterns = [
     ),
     path("referral-program/", views.Referral.as_view(), name="referral-program"),
     path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
+    path("subscription/", views.Subscription.as_view(), name="subscription"),
 ]

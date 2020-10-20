@@ -23,6 +23,7 @@ django-measurement = "*"
 myfitnesspal = "*"
 django-cryptography = "*"
 pinax-referrals = "*"
+dj-stripe = "*"
 
 [requires]
 python_version = "3.7"

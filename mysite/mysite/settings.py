@@ -31,6 +31,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
+# Stripe
+STRIPE_LIVE_PUBLIC_KEY = os.getenv("STRIPE_LIVE_PUBLIC_KEY")
+STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
+STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
+STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
+STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
+
+
 # Custom settings
 LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
@@ -119,6 +127,7 @@ INSTALLED_APPS = [
     "chartjs",
     "measurement",
     "pinax.referrals",
+    "djstripe",
 ]
 
 # 1 == dev domaine and sitename

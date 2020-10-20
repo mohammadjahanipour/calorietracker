@@ -40,6 +40,16 @@ from .models import Feedback, Log, MFPCredentials, Setting
 logger = logging.getLogger("PrimaryLogger")
 
 
+class Subscription(LoginRequiredMixin, TemplateView):
+    """docstring for Subscription."""
+
+    template_name = "calorietracker/subscription.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
 class Referral(LoginRequiredMixin, TemplateView):
     """docstring for Referral."""
 

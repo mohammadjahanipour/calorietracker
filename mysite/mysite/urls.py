@@ -20,4 +20,5 @@ urlpatterns = [
     path('', include("calorietracker.urls")),
     path('admin/', admin.site.urls),
     re_path(r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")),
+    re_path(r'^payments/', include('djstripe.urls', namespace="djstripe")),
 ]
