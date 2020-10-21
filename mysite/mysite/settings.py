@@ -16,6 +16,25 @@ import os
 import logging.config
 
 
+# # Base Configuration ========================================================
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv("DEBUG", False) == "True"
+
+ALLOWED_HOSTS = []
+
+# # Heroku ========================================================
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
+
 # # Email Configuration ========================================================
 ADMINS = [("CT", "calorietrackerio@gmail.com")]
 MANAGERS = ADMINS
@@ -31,7 +50,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
-# Stripe
+# # Stripe Configuration ========================================================
 STRIPE_LIVE_PUBLIC_KEY = os.getenv("STRIPE_LIVE_PUBLIC_KEY")
 STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
 STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
@@ -39,16 +58,15 @@ STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
 
 
-# Custom settings
+# # Log in/out Configuration ========================================================
 LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 
 
-# Clear prev config
-# LOGGING_CONFIG = None
-
+# # Logging Configuration ========================================================
 # Get loglevel from env
+# LOGGING_CONFIG = None
 LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "info").upper()
 
 logging.config.dictConfig(
@@ -85,29 +103,7 @@ logging.config.dictConfig(
 )
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", False) == "True"
-
-
-PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
-
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
-
+# # Applications Configuration ========================================================
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -133,7 +129,10 @@ INSTALLED_APPS = [
 SITE_ID = 1 if DEBUG else 2  # see migration 0008_Configure_Site_Names for more info
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 
+
+# # Middleware ========================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -145,8 +144,11 @@ MIDDLEWARE = [
     "pinax.referrals.middleware.SessionJumpingMiddleware",
 ]
 
+# # URLCONF ========================================================
 ROOT_URLCONF = "mysite.urls"
+WSGI_APPLICATION = "mysite.wsgi.application"
 
+# # Templates ========================================================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -163,12 +165,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "mysite.wsgi.application"
 
-
-# Database
+# # Database(s) ========================================================
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -177,9 +176,8 @@ DATABASES = {
 }
 
 
-# Password validation
+# # Password Validation ========================================================
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-
 # AUTH_PASSWORD_VALIDATORS = [
 #     {
 #         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -190,25 +188,14 @@ DATABASES = {
 # ]
 
 
-# Internationalization
+# # Internationalization ========================================================
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
+# # Static Files(CSS, JavaScript, Images) ========================================================
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = "/static/"
-
-
-# Configure Django App for Heroku.
-django_heroku.settings(locals())
