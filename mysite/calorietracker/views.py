@@ -99,6 +99,10 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         return Log.objects.filter(user=self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
     def get_form(self):
         form = super().get_form()
         return form
@@ -167,6 +171,12 @@ class LogData(LoginRequiredMixin, CreateView):
                 ),
             )
             return super().form_invalid(form)
+
+        if self.request.method == "POST":
+            if self.request.FILES:
+                # print("file detected!")
+                # print(self.request.FILES)
+            form.save()
         return super().form_valid(form)
 
 

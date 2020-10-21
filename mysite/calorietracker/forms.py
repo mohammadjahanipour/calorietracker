@@ -7,8 +7,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django_measurement.forms import MeasurementField
 from measurement.measures import Distance, Weight
+from cloudinary.forms import CloudinaryFileField
 
-from .models import Log, Setting
+from .models import Log, Setting, Image
 
 
 class MeasurementWidget(forms.MultiWidget):
@@ -229,7 +230,21 @@ class LogDataForm(forms.ModelForm):
             "calories_in",
             "calories_out",
             "activity_lvl",
+            "log_progress_pic",
         )
+
+    log_progress_pic = CloudinaryFileField(
+        label="Progress Pic:",
+        widget=forms.FileInput(
+            attrs={
+                "style": "display: inline-block;",
+            }
+        ),
+        options={
+            "folder": "progress_pics",
+        },
+        required=False,
+    )
 
     date = forms.DateField(
         widget=DatePickerInput(

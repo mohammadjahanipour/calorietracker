@@ -69,6 +69,20 @@
         </div>
         </p>
       </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.log_progress_pic.label }} </label><br>
+        {% if log.log_progress_pic.url %}
+          <a class="img-fluid" data-target="#imageModal" data-toggle="modal" href="{{ log.log_progress_pic.url }}">
+            <img src="{{ log.log_progress_pic.url }}" class="mb-3" width="150", height="150">
+          </a>
+        {% endif %}
+        <div class="controls"style="width:75%">{{ form.log_progress_pic }}
+          {% if form.log_progress_pic.help_text %}
+          <span class="help-inline"><small>{{ form.log_progress_pic.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
 
     <div class="form-actions">
       <button form="updateForm" type="submit" class="btn btn-primary">Submit</button>
@@ -82,6 +96,25 @@
       <i class="fas fa-trash"></i>
     <span class="text">Delete Log</span>
   </button>
+
+  <!-- Progress Pic Modal-->
+  <div class="modal fade" id="imageModal" tabindex="-1" role="image" aria-labelledby="imageModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+      <div class="modal-content modal-lg">
+        <div class="modal-header modal-lg">
+          <h5 class="modal-title modal-lg" id="imageModal"></h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body modal-lg">
+          <a href="{{ log.log_progress_pic.url }}">
+          <img src="{{ log.log_progress_pic.url }}" class="mb-3; img-fluid">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Deletion Modal-->
   <div class="modal fade" id="logdeletemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">

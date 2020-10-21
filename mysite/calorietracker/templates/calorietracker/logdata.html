@@ -18,7 +18,7 @@
   </div>
 
 
-  <form class="form" method="post">{% csrf_token %}
+  <form class="form" method="post" enctype="multipart/form-data">{% csrf_token %}
     <div class="control-group">
       <label class="control-label">{{ form.date.label }} </label>
       <div class="controls" style="width:75%">{{ form.date }}
@@ -71,6 +71,16 @@
         <div class="controls"style="width:75%">{{ form.activity_lvl }}
           {% if form.activity_lvl.help_text %}
           <span class="help-inline"><small>{{ form.activity_lvl.help_text }}</small></span>
+          {% endif %}
+        </div>
+        </p>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{ form.log_progress_pic.label }} </label>
+        <i id="progress_picTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+        <div class="controls"style="width:75%">{{ form.log_progress_pic }}
+          {% if form.log_progress_pic.help_text %}
+          <span class="help-inline"><small>{{ form.log_progress_pic.help_text }}</small></span>
           {% endif %}
         </div>
         </p>
