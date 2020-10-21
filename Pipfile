@@ -24,6 +24,7 @@ myfitnesspal = "*"
 django-cryptography = "*"
 pinax-referrals = "*"
 dj-stripe = "*"
+cloudinary = "*"
 
 [requires]
 python_version = "3.7"

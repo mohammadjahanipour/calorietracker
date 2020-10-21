@@ -14,6 +14,7 @@ import django_heroku
 from pathlib import Path
 import os
 import logging.config
+import cloudinary
 
 
 # # Base Configuration ========================================================
@@ -30,10 +31,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 ALLOWED_HOSTS = []
-
-# # Heroku ========================================================
-# Configure Django App for Heroku.
-django_heroku.settings(locals())
 
 # # Email Configuration ========================================================
 ADMINS = [("CT", "calorietrackerio@gmail.com")]
@@ -56,7 +53,15 @@ STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
 STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
 STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
+DJSTRIPE_WEBHOOK_VALIDATION = None
 
+# # Cloudinary Configuration ========================================================
+cloudinary.config(
+    cloud_name="calorietracker-io",
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 # # Log in/out Configuration ========================================================
 LOGIN_REDIRECT_URL = "/logdata"
@@ -122,6 +127,7 @@ INSTALLED_APPS = [
     "measurement",
     "pinax.referrals",
     "djstripe",
+    "cloudinary",
 ]
 
 # 1 == dev domaine and sitename
@@ -199,3 +205,7 @@ USE_TZ = True
 # # Static Files(CSS, JavaScript, Images) ========================================================
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = "/static/"
+
+# # Heroku ========================================================
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
