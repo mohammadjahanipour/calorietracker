@@ -103,3 +103,7 @@
   There is some funny business going on with the 004 Migration file
 
 - https://github.com/pinax/pinax-referrals
+
+**Allauth**
+
+- https://django-allauth.readthedocs.io/en/latest/index.html
