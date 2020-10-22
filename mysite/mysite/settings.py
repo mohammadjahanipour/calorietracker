@@ -242,14 +242,28 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# Provider specific settings
+# # Provider specific settings
+# https://django-allauth.readthedocs.io/en/latest/providers.html#facebook
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
-
-        'APP': {
-            'client_id': os.getenv("ZUCC_APP_ID"),
-            'secret': os.getenv("ZUCC_APP_SECRET"),
-            'key': ''
-        }
+        'METHOD': 'js_sdk',
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        # 'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v7.0',
     }
 }
