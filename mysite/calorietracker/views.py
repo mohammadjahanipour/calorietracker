@@ -176,7 +176,7 @@ class LogData(LoginRequiredMixin, CreateView):
             if self.request.FILES:
                 # print("file detected!")
                 # print(self.request.FILES)
-            form.save()
+                form.save()
         return super().form_valid(form)
 
 
