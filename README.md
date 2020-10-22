@@ -15,6 +15,13 @@
 
       SECRET_KEY = $z^fbe7!k&aqq79n^9lnhb^0qn+5cym*vx1n2r8m05^5=0+$)7
 
+      # Gmail SMTP
+      EMAIL_HOST_PASSWORD = 43lak
+
+      # Cloudinary:
+      CLOUDINARY_API_KEY = jl354kj
+      CLOUDINARY_API_SECRET = 534lk
+
       # Facebook:
       ZUCC_APP_ID = 244
       ZUCC_APP_SECRET = 8e5e8
