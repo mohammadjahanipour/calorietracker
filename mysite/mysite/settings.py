@@ -34,15 +34,14 @@ DEBUG = os.getenv("DEBUG", False) == "True"
 # Specify the context processors as follows:
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
                 # Already defined Django-related contexts here
-
                 # `allauth` needs this from django
-                'django.template.context_processors.request',
+                "django.template.context_processors.request",
             ],
         },
     },
@@ -146,11 +145,12 @@ INSTALLED_APPS = [
     "pinax.referrals",
     "djstripe",
     "cloudinary",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.discord',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.discord",
+    "sslserver",
 ]
 
 # 1 == dev domaine and sitename
@@ -190,7 +190,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 # `allauth` needs this from django
-                'django.template.context_processors.request',
+                "django.template.context_processors.request",
             ],
         },
     },
@@ -237,41 +237,44 @@ django_heroku.settings(locals())
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
+    "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 # # Provider specific settings
 # https://django-allauth.readthedocs.io/en/latest/providers.html#facebook
 SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'METHOD': 'js_sdk',
-        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
-        'SCOPE': ['email', 'public_profile'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'first_name',
-            'last_name',
-            'middle_name',
-            'name',
-            'name_format',
-            'picture',
-            'short_name'
+    "facebook": {
+        "METHOD": "js_sdk",
+        "SDK_URL": "//connect.facebook.net/{locale}/sdk.js",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        "INIT_PARAMS": {"cookie": True},
+        "FIELDS": [
+            "id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "name",
+            "name_format",
+            "picture",
+            "short_name",
         ],
-        'EXCHANGE_TOKEN': True,
+        "EXCHANGE_TOKEN": True,
         # 'LOCALE_FUNC': 'path.to.callable',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v7.0',
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v7.0",
+        "APP": {
+            "client_id": os.getenv("ZUCC_APP_ID"),
+            "secret": os.getenv("ZUCC_APP_SECRET"),
+        },
     },
-    'discord': {
-        'APP': {
-            'client_id': os.getenv("DISCORD_CLIENT_ID"),
-            'secret': os.getenv("DISCORD_SECRET"),
-            'key': os.getenv("DISCORD_KEY")
+    "discord": {
+        "APP": {
+            "client_id": os.getenv("DISCORD_CLIENT_ID"),
+            "secret": os.getenv("DISCORD_SECRET"),
+            "key": os.getenv("DISCORD_KEY"),
         }
-    }
+    },
 }

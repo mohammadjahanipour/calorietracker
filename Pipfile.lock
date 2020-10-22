@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fcf6ff0af28ea79651accad75aef2f536a6ac267aefa3b3a089bc3073d2022ca"
+            "sha256": "3049e971e95ad756b913c78ffe5fadd03e00289e3df3d339785cb9bfeed0cd56"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -246,6 +246,13 @@
             "index": "pypi",
             "version": "==0.5.6"
         },
+        "django-sslserver": {
+            "hashes": [
+                "sha256:c598a363d2ccdc2421c08ddb3d8b0973f80e8e47a3a5b74e4a2896f21c2947c5"
+            ],
+            "index": "pypi",
+            "version": "==0.22"
+        },
         "gunicorn": {
             "hashes": [
                 "sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626",
@@ -277,14 +284,6 @@
             ],
             "index": "pypi",
             "version": "==1.3.4"
-        },
-        "jeepney": {
-            "hashes": [
-                "sha256:3479b861cc2b6407de5188695fa1a8d57e5072d7059322469b62628869b8e36e",
-                "sha256:d6c6b49683446d2407d2fe3acb7a368a77ff063f9182fe427da15d622adc24cf"
-            ],
-            "markers": "sys_platform == 'linux'",
-            "version": "==0.4.3"
         },
         "joblib": {
             "hashes": [
@@ -596,14 +595,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==1.5.3"
-        },
-        "secretstorage": {
-            "hashes": [
-                "sha256:15da8a989b65498e29be338b3b279965f1b8f09b9668bd8010da183024c8bff6",
-                "sha256:b5ec909dde94d4ae2fa26af7c089036997030f0cf0a5cb372b4cccabd81c143b"
-            ],
-            "markers": "sys_platform == 'linux'",
-            "version": "==3.1.2"
         },
         "six": {
             "hashes": [
