@@ -173,9 +173,6 @@ class LogData(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
 
         if self.request.method == "POST":
-            if self.request.FILES:
-                # print("file detected!")
-                # print(self.request.FILES)
             form.save()
         return super().form_valid(form)
 
