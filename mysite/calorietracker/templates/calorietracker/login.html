@@ -1,5 +1,6 @@
 {% extends "extends/base_simple.html" %}
 {% load static %}
+{% load socialaccount %}
 
 {% block content %}
 
@@ -59,10 +60,13 @@
 
 
                     <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                    <hr>
+                    <a href="{% provider_login_url "discord" %}" class="btn btn-facebook btn-user btn-block">
+                      <i class="fab fa-discord fa-fw"></i> Login with Discord
+                    </a>
 
-                    {% load socialaccount %}
-                    {% providers_media_js %}
-                    <a href="{% provider_login_url "facebook" method="js_sdk" %}">Facebook Connect</a>
+                    <!-- <a href="{% provider_login_url "facebook" method="js_sdk" %}">Facebook Connect</a> -->
+
 
                     <!-- Social Logins   -->
                     <!-- <hr>
@@ -92,4 +96,6 @@
     </div>
   </div>
 </body>
+
+{% providers_media_js %}
 {% endblock %}

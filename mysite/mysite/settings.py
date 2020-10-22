@@ -150,6 +150,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.discord',
 ]
 
 # 1 == dev domaine and sitename
@@ -265,5 +266,12 @@ SOCIALACCOUNT_PROVIDERS = {
         # 'LOCALE_FUNC': 'path.to.callable',
         'VERIFIED_EMAIL': False,
         'VERSION': 'v7.0',
+    },
+    'discord': {
+        'APP': {
+            'client_id': os.getenv("DISCORD_CLIENT_ID"),
+            'secret': os.getenv("DISCORD_SECRET"),
+            'key': os.getenv("DISCORD_KEY")
+        }
     }
 }

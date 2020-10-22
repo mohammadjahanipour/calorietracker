@@ -15,11 +15,22 @@
 
       SECRET_KEY = $z^fbe7!k&aqq79n^9lnhb^0qn+5cym*vx1n2r8m05^5=0+$)7
 
+      # Facebook:
+      ZUCC_APP_ID = 244
+      ZUCC_APP_SECRET = 8e5e8
+
+      # Discord
+      DISCORD_CLIENT_ID = 768
+      DISCORD_SECRET = 4OTdwm2_betA
+      DISCORD_KEY = 57a72a
+
+
       STRIPE_LIVE_MODE = False
       STRIPE_TEST_PUBLIC_KEY = pk_test_51
       STRIPE_TEST_SECRET_KEY = sk_test_51
       STRIPE_LIVE_PUBLIC_KEY = pk_live_51
       STRIPE_LIVE_SECRET_KEY = sk_live_51
+
 
 
 ### Dokku
