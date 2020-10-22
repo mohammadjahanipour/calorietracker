@@ -25,6 +25,8 @@ django-cryptography = "*"
 pinax-referrals = "*"
 dj-stripe = "*"
 cloudinary = "*"
+django-allauth = "*"
+django-sslserver = "*"
 
 [requires]
 python_version = "3.7"
