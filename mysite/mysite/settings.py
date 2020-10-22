@@ -30,6 +30,24 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False) == "True"
 
+
+# Specify the context processors as follows:
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Already defined Django-related contexts here
+
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
+            ],
+        },
+    },
+]
+
 ALLOWED_HOSTS = []
 
 # # Email Configuration ========================================================
@@ -128,6 +146,10 @@ INSTALLED_APPS = [
     "pinax.referrals",
     "djstripe",
     "cloudinary",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
 ]
 
 # 1 == dev domaine and sitename
@@ -166,6 +188,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -209,3 +233,23 @@ STATIC_URL = "/static/"
 # # Heroku ========================================================
 # Configure Django App for Heroku.
 django_heroku.settings(locals())
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+
+        'APP': {
+            'client_id': os.getenv("ZUCC_APP_ID"),
+            'secret': os.getenv("ZUCC_APP_SECRET"),
+            'key': ''
+        }
+    }
+}
