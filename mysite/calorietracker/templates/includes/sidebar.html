@@ -6,19 +6,16 @@
 
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
-    <div class="sidebar-brand-icon">
       {% comment %} <img src="{% static 'favicon/favicon.ico' %}" width="20" height="20"></img> {% endcomment %}
+    <div class="sidebar-brand-icon rotate-n-15">
+      {% comment %} <i class="fab fa-gitkraken"></i> {% endcomment %}
+      <img src="{% static 'favicon/favicon.ico' %}" width="25" height="25"></img>
     </div>
     <div class="sidebar-brand-text mx-1">CalorieTracker.io</div>
   </a>
 
   <!-- Divider -->
   <hr class="sidebar-divider my-0">
-
-
-
-  <!-- Divider -->
-  <hr class="sidebar-divider">
 
   <!-- Heading -->
   <div class="sidebar-heading">
@@ -49,8 +46,8 @@
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Integrations:</h6>
-        <a class="collapse-item" href="{% url 'importmfp' %}">MyFitnessPal</a>
-        <a class="collapse-item" href="{% url 'importcsv' %}">CSV File</a>
+        <a class="collapse-item" href="{% url 'importmfp' %}"><span>MyFitnessPal</span></a>
+        <a class="collapse-item" href="{% url 'importcsv' %}"><span>CSV File</span></a>
       </div>
     </div>
   </li>
@@ -61,8 +58,6 @@
       <i class="fas fa-chart-bar"></i>
       <span>Analytics Dashboard</span></a>
   </li>
-
-
 
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">
@@ -81,10 +76,35 @@
       <span>Settings</span></a>
   </li>
 
+  <!-- Nav Item - Community Collapse Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#communityCollapse" aria-expanded="true" aria-controls="communityCollapse">
+      <i class="fas fa-comments"></i>
+      <span>Community</span>
+    </a>
+    <div id="communityCollapse" class="collapse" aria-labelledby="communityCollapse" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item" href="https://discord.gg/jUhASAM">
+            <i class="fab fa-fw fa-discord"></i>
+            <span>Discord</span></a>
+          <a class="collapse-item" href="https://www.facebook.com/calorietracker.io/">
+            <i class="fab fa-fw fa-facebook"></i>
+            <span>Facebook</span></a>
+          <a class="collapse-item" href="https://www.instagram.com/calorietracker.io/">
+            <i class="fab fa-fw fa-instagram"></i>
+            <span>Instagram</span></a>
+          <a class="collapse-item" href="https://www.reddit.com/r/calorietrackerio/">
+            <i class="fab fa-fw fa-reddit"></i>
+            <span>Reddit</span></a>
+          
+      </div>
+    </div>
+  </li>
+
   <!-- Nav Item - Feedback -->
   <li class="nav-item">
     <a class="nav-link" href="{% url 'feedback' %}">
-      <i class="fas fa-comment"></i>
+      <i class="fas fa-edit"></i>
       <span>Feedback</span></a>
   </li>
 
