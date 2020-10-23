@@ -1,3 +1,4 @@
+from django.conf import settings
 import json
 import logging
 from datetime import datetime, timezone
@@ -173,10 +174,7 @@ class LogData(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
 
         if self.request.method == "POST":
-            if self.request.FILES:
-                # print("file detected!")
-                # print(self.request.FILES)
-                form.save()
+            form.save()
         return super().form_valid(form)
 
 
@@ -313,22 +311,22 @@ class Register(CreateView):
     def get_success_url(self):
 
         # Log user in so he can be redirect to the settings page without having to login manually
-        login(self.request, self.object)
+        login(self.request, self.object, settings.AUTHENTICATION_BACKENDS[0])
 
-        # Logging
-        user = self.request.user.username
-        message = (
-            user
-            + " just registered on CalorieTracker.io! on "
-            + datetime.now(timezone.utc).strftime("%A, %B %e, %Y %I:%M %p")
-        )
-        send_mail(
-            message,
-            message,
-            "calorietrackerio@gmail.com",
-            ["calorietrackerio@gmail.com"],
-            fail_silently=False,
-        )
+        # # Logging
+        # user = self.request.user.username
+        # message = (
+        #     user
+        #     + " just registered on CalorieTracker.io! on "
+        #     + datetime.now(timezone.utc).strftime("%A, %B %e, %Y %I:%M %p")
+        # )
+        # send_mail(
+        #     message,
+        #     message,
+        #     "calorietrackerio@gmail.com",
+        #     ["calorietrackerio@gmail.com"],
+        #     fail_silently=False,
+        # )
 
         return super().get_success_url()
 
