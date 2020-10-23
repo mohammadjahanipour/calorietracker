@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 import pandas as pd
 from django.contrib.auth import get_user_model
@@ -200,7 +200,65 @@ class LogModelTest(TestCase):
 
 
 # Test Forms
+# Tested forms: RegisterForm, LoginForm, LogDataForm
+# Untested forms: Progresspic in LogDataForm, ImportCSVForm, ImportMFPForm, SettingForm
 # todo
+class FormTests(TestCase):
+    def setUp(self) -> None:
+        self.username = "testuser"
+        self.email = "testuser@email.com"
+        self.password = "testpw"
+
+    def test_register_form_response(self):
+        print("FormTests: test_register_form_response")
+        response = self.client.get(reverse_lazy("register"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_register_form_registration(self):
+        print("FormTests: test_register_form_registration")
+        response = self.client.post(
+            reverse_lazy("register"),
+            data={
+                "username": self.username,
+                "email": self.email,
+                "password1": self.password,
+                "password2": self.password,
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+
+        users = get_user_model().objects.all()
+        self.assertEqual(users.count(), 1)
+
+    def test_login_form(self):
+        print("FormTests: test_login_form_login")
+        response = self.client.post(
+            reverse_lazy("login"),
+            data={"username": self.username, "password": self.password},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_logdata_form(self):
+        print("FormTests: test_logdata_form_logdata")
+        self.client.force_login(User.objects.get_or_create(username="formtests")[0])
+        response = self.client.post(
+            reverse_lazy("logdata"),
+            data={
+                "date": date(2019, 4, 13),
+                "weight_0": 200,
+                "weight_1": "lb",
+                "calories_in": 2000,
+                "calories_out": 1000,
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        logs = Log.objects.all()
+        print(logs)
+        self.assertEqual(logs.count(), 1)
+
 
 # Test Views
 # todo

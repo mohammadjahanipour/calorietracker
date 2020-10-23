@@ -16,6 +16,7 @@
 ### Added 
 - progress pics storage in logs using cloudinary
 - oauth2 logins via facebook, discord
+- deletion of logs
 - import logs via csv
 - favicon
 - implemented a privacy policy
