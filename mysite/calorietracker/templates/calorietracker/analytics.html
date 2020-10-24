@@ -113,8 +113,15 @@
     <div class="col-xl-8 col-lg-7">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Weight Over Time</h6>
+          <a id="downloadWC"
+              download="WeightOverTime.jpg" 
+              href=""
+              class="btn-sm btn-info float-right bg-flat-color-1"
+                  <!-- Download Icon -->
+            <i class="fa fa-download"></i>
+          </a>
         </div>
         <!-- Card Body -->
         <div class="card-body">
@@ -184,8 +191,15 @@
     <div class="col-xl-8 col-lg-7">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Over Time</h6>
+          <a id="downloadCIC"
+              download="CaloricIntakeOverTime.jpg" 
+              href=""
+              class="btn-sm btn-info float-right bg-flat-color-1"
+                  <!-- Download Icon -->
+            <i class="fa fa-download fa"></i>
+          </a>
         </div>
         <!-- Card Body -->
         <div class="card-body">
@@ -200,8 +214,15 @@
     <div class="col-xl-4 col-lg-5">
       <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Breakdown</h6>
+          <a id="downloadCIPC"
+              download="CaloricIntakeBreakdown.jpg" 
+              href=""
+              class="btn-sm btn-info float-right bg-flat-color-1"
+                  <!-- Download Icon -->
+            <i class="fa fa-download"></i>
+          </a>
         </div>
         <!-- Card Body -->
         <div class="card-body">
@@ -350,5 +371,4 @@ $(document).ready(function() {
 <script src="{% static "js/line-chart-weights.js" %}"></script>
 <script src="{% static "js/line-chart-calories.js" %}"></script>
 <script src="{% static "js/pie-chart-calories.js" %}"></script>
-
 {% endblock %}

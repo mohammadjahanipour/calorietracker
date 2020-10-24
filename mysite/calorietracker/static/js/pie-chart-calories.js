@@ -32,7 +32,15 @@ var myPieChart = new Chart(ctx, {
       position: "bottom",
     },
     cutoutPercentage: 60,
-    circumference: 2*Math.PI,
-    rotation: -2*Math.PI
+    circumference: 2 * Math.PI,
+    rotation: -2 * Math.PI
   },
+});
+
+document.getElementById("downloadCIPC").addEventListener('click', function () {
+  /*Get image of canvas element*/
+  var url_base64jp = document.getElementById("piechartCalories").toDataURL("image/jpg");
+  /*get download button (tag: <a></a>) */
+  /*insert chart image url to download button (tag: <a></a>) */
+  document.getElementById("downloadCIPC").href = url_base64jp;
 });

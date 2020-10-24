@@ -10,6 +10,11 @@
 - sign in with apple
 - landing page
 - bodyfat % calculator
+- share analytics view to social media (fb/twitter/ig)
+
+## 2020-10-XX
+### Added
+- download jpgs of analytics graphs
 
 
 ## 2020-10-22
