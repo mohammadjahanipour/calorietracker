@@ -27,6 +27,7 @@ dj-stripe = "*"
 cloudinary = "*"
 django-allauth = "*"
 django-sslserver = "*"
+django-friendship = "*"
 
 [requires]
 python_version = "3.7"

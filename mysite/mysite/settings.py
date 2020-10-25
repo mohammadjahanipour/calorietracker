@@ -151,6 +151,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.discord",
     "sslserver",
+    "friendship"
 ]
 
 # 1 == dev domaine and sitename
