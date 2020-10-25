@@ -132,8 +132,6 @@ class DeleteLogData(LoginRequiredMixin, DeleteView):
 
 class LogData(LoginRequiredMixin, CreateView):
 
-    # TODO: check if date does not overlap with existing log
-
     model = Log
     form_class = LogDataForm
     template_name = "calorietracker/logdata.html"

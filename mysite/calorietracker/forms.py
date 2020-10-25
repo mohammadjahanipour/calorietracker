@@ -230,11 +230,40 @@ class LogDataForm(forms.ModelForm):
             "calories_in",
             "calories_out",
             "activity_lvl",
-            "log_progress_pic",
+            "front_progress_pic",
+            "side_progress_pic",
+            "back_progress_pic"
+
         )
 
-    log_progress_pic = CloudinaryFileField(
-        label="Progress Pic:",
+    front_progress_pic = CloudinaryFileField(
+        label="Front Facing Progress Pic:",
+        widget=forms.FileInput(
+            attrs={
+                "style": "display: inline-block;",
+            }
+        ),
+        options={
+            "folder": "progress_pics",
+        },
+        required=False,
+    )
+
+    side_progress_pic = CloudinaryFileField(
+        label="Side Facing Progress Pic:",
+        widget=forms.FileInput(
+            attrs={
+                "style": "display: inline-block;",
+            }
+        ),
+        options={
+            "folder": "progress_pics",
+        },
+        required=False,
+    )
+
+    back_progress_pic = CloudinaryFileField(
+        label="Back Facing Progress Pic:",
         widget=forms.FileInput(
             attrs={
                 "style": "display: inline-block;",

@@ -231,10 +231,6 @@ class Log(DateTimeFields, SafeDeleteModel):
         help_text="Estimate your relative activity level",
     )
 
-    log_progress_pic = CloudinaryField("image", null=True)
-
-    # todo we want to be able to make images/progress pics relational
-    # todo we possibly also want to be able to have multiple progress pics for a given log/date
-    # log_progress_pic = models.ForeignKey(
-    #     Image, null=True, blank=True, on_delete=models.CASCADE
-    # )
+    front_progress_pic = CloudinaryField("image", null=True, blank=True)
+    side_progress_pic = CloudinaryField("image", null=True, blank=True)
+    back_progress_pic = CloudinaryField("image", null=True, blank=True)
