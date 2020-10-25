@@ -151,7 +151,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.discord",
     "sslserver",
-    "friendship"
+    "friendship",
 ]
 
 # 1 == dev domaine and sitename
@@ -231,6 +231,10 @@ USE_TZ = True
 # # Static Files(CSS, JavaScript, Images) ========================================================
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = "/static/"
+
+# # Media Files ========================================================
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 # # Heroku ========================================================
 # Configure Django App for Heroku.
