@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>C3 Chart | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+            <!-- C3 Chart css -->
+         <link href="assets/libs/c3/c3.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-sidebar="dark">
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/topbar.html", {"title": "C3 Chart"})
+
+            @@include("partials/sidebar.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Bar Chart</h4>
+
+                                         <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">86541</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">2541</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">102030</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="chart" dir="ltr"></div>
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Stacked Area Chart</h4>
+
+                                         <div class="row text-center mt-4">
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">86541</h5>
+                                            <p class="text-muted text-truncate">Activated</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">2541</h5>
+                                            <p class="text-muted text-truncate">Pending</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">102030</h5>
+                                            <p class="text-muted text-truncate">Deactivated</p>
+                                        </div>
+                                    </div>
+
+                                        <div id="chart-stacked" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Roated Chart</h4>
+
+                                         <div class="row text-center mt-4">
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">86541</h5>
+                                            <p class="text-muted text-truncate">Activated</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">2541</h5>
+                                            <p class="text-muted text-truncate">Pending</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">102030</h5>
+                                            <p class="text-muted text-truncate">Deactivated</p>
+                                        </div>
+                                    </div>
+
+                                        <div id="roated-chart" dir="ltr"></div>
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Combine Chart</h4>
+
+                                         <div class="row text-center mt-4">
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">86541</h5>
+                                            <p class="text-muted text-truncate">Activated</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">2541</h5>
+                                            <p class="text-muted text-truncate">Pending</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">102030</h5>
+                                            <p class="text-muted text-truncate">Deactivated</p>
+                                        </div>
+                                    </div>
+
+                                        <div id="combine-chart" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Donut Chart</h4>
+
+                                         <div class="row text-center mt-4">
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">86541</h5>
+                                            <p class="text-muted text-truncate">Activated</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">2541</h5>
+                                            <p class="text-muted text-truncate">Pending</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">102030</h5>
+                                            <p class="text-muted text-truncate">Deactivated</p>
+                                        </div>
+                                    </div>
+
+                                        <div id="donut-chart" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Pie Chart</h4>
+
+                                         <div class="row text-center mt-4">
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">86541</h5>
+                                            <p class="text-muted text-truncate">Activated</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">2541</h5>
+                                            <p class="text-muted text-truncate">Pending</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <h5 class="mb-0 font-size-18">102030</h5>
+                                            <p class="text-muted text-truncate">Deactivated</p>
+                                        </div>
+                                    </div>
+
+                                        <div id="pie-chart" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+                <!--C3 Chart-->
+        <script src="assets/libs/d3/d3.min.js"></script>
+        <script src="assets/libs/c3/c3.min.js"></script>
+
+        <!-- Init js -->
+        <script src="assets/js/pages/c3-chart.init.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>

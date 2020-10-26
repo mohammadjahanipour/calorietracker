@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Range Slider | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- ION Slider -->
+        <link href="assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-sidebar="dark">
+
+         <!-- Loader -->
+    <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/topbar.html", {"title": "Range Slider"})
+
+            @@include("partials/sidebar.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title">ION Range slider</h4>
+                                        <p class="card-title-desc">Cool, comfortable, responsive and easily customizable range slider</p>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Default</h5>
+                                                    <input type="text" id="range_01">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Min-Max</h5>
+                                                    <input type="text" id="range_02">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Prefix</h5>
+                                                    <input type="text" id="range_03">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Range</h5>
+                                                    <input type="text" id="range_04">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Step</h5>
+                                                    <input type="text" id="range_05">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Custom Values</h5>
+                                                    <input type="text" id="range_06">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Prettify Numbers</h5>
+                                                    <input type="text" id="range_07">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Disabled</h5>
+                                                    <input type="text" id="range_08">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Extra Example</h5>
+                                                    <input type="text" id="range_09">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Use decorate_both option</h5>
+                                                    <input type="text" id="range_10">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Postfixes</h5>
+                                                    <input type="text" id="range_11">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="p-3">
+                                                    <h5 class="font-size-16 mb-4 mt-0">Hide</h5>
+                                                    <input type="text" id="range_12">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+        <!-- Ion Range Slider-->
+        <script src="assets/libs/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+
+        <!-- Range slider init js-->
+        <script src="assets/js/pages/range-sliders.init.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>

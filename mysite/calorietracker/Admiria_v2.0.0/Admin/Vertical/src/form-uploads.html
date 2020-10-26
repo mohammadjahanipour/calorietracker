@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>File Uploads | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- Plugins css -->
+        <link href="assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-sidebar="dark">
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/topbar.html", {"title": "File Uploads"})
+
+            @@include("partials/sidebar.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title">Dropzone</h4>
+                                        <p class="card-title-desc">DropzoneJS is an open source library
+                                            that provides drag’n’drop file uploads with image previews.
+                                        </p>
+
+                                        <div class="mb-5">
+                                            <form action="#" class="dropzone">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple="multiple">
+                                                </div>
+                                            </form>
+                                        </div>
+    
+                                        <div class="text-center mt-3">
+                                            <button type="button" class="btn btn-primary waves-effect waves-light">Send Files</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+        <!-- Plugins js -->
+        <script src="assets/libs/dropzone/min/dropzone.min.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>

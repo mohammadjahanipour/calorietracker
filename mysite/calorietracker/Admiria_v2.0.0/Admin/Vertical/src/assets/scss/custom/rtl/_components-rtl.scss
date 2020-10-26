@@ -1,0 +1,90 @@
+//
+// components-rtl.scss
+//
+
+
+/* Activity */
+.activity-feed {
+  .feed-item {
+    padding-right: 30px;
+    border-right: 2px solid $gray-200;
+    padding-left: 0px;
+    border-left: none;
+    &::after {
+      right: -6px;
+      left: 0;
+    }
+  }
+}
+
+// monthly earning widget
+
+@media (min-width: 768px) {
+
+  .monthly-earning-wid{
+    padding-right: $grid-gutter-width / 2;
+    padding-left: 0;
+  }
+
+  .earning-wid{
+    padding-left: $grid-gutter-width / 2;
+    padding-right: 0;
+  }
+}
+
+
+/* Inbox-widget */
+
+.inbox-widget {
+  .inbox-item {
+    .inbox-item-img {
+      float: right;
+      margin-left: 15px;
+    }
+    .inbox-item-date {
+      left: 7px;
+      right: auto;
+    }
+  }
+}
+
+
+
+
+// dropdown
+
+.dropdown-megamenu{
+  &.show{
+    left: 20px!important;
+  }
+}
+
+
+// icons
+
+.icon-list-demo{
+  i{
+    margin-left: 12px;
+    margin-right: 0;
+  }
+}
+
+
+
+
+// Invoice
+
+@media print {
+  .content-page,
+  .content,
+  body {
+      margin-right: 0;
+  }
+}
+
+// Demos button 
+.demos-show-btn {
+  left: 0;
+  right: auto;
+  border-radius: 0 6px 6px 0;
+}

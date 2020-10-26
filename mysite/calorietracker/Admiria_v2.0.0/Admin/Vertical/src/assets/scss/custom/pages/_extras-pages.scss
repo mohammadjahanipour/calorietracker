@@ -1,0 +1,47 @@
+// 
+// Extras pages.scss
+//
+
+
+// pricing
+
+.plan-card {
+    .plan-icon{
+      display: inline-block;
+      font-size: 35px;
+      width: 100px;
+      height: 100px;
+      color: $white;
+      line-height: 76px;
+      overflow: hidden;
+      border: 12px solid lighten($card-bg, 10%);
+      border-radius: 50%;
+      background: $primary;
+      box-shadow: 0 0 3px $gray-400;
+      transition: all .3s;
+    }
+  
+    .plan-price {
+      span{
+        font-size: 15px;
+        vertical-align: middle;
+      }
+    }
+    .plan-features  {
+      p{
+        line-height: 32px;
+      }
+    }
+  }
+
+
+// 404
+
+.ex-page-content {
+    h1 {
+      font-size: 98px;
+      font-weight: 700;
+      line-height: 150px;
+      text-shadow: rgba(61, 61, 61, 0.3) 1px 1px, rgba(61, 61, 61, 0.2) 2px 2px, rgba(61, 61, 61, 0.3) 3px 3px;
+    }
+  }
