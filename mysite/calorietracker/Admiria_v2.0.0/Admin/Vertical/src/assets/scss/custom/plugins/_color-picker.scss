@@ -1,0 +1,21 @@
+
+//
+// Color-picker
+//
+
+// Colorpicker 2X
+.colorpicker-2x {
+  .colorpicker-saturation {
+    width: 110px;
+    height: 200px;
+  }
+
+  .colorpicker-hue, .colorpicker-alpha {
+    width: 20px;
+    height: 200px;
+  }
+
+  .colorpicker-color, .colorpicker-color div {
+    height: 30px;
+  }
+}

@@ -1,315 +1,596 @@
-{% extends "extends/base.html" %}
 {% load static %}
 
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>CalorieTracker.io - Intelligent Calorie and Fitness Tracking</title>
+    <meta content="CalorieTracker.io Landing Page" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<!-- Begin Page Content -->
-<div class="container-fluid">
+    <!-- App Icons -->
+    <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}">
 
-  <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-  </div>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Quattrocento+Sans:400,700"
+        rel="stylesheet" />
 
-  <!-- Content Row -->
-  <div class="row">
+    <!--Mobirise Icons-->
+    <link rel="stylesheet" type="text/css" href="{% static 'landingpage/css/mobirise.css' %}" />
 
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-calendar fa-2x text-gray-300"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Magnific-popup -->
+    <link rel="stylesheet" href="{% static 'landingpage/css/magnific-popup.css' %}">
 
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!--Material Design Icons-->
+    <link rel="stylesheet" type="text/css" href="{% static 'landingpage/css/materialdesignicons.min.css' %}" />
 
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-info shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-              <div class="row no-gutters align-items-center">
-                <div class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                </div>
-                <div class="col">
-                  <div class="progress progress-sm mr-2">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'landingpage/css/bootstrap.min.css' %}" rel="stylesheet">
 
-    <!-- Pending Requests Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-warning shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-comments fa-2x text-gray-300"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <!-- Custom styles for this template -->
+    <link href="{% static 'landingpage/css/style.css' %}" rel="stylesheet">
 
-  <!-- Content Row -->
+</head>
 
-  <div class="row">
+<body data-spy="scroll" data-target="#navbar-example" data-offset="20">
 
-    <!-- Area Chart -->
-    <div class="col-xl-8 col-lg-7">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+    <!--START NAVBAR-->
+    <nav id="navbar-example"
+        class="navbar navbar-expand-lg navbar-inverse navbar-toggleable-md fixed-top sticky navbar-custom">
+        <div class="container">
+            <a class="navbar-brand logo" href="#">
+                <span class="logo-text">CALORIETRACKER.IO</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="mdi mdi-menu"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
+                <ul class="navbar-nav ml-auto" id="mySidenav">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#features" class="nav-link">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#screenshots" class="nav-link">Screenshots</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a href="#pricing" class="nav-link">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#team" class="nav-link">Team</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
             </div>
-          </div>
         </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas id="myAreaChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
+    </nav>
+    <!--END NAVBAR-->
 
-    <!-- Pie Chart -->
-    <div class="col-xl-4 col-lg-5">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+    <!--START HOME-->
+    <section class="section home" id="home">
+        <div class="bg-overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2 text-white text-center">
+                    <h1 class="home-title">An Intelligent Fitness and Calorie Tracking Assistant</h1>
+                    <p class="mt-4 home-subtitle">No more cookie-cutter formulas. CalorieTracker.io adapts
+                        it's algorithms to your personal progress every day to deliver next-level
+                        individualized insights and recommendations.</p>
+                    <a href="https://calorietracker.io/login" class="btn btn-custom mt-4 mb-4">Try It Now</a>
+
+                    <img src="{% static "landingpage/images/showcasefull.png" %}" alt="" class="img-fluid">
+                </div>
             </div>
-          </div>
         </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="chart-pie pt-4 pb-2">
-            <canvas id="myPieChart"></canvas>
-          </div>
-          <div class="mt-4 text-center small">
-            <span class="mr-2">
-              <i class="fas fa-circle text-primary"></i> Direct
-            </span>
-            <span class="mr-2">
-              <i class="fas fa-circle text-success"></i> Social
-            </span>
-            <span class="mr-2">
-              <i class="fas fa-circle text-info"></i> Referral
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    </section>
+    <!--END HOME-->
 
-  <!-- Content Row -->
-  <div class="row">
+    <!--START FEATURES-->
+    <section class="section" id="features">
+        <div class="container">
 
-    <!-- Content Column -->
-    <div class="col-lg-6 mb-4">
-
-      <!-- Project Card Example -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-        </div>
-        <div class="card-body">
-          <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-          <div class="progress mb-4">
-            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-          <div class="progress mb-4">
-            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-          <div class="progress mb-4">
-            <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-          <div class="progress mb-4">
-            <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-          <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Color System -->
-      <div class="row">
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-primary text-white shadow">
-            <div class="card-body">
-              Primary
-              <div class="text-white-50 small">#4e73df</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3>Features</h3>
+                        <p class="text-muted slogan"></p>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-success text-white shadow">
-            <div class="card-body">
-              Success
-              <div class="text-white-50 small">#1cc88a</div>
+
+            <div class="row mt-4">
+                <div class="col-md-4 services-box">
+                    <div class="text-center p-3">
+                        <i class="mbri-gift text-custom"></i>
+                        <h5 class="pt-4">Stop Guessing - Start Progressing</h5>
+                        <p class="text-gray pt-2"> People's habits and lifestyles can change - and CalorieTracker.io
+                            understands that. Our models adjust themselves daily to your habits and data to keep you on
+                            top of it all.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 services-box">
+                    <div class="text-center p-3">
+                        <i class="mbri-growing-chart text-custom"></i>
+                        <h5 class="pt-4">Visualize Progress</h5>
+                        <p class="text-gray pt-2"> We strive to display your progress in an
+                            intuitive, comprehensible manner. See your overall progress
+                            from your personalized analytics dashboard.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 services-box">
+                    <div class="text-center p-3">
+                        <i class="mbri-lock text-custom"></i>
+                        <h5 class="pt-4">Log Everything</h5>
+                        <p class="text-gray pt-2"> From caloric intake to weight, progress pictures and
+                            more. CalorieTracker.io is constantly expanding to provide a secure, all-in-one space to
+                            document your full fitness journey.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 services-box">
+                    <div class="text-center p-3">
+                        <i class="mbri-idea text-custom "></i>
+                        <h5 class="pt-4">Generate Insights</h5>
+                        <p class="text-gray pt-2"> Breakdown your patterns numerically and visually. Find out where
+                            you're on track and where you can improve to get to your goals faster.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 services-box">
+                    <div class="text-center p-3">
+                        <i class="mbri-responsive text-custom"></i>
+                        <h5 class="pt-4">Any Time, Any Place</h5>
+                        <p class="text-gray pt-2"> Update your data and access your insights at your convenience.
+                            CalorieTracker.io is crossplatform and works on mobile, desktop and tablet.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 services-box">
+                    <div class="text-center p-3">
+                        <i class="mbri-upload text-custom "></i>
+                        <h5 class="pt-4">Integrations</h5>
+                        <p class="text-gray pt-2"> Already use another tracking system? Import or sync your
+                            CalorieTracker.io account with services like MyFitnessPal or your personal CSV with the
+                            click of a button.</p>
+                    </div>
+                </div>
+
             </div>
-          </div>
+
         </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-info text-white shadow">
-            <div class="card-body">
-              Info
-              <div class="text-white-50 small">#36b9cc</div>
+    </section>
+    <!--END FEATURES-->
+
+    <!--START SCREENSHOTS-->
+    <section class="section bg-grey" id="screenshots">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3>Screenshots</h3>
+                        <p class="text-muted slogan"></p>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-warning text-white shadow">
-            <div class="card-body">
-              Warning
-              <div class="text-white-50 small">#f6c23e</div>
+
+            <div class="row mt-4">
+                <div class="col-sm-4">
+                    <a href="{% static "landingpage/images/screenshots/1.png" %}" class="thumb preview-thumb image-popup"
+                        title="Analytics Overview">
+                        <img src="{% static "landingpage/images/screenshots/1.png" %}" class="thumb-img" alt="work-thumbnail">
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="{% static "landingpage/images/screenshots/2.png" %}" class="thumb preview-thumb image-popup"
+                        title="Analytics Overview">
+                        <img src="{% static "landingpage/images/screenshots/2.png" %}" class="thumb-img" alt="work-thumbnail">
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="{% static "landingpage/images/screenshots/3.png" %}" class="thumb preview-thumb image-popup"
+                        title="Analytics Overview">
+                        <img src="{% static "landingpage/images/screenshots/3.png" %}" class="thumb-img" alt="work-thumbnail">
+                    </a>
+                </div>
             </div>
-          </div>
+
+            <!-- <div class="row">
+                <div class="col-sm-4">
+                    <a href="{% static "landingpage/images/screenshots/4.png" %}" class="thumb preview-thumb image-popup"
+                        title="Analytics Overview">
+                        <img src="{% static "landingpage/images/screenshots/4.png" %}" class="thumb-img" alt="work-thumbnail">
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="{% static "landingpage/images/screenshots/5.png" %}" class="thumb preview-thumb image-popup"
+                        title="Analytics Overview">
+                        <img src="{% static "landingpage/images/screenshots/5.png" %}" class="thumb-img" alt="work-thumbnail">
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="{% static "landingpage/images/screenshots/6.png" %}" class="thumb preview-thumb image-popup"
+                        title="Analytics Overview">
+                        <img src="{% static "landingpage/images/screenshots/6.png" %}" class="thumb-img" alt="work-thumbnail">
+                    </a>
+                </div>
+            </div> -->
+
         </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-danger text-white shadow">
-            <div class="card-body">
-              Danger
-              <div class="text-white-50 small">#e74a3b</div>
+    </section>
+    <!--END SCREENSHOTS-->
+
+    <!--START PRICING-->
+    <!--
+    <section class="section" id="pricing">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3>Simple Pricing</h3>
+                        <p class="text-muted slogan">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                            posuere cubilia Curae. Vivamus eu sollicitudin lacus, nec ultricies lorem.</p>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-secondary text-white shadow">
-            <div class="card-body">
-              Secondary
-              <div class="text-white-50 small">#858796</div>
+
+            <div class="row mt-4">
+                <div class="col-sm-4">
+                    <div class="card plan-card text-center">
+                        <div class="card-body">
+                            <div class="pt-3 pb-3">
+                                <h1><i class="ion-trophy plan-icon bg-dark"></i></h1>
+                                <h6 class="text-uppercase text-dark">Single License</h6>
+                            </div>
+                            <div>
+                                <h1 class="plan-price">$25<sup class="text-muted">Per License</sup></h1>
+                                <div class="plan-div-border"></div>
+                            </div>
+                            <div class="plan-features pb-3 mt-3 text-muted padding-t-b-30">
+                                <p>Free Live Support</p>
+                                <p>Unlimited User</p>
+                                <p>No Time Tracking</p>
+                                <p>Free Setup</p>
+                                <a href="#" class="btn btn-custom">Sign Up Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card plan-card text-center">
+                        <div class="card-body">
+                            <div class="pt-3 pb-3">
+                                <h1><i class="ion-trophy plan-icon bg-dark"></i></h1>
+                                <h6 class="text-uppercase text-dark">Multiple License</h6>
+                            </div>
+                            <div>
+                                <h1 class="plan-price">$99<sup class="text-muted">Per License</sup></h1>
+                                <div class="plan-div-border"></div>
+                            </div>
+                            <div class="plan-features pb-3 mt-3 text-muted padding-t-b-30">
+                                <p>Free Live Support</p>
+                                <p>Unlimited User</p>
+                                <p>No Time Tracking</p>
+                                <p>Free Setup</p>
+                                <a href="#" class="btn btn-custom">Sign Up Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card plan-card text-center">
+                        <div class="card-body">
+                            <div class="pt-3 pb-3">
+                                <h1><i class="ion-trophy plan-icon bg-dark"></i></h1>
+                                <h6 class="text-uppercase text-dark">Extended License</h6>
+                            </div>
+                            <div>
+                                <h1 class="plan-price">$799<sup class="text-muted">Per License</sup></h1>
+                                <div class="plan-div-border"></div>
+                            </div>
+                            <div class="plan-features pb-3 mt-3 text-muted padding-t-b-30">
+                                <p>Free Live Support</p>
+                                <p>Unlimited User</p>
+                                <p>No Time Tracking</p>
+                                <p>Free Setup</p>
+                                <a href="#" class="btn btn-custom">Sign Up Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-light text-black shadow">
-            <div class="card-body">
-              Light
-              <div class="text-black-50 small">#f8f9fc</div>
+    </section>-->
+    <!--END PRICING-->
+
+    <!--START TRY IT FREE-->
+    <section class="section bg-custom">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3 class="text-white">Try it free - indefinitely. No email required.</h3>
+                        <br />
+                        <a href="https://calorietracker.io/login" class="btn btn-custom active">Sign Up Now</a>
+                    </div>
+                </div>
             </div>
-          </div>
+
         </div>
-        <div class="col-lg-6 mb-4">
-          <div class="card bg-dark text-white shadow">
-            <div class="card-body">
-              Dark
-              <div class="text-white-50 small">#5a5c69</div>
+    </section>
+    <!--END TRY IT FREE-->
+
+    <!--START TEAM-->
+    <!--<section class="section" id="team">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3>Our Team</h3>
+                        <p class="text-muted slogan">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                            posuere cubilia Curae. Vivamus eu sollicitudin lacus, nec ultricies lorem.</p>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <div class="row mt-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-box text-center">
+                        <div class="team-wrapper">
+                            <div class="team-member">
+                                <img alt="" src="images/team/img-1.jpg" alt="" class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <h4 class="team-name text-uppercase">Michael Adkins</h4>
+                        <p class="text-uppercase team-designation">Founder</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-box text-center">
+                        <div class="team-wrapper">
+                            <div class="team-member">
+                                <img alt="" src="images/team/img-2.jpg" alt="" class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <h4 class="team-name text-uppercase">Mary Robinson</h4>
+                        <p class="text-uppercase team-designation">Co-founder</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-box text-center">
+                        <div class="team-wrapper">
+                            <div class="team-member">
+                                <img alt="" src="images/team/img-3.jpg" alt="" class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <h4 class="team-name text-uppercase">Donald Hanson</h4>
+                        <p class="text-uppercase team-designation">designer</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-box text-center">
+                        <div class="team-wrapper">
+                            <div class="team-member">
+                                <img alt="" src="images/team/img-4.jpg" alt="" class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <h4 class="team-name text-uppercase">Melba Brown</h4>
+                        <p class="text-uppercase team-designation">Manager</p>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-      </div>
+    </section> -->
+    <!--END TEAM-->
 
-    </div>
+    <!--START TESTIMONIALS-->
+    <section class="section bg-grey text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
 
-    <div class="col-lg-6 mb-4">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                            <!-- <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> -->
+                        </ol>
+                        <div class="carousel-inner" role="listbox">
+                            <div class="carousel-item active">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-md-8 offset-md-2">
+                                            <div class="testimonial-box">
+                                                <div class="mb-4">
+                                                    <i class="mdi mdi-format-quote-open quote-icon"></i>
+                                                </div>
+                                                <h6 class="testimonial-team-desc mb-4">Congrats on the whole project,
+                                                    it's being really useful! I just input the calories manually
+                                                    everyday, and the Analytics are on point, everything working
+                                                    perfectly.
+                                                </h6>
 
-      <!-- Illustrations -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
+                                                <p class="testmonial-team-name">RGFX</p>
+                                                <p class="testmonial-team-designation">Beta-tester</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <div class="carousel-item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-md-8 offset-md-2">
+                                            <div class="testimonial-box">
+                                                <div class="mb-4">
+                                                    <i class="mdi mdi-format-quote-open quote-icon"></i>
+                                                </div>
+                                                <h6 class="testimonial-team-desc mb-4">When our doctor told my dad that
+                                                    he had to choose between losing weight and risking diabetes and
+                                                    heart issues, we both knew it was time to get serious. In 4
+                                                    months my dad went from prediabetic, obese and sedentary to an
+                                                    energetic, active and heatlhy super-star patient! He attributes so
+                                                    much of his sucess to calorietracker.io and showed his profile to
+                                                    our doctor every visit along the journey.
+                                                </h6>
+
+                                                <p class="testmonial-team-name">Anonymous</p>
+                                                <p class="testmonial-team-designation">Beta-tester</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- <div class="carousel-item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-md-8 offset-md-2">
+                                            <div class="testimonial-box">
+                                                <div class="mb-4">
+                                                    <i class="mdi mdi-format-quote-open quote-icon"></i>
+                                                </div>
+                                                <h6 class="testimonial-team-desc mb-4">Lorem ipsum dolor sit amet,
+                                                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+                                                    esse cillum dolore eu fugiat nulla pariatur.</h6>
+
+                                                <p class="testmonial-team-name">Albert Adorson</p>
+                                                <p class="testmonial-team-designation">CEO, Pic.com</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-          <div class="text-center">
-            <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/undraw_posting_photo.svg" alt="">
-          </div>
-          <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and
-            without attribution!</p>
-          <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
+    </section>
+    <!--START TESTIMONIALS-->
+
+    <!--Form Section-->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3>Get In Touch</h3>
+                        <p class="text-muted slogan">Questions, comments, feedback? Just want to connect? We'd love to
+                            hear from you. </p>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+
+            <form class="">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="username">Name</label>
+                            <input type="text" class="form-control" id="username" required />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="useremail">Email address</label>
+                            <input type="email" class="form-control" id="useremail" required />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" class="form-control" id="subject" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" rows="5" id="message"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="submit" class="btn btn-custom">Send Message</button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </div>
+    </section>
+    <!--END FORM-->
 
-      <!-- Approach -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
+    <!--start footer-->
+    <footer class="footer bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="float-right pull-none">
+                        <ul class="list-inline social">
+                            <li class="list-inline-item"><a href="https://discord.com/invite/jUhASAM"><i
+                                        class="mdi mdi-discord"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.facebook.com/calorietracker.io/"><i
+                                        class="mdi mdi-facebook"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.instagram.com/calorietracker.io/"><i
+                                        class="mdi mdi-instagram"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.reddit.com/r/calorietrackerio/"><i
+                                        class="mdi mdi-reddit"></i></a></li>
+
+                        </ul>
+                    </div>
+                    <div class="pull-none">
+                        <p class="copy-rights"> © CalorieTracker.io 2020 All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-          <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.</p>
-          <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p>
-        </div>
-      </div>
+    </footer>
+    <!--END FOOTER-->
 
-    </div>
-  </div>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{% static "landingpage/js/jquery.min.js" %}"></script>
+    <script src="{% static "landingpage/js/bootstrap.bundle.min.js" %}"></script>
+    {% comment %} <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script> {% endcomment %}
 
-</div>
-<!-- /.container-fluid -->
+    <!-- Sticky Header -->
+    <script src="{% static "landingpage/js/jquery.sticky.js" %}"></script>
+    {% comment %} <script src="js/jquery.sticky.js"></script> {% endcomment %}
 
-<!-- Page level plugins -->
-<script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
+    <!-- Jquery easing -->
+    <script src="{% static "landingpage/js/jquery.easing.min.js" %}"></script>
+    <script src="{% static "landingpage/js/jquery.magnific-popup.min.js" %}"></script>
+    {% comment %} <script src="js/jquery.easing.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script> {% endcomment %}
 
-<!-- Page level custom scripts -->
-<script src="{% static "js/demo/chart-area-demo.js" %}"></script>
-<script src="{% static "js/demo/chart-pie-demo.js" %}"></script>
+    <!--common script for all pages-->
+    <script src="{% static "landingpage/js/jquery.app.js" %}"></script>
+    {% comment %} <script src="js/jquery.app.js"></script> {% endcomment %}
+</body>
 
-{% endblock %}
+</html>

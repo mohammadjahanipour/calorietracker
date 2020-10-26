@@ -1,0 +1,34 @@
+// 
+// authentication.scss
+//
+
+
+  .accountbg {
+    position: absolute;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    top: 0;
+  }
+  
+  .account-page-full {
+    left: 0;
+    position: absolute;
+    height: 100%;
+    margin: 0;
+    width: 420px;
+    background-color: $card-bg;
+  
+    .card {
+      border: none;
+    }
+  }
+  
+  .account-copyright {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+
+
+  

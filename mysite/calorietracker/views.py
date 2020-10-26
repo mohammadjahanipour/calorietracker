@@ -351,3 +351,7 @@ class Purchase(LoginRequiredMixin):
 
 class PrivacyPolicy(TemplateView):
     template_name = "calorietracker/privacy-policy.html"
+
+
+class LandingPage(TemplateView):
+    template_name = "calorietracker/home.html"

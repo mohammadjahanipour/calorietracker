@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Form Elements | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-topbar="dark" data-layout="horizontal">
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/horizontal.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0 font-size-18">Form Elements </h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Forms</a></li>
+                                            <li class="breadcrumb-item active">Form Elements</li>
+                                        </ol>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title">Textual inputs</h4>
+                                        <p class="card-title-desc">Here are examples of <code
+                                                class="highlighter-rouge">.form-control</code> applied to each
+                                            textual HTML5 <code class="highlighter-rouge">&lt;input&gt;</code> <code
+                                                    class="highlighter-rouge">type</code>.</p>
+
+                                        <div class="form-group row">
+                                            <label for="example-text-input" class="col-sm-2 col-form-label">Text</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="text" value="Artisanal kale" id="example-text-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-search-input" class="col-sm-2 col-form-label">Search</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="search" value="How do I shoot web" id="example-search-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-email-input" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="email" value="bootstrap@example.com" id="example-email-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-url-input" class="col-sm-2 col-form-label">URL</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="url" value="https://getbootstrap.com" id="example-url-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-tel-input" class="col-sm-2 col-form-label">Telephone</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="tel" value="1-(555)-555-5555" id="example-tel-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-password-input" class="col-sm-2 col-form-label">Password</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="password" value="hunter2" id="example-password-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-number-input" class="col-sm-2 col-form-label">Number</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="number" value="42" id="example-number-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-datetime-local-input" class="col-sm-2 col-form-label">Date and time</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-date-input" class="col-sm-2 col-form-label">Date</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-month-input" class="col-sm-2 col-form-label">Month</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="month" value="2011-08" id="example-month-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-week-input" class="col-sm-2 col-form-label">Week</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="week" value="2011-W33" id="example-week-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-time-input" class="col-sm-2 col-form-label">Time</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="time" value="13:45:00" id="example-time-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-color-input" class="col-sm-2 col-form-label">Color</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" type="color" value="#67a8e4" id="example-color-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Select</label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control">
+                                                    <option>Select</option>
+                                                    <option>Large select</option>
+                                                    <option>Small select</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Custom Select</label>
+                                            <div class="col-sm-10">
+                                                <select class="custom-select">
+                                                    <option selected>Open this select menu</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-text-input-lg" class="col-sm-2 col-form-label">Large</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-lg" type="text" placeholder=".form-control-lg" id="example-text-input-lg">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-text-input-sm" class="col-sm-2 col-form-label">Small</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control form-control-sm" type="text" placeholder=".form-control-sm" id="example-text-input-sm">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row has-success">
+                                            <label for="inputHorizontalSuccess" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control form-control-success border-info" id="inputHorizontalSuccess" placeholder="name@example.com">
+                                                <div class="form-control-feedback">Success! You've done it.</div>
+                                                <small class="form-text text-muted">Example help text that remains unchanged.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row has-warning">
+                                            <label for="inputHorizontalWarning" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control form-control-warning border-warning" id="inputHorizontalWarning" placeholder="name@example.com">
+                                                <div class="form-control-feedback">Shucks, check the formatting of that and try again.</div>
+                                                <small class="form-text text-muted">Example help text that remains unchanged.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row has-danger mb-0">
+                                            <label for="inputHorizontalDnger" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control form-control-danger" id="inputHorizontalDnger" placeholder="name@example.com">
+                                                <div class="form-control-feedback">Sorry, that username's taken. Try another?</div>
+                                                <small class="form-text text-muted">Example help text that remains unchanged.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>
