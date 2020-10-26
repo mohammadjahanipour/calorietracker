@@ -8,24 +8,26 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <div class="d-sm-flex mb-4">
     <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
-
-   <form action="" method="get">
-    <select name = "rangeDrop" class="form-control" onchange="this.form.submit()">
-      <option value="" disabled selected>Last {{n}} days</option>
-      <option value="7">Last 7 Days</option>
-      <option value="14">Last 14 Days</option>
-      <option value="31">Last 31 Days</option>
-      <option value="All">All Time</option>
-    </select>
-  </form>
-
+    <div class="ml-auto mt-2">
+      <form action="" method="get">
+        <select name = "rangeDrop" class="btn" onchange="this.form.submit()">
+          <option value="" disabled selected>Last {{n}} days</option>
+          <option value="7">Last 7 Days</option>
+          <option value="14">Last 14 Days</option>
+          <option value="31">Last 31 Days</option>
+          <option value="All">All Time</option>
+        </select>
+        <a href="#" data-toggle="modal" data-target="#sharemodal" class="btn btn-sm btn-primary shadow-sm float-right ml-2"><i class="fas fa-share-square fa-sm text-white-50"></i> &nbsp;Share</a>
+      </form>
+    </div>
+    
   </div>
-
+  
   <!-- Content Row -->
   <div class="row">
-
+  
     <!-- Weight Change Card -->
     <div class="col-xl-3 col-md-6 mb-4">
       <div class="card border-left-primary shadow h-100 py-2">
@@ -106,7 +108,6 @@
   </div>
 
   <!-- Content Row -->
-
   <div class="row">
 
     <!-- Weight Over Time Chart -->
@@ -265,7 +266,34 @@
         </div>
       </div>
     </div>
+  
 
+    <!-- Sharing Modal-->
+    <div class="modal fade" id="sharemodal" tabindex="-1" role="dialog" aria-labelledby="sharemodal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sharemodal">Share Analytics</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">x</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            {% comment %} <i class="fab fa-facebook-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i>
+            <i class="fab fa-reddit-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i>
+            <i class="fab fa-twitter-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i>
+            <i class="fab fa-instagram-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i> {% endcomment %}
+            <div class="text-center">
+              <input type="url" id="sharelink" class="form-control" style="display:inline; text-align:center; " value="calorietracker.io/share/rlj4ktql4" readonly></input>
+                <button onclick="copyShareLink();" href="#" class="mt-2 btn btn-sm btn-primary shadow-sm">Copy Sharing Link</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            {% comment %} Note:   {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -371,4 +399,25 @@ $(document).ready(function() {
 <script src="{% static "js/line-chart-weights.js" %}"></script>
 <script src="{% static "js/line-chart-calories.js" %}"></script>
 <script src="{% static "js/pie-chart-calories.js" %}"></script>
+
+<!-- Sharing Modal -->
+<script>
+function copyShareLink() {
+  /* Get the text field */
+  var copyText = document.getElementById("sharelink");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  console.log(copyText.value)
+
+  /* Alert the copied text */
+  /*alert("Copied your referral: " + copyText.value); */
+}
+
+</script>
 {% endblock %}

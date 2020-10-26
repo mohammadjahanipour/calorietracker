@@ -25,26 +25,29 @@
 
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
 
-
   <!-- DatetimePicker -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet"/>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"></script>
 
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static "vendor/jquery/jquery.min.js" %}"></script>
+  <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{% static "vendor/jquery-easing/jquery.easing.min.js" %}"></script>
+
+  <!-- DataTables -->
+  <link href="{% static "vendor/datatables/dataTables.bootstrap4.min.css" %}" rel="stylesheet" type="text/css">
+  <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
+  <script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
 
   <!-- Buy Me a Coffee -->
   <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="calorietracker" data-description="Support calorietracker.io with a coffee!" data-message="Thank you for visiting! Want to support further development?" data-color="#79D6B5" data-position="right" data-x_margin="18" data-y_margin="18"></script>
 
+
   {% block extrahead %}
   {% endblock %}
-
-  <!-- End DatetimePicker -->
-
-  <!-- DataTables -->
-  <link href="{% static "vendor/datatables/dataTables.bootstrap4.min.css" %}" rel="stylesheet" type="text/css">
-
-  <!-- End DataTables -->
 
 </head>
 
@@ -101,20 +104,8 @@
 
   {% include "includes/logout_modal.html" %}
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="{% static "vendor/jquery-easing/jquery.easing.min.js" %}"></script>
-
   <!-- Custom scripts for all pages-->
   <script src="{% static "js/sb-admin-2.min.js" %}"></script>
-
-  <!-- DataTables -->
-  <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
-  <script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
-
-  <!-- End DataTables -->
 
   <!-- Tooltips -->
   <script>
