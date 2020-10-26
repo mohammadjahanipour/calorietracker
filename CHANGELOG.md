@@ -1,20 +1,24 @@
-
-
 # Calorietracker Changelog
 
 ---
 ## [Unreleased]
 - analytics exporting / sharing to socials
-- static landing page
 - sign in with google
 - sign in with apple
-- landing page
 - bodyfat % calculator
 - share analytics view to social media (fb/twitter/ig)
 
 ## 2020-10-XX
 ### Added
-- download jpgs of analytics graphs
+- landing page!
+- download jpgs of analytics graphs buttons
+- hover effect on profile name topbar
+- up to 3 progress pics per log entry
+
+### Changed
+- migrated feedback, logout buttons from sidebar to topbar profile dropdown
+- updated footer
+- standardized card use for forms etc.
 
 
 ## 2020-10-22
