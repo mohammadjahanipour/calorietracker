@@ -28,7 +28,7 @@ class MeasurementWidget(forms.MultiWidget):
             float_widget = forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "style": "width: 55%; display: inline-block;",
+                    "style": "width: 75%; display: inline-block;",
                     "placeholder": "160",
                 }
             )
@@ -37,7 +37,7 @@ class MeasurementWidget(forms.MultiWidget):
             unit_choices_widget = forms.Select(
                 attrs={
                     "class": "form-control",
-                    "style": "width: 20%; display: inline-block;",
+                    "style": "width: 25%; display: inline-block;",
                     "placeholder": "160",
                 },
                 choices=unit_choices,
@@ -232,8 +232,7 @@ class LogDataForm(forms.ModelForm):
             "activity_lvl",
             "front_progress_pic",
             "side_progress_pic",
-            "back_progress_pic"
-
+            "back_progress_pic",
         )
 
     front_progress_pic = CloudinaryFileField(

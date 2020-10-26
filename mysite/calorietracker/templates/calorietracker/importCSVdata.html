@@ -28,58 +28,61 @@
       </ul>
   </div>
 
-  <div class="my-2"></div>
-  <form enctype="multipart/form-data" id="CSVForm" style="display:;" class="form" method="post">{% csrf_token %}
-    <div>
-      <div class="control-group">
-        <label class="control-label">{{ form.data_file.label }} </label>
-        <div class="controls" style="width:75%">{{ form.data_file }}
-          {% if form.data_file.help_text %}
-          <span class="help-inline"><small>{{ form.data_file.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
-      <div class="control-group">
-        <label class="control-label">{{ form.weight_units.label }} </label>
-        <div class="controls" style="width:75%">{{ form.weight_units }}
-          {% if form.weight_units.help_text %}
-          <span class="help-inline"><small>{{ form.weight_units.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
+  <div class="card w-100">
+    <div class="card-body">
+      <form enctype="multipart/form-data" id="CSVForm" style="display:;" class="form" method="post">{% csrf_token %}
+        <div>
+          <div class="control-group">
+            <label class="control-label">{{ form.data_file.label }} </label>
+            <div class="controls" style="width:100%">{{ form.data_file }}
+              {% if form.data_file.help_text %}
+              <span class="help-inline"><small>{{ form.data_file.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.weight_units.label }} </label>
+            <div class="controls" style="width:100%">{{ form.weight_units }}
+              {% if form.weight_units.help_text %}
+              <span class="help-inline"><small>{{ form.weight_units.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
 
-      <div class="control-group">
-        <label class="control-label">{{ form.date_format.label }} </label>
-        <div class="controls" style="width:75%">{{ form.date_format }}
-          {% if form.date_format.help_text %}
-          <span class="help-inline"><small>{{ form.date_format.help_text }}</small></span>
-          {% endif %}
+          <div class="control-group">
+            <label class="control-label">{{ form.date_format.label }} </label>
+            <div class="controls" style="width:100%">{{ form.date_format }}
+              {% if form.date_format.help_text %}
+              <span class="help-inline"><small>{{ form.date_format.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.csv_overwrite.label }} </label>
+            <div class="controls" style="width:100%">{{ form.csv_overwrite }}
+              {% if form.csv_overwrite.help_text %}
+              <span class="help-inline"><small>{{ form.csv_overwrite.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
         </div>
-        </p>
-      </div>
-      <div class="control-group">
-        <label class="control-label">{{ form.csv_overwrite.label }} </label>
-        <div class="controls" style="width:75%">{{ form.csv_overwrite }}
-          {% if form.csv_overwrite.help_text %}
-          <span class="help-inline"><small>{{ form.csv_overwrite.help_text }}</small></span>
-          {% endif %}
-        </div>
-        </p>
-      </div>
+
+        <div class="my-2"></div>
+        <button id="submitButton" type="submit" class="btn btn-primary btn-icon-split btn-sm">
+            <i class="fas fa-check"></i>
+          <span class="text">Submit</span>
+        </button>
+        <button type="reset" class="btn btn-danger btn-icon-split btn-sm">
+            <i class="fas fa-trash"></i>
+          <span class="text">Clear</span>
+        </button>
+      </form>
     </div>
-
-    <div class="my-2"></div>
-    <button id="submitButton" type="submit" class="btn btn-primary btn-icon-split btn-sm">
-        <i class="fas fa-check"></i>
-      <span class="text">Submit</span>
-    </button>
-    <button type="reset" class="btn btn-danger btn-icon-split btn-sm">
-        <i class="fas fa-trash"></i>
-      <span class="text">Clear</span>
-    </button>
-  </form>
+  </div>
 
   {% if form.errors %}
         {% for field in form %}
