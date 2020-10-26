@@ -1,0 +1,60 @@
+// 
+// ecommerce.scss
+//
+
+// product list
+
+.search-box{
+    .form-control{
+        border-radius: 30px;
+        padding-left: 40px;
+    }
+    .search-icon{
+        font-size: 16px;    
+        position: absolute;
+        left: 13px;
+        top: 0;
+        line-height: 38px;
+    }
+}
+
+.product-list{
+    li{
+        a{
+            display: block;
+            padding: 4px 0px;
+            color: $body-color;
+        }
+    }
+}
+
+.product-view-nav{
+    &.nav-pills {
+        .nav-item{
+            margin-left: 4px;
+        }
+        .nav-link{
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+            padding: 0;
+            line-height: 36px;
+            text-align: center;
+            border-radius: 50%;
+        }
+    }
+}
+
+.product-tag{
+    position: absolute;
+    left: 0px;
+    top: 28px;
+    padding: 2px 13px;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: $white;
+    letter-spacing: 1px;
+    line-height: 21px;
+    background-color: $danger;
+}
+

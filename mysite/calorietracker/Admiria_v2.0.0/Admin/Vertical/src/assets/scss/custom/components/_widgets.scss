@@ -1,0 +1,164 @@
+// 
+// Widgets.scss
+// 
+
+
+// dashboard
+
+.mini-stat-icon {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    line-height: 54px;
+    text-align: center;
+    font-size: 30px;
+    border-radius: 50%;
+    color: $white;
+  }
+
+
+  .mini-stat-info {
+    font-size: 14px;
+    padding-top: 2px;
+  }
+  
+  .mini-stat-info span {
+    display: block;
+    font-size: 22px;
+    font-weight: 400;
+    font-family: $font-family-secondary;
+  }
+  
+
+.mini-stats-wid{
+    .mini-stat-icon{
+        overflow: hidden;
+        position: relative;
+        &:before, &:after{
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 54px;
+            background-color: rgba($white,.1);
+            left: 16px;
+            transform: rotate(32deg);
+            top: -5px;
+            transition: all 0.4s;
+        }
+
+        &::after{
+            left: -12px;
+            width: 12px;
+            transition: all 0.2s;
+        }
+    }
+
+    &:hover{
+        .mini-stat-icon{
+            &::after{
+                left: 60px;
+            }
+        }
+    }
+}
+
+
+// monthly earning widget
+
+@media (min-width: 768px) {
+
+  .monthly-earning-wid{
+    padding-right: 0;
+  }
+
+  .earning-wid{
+    padding-left: 0;
+  }
+}
+
+/* Inbox-widget */
+
+.inbox-widget {
+    .inbox-item {
+      border-bottom: 1px solid $gray-200;
+      overflow: hidden;
+      padding: 10px 0;
+      position: relative;
+      .inbox-item-img {
+        display: block;
+        float: left;
+        margin-right: 15px;
+        width: 40px;
+      }
+      img{
+        width: 40px;
+      }
+      .inbox-item-author {
+        color: $body-color;
+        display: block;
+        margin: 0;
+      }
+      .inbox-item-text {
+        color: #a0a0a0;
+        display: block;
+        font-size: 12px;
+        margin: 0;
+      }
+      .inbox-item-date {
+        color: #a9a9a9;
+        font-size: 11px;
+        position: absolute;
+        right: 7px;
+        top: 2px;
+      }
+    }
+  }
+
+
+  /* Activity */
+.activity-feed {
+    padding: 15px 15px 0 15px;
+    list-style: none;
+  
+    .feed-item {
+      position: relative;
+      padding-bottom: 20px;
+      padding-left: 30px;
+      border-left: 2px solid $gray-200;
+  
+      &:last-child {
+        border-color: transparent;
+      }
+     
+  
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -6px;
+        width: 10px;
+        height: 10px;
+        border-radius: 6px;
+        background: $card-bg;
+        border: 1px solid $primary;
+      }
+  
+      .date {
+        display: block;
+        position: relative;
+        top: -5px;
+        color: #8c96a3;
+        text-transform: uppercase;
+        font-size: 13px;
+      }
+      .activity-text {
+        position: relative;
+        top: -3px;
+      }
+    }
+  }
+
+
+ 
+ 

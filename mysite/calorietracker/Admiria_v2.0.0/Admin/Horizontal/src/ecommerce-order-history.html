@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Order History | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- DataTables -->
+        <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />  
+  
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-topbar="dark" data-layout="horizontal">
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/horizontal.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0 font-size-18">Order History  </h4>
+
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+                                            <li class="breadcrumb-item active">Order History </li>
+                                        </ol>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mini-stat clearfix">
+                                            <span class="font-size-40 text-primary mr-0 float-right"><i class="mdi mdi-cart-outline"></i></span>
+                                            <div class="mini-stat-info">
+                                                <h3 class="counter font-weight-normal mt-0">$36,410</h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <p class=" mb-0 mt-3 text-muted">Total Orders <span class="float-right"><i class="fa fa-caret-down text-danger mr-1"></i>3.25%</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                               <div class="card">
+                                   <div class="card-body">
+                                    <div class="mini-stat clearfix">
+                                        <span class="font-size-40 text-success mr-0 float-right"><i class="mdi mdi-currency-usd"></i></span>
+                                        <div class="mini-stat-info">
+                                            <h3 class="counter font-weight-normal mt-0">$29,854</h3>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <p class=" mb-0 mt-3 text-muted">Successful Orders <span class="float-right"><i class="fa fa-caret-up text-success mr-1"></i>8.51%</span></p>
+                                    </div>
+                                   </div>
+                               </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mini-stat clearfix">
+                                            <span class="font-size-40 text-warning mr-0 float-right"><i class="mdi mdi-fingerprint"></i></span>
+                                            <div class="mini-stat-info">
+                                                <h3 class="counter font-weight-normal mt-0">$4,512</h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <p class=" mb-0 mt-3 text-muted">Refunds <span class="float-right"><i class="fa fa-caret-down text-danger mr-1"></i>5.52%</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mini-stat clearfix">
+                                            <span class="font-size-40 text-danger mr-0 float-right"><i class="mdi mdi-rotate-right"></i></span>
+                                            <div class="mini-stat-info">
+                                                <h3 class="counter font-weight-normal mt-0">$2,854</h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <p class=" mb-0 mt-3 text-muted">Chargebacks <span class="float-right"><i class="fa fa-caret-up text-success mr-1"></i>7.10%</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <table id="datatable" class="table table-striped dt-responsive nowrap table-vertical" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Amount</th>
+                                                <th>Order Date</th>
+                                                <th>Payment</th>
+                                                <th>Billing Name</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#98541201</a>
+                                                    </td>
+                                                    <td>$45</td>
+                                                    <td>Jul 20, 2017</td>
+                                                    <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td>
+                                                    <td>Herbert C. Patton</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#85124562</a>
+                                                    </td>
+                                                    <td>$521</td>
+                                                    <td>Jul 18, 2017</td>
+                                                    <td><i class="fab fa-cc-mastercard text-muted font-size-20"></i> </td>
+                                                    <td>Mathias N. Klausen</td>
+                                                    <td><span class="badge badge-warning">Refund</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#45123698</a>
+                                                    </td>
+                                                    <td>$241</td>
+                                                    <td>July 14, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Nikolaj S. Henriksen</td>
+                                                    <td><span class="badge badge-warning">Refund</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#85214796</a>
+                                                    </td>
+                                                    <td>$541.34</td>
+                                                    <td>Jul 15, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Kasper S. Jessen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#23145216</a>
+                                                    </td>
+                                                    <td>$22</td>
+                                                    <td>Jul 11, 2017</td>
+                                                    <td><i class="fab fa-cc-amex text-muted font-size-20"></i> </td>
+                                                    <td>Lasse C. Overgaard</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#12365474</a>
+                                                    </td>
+                                                    <td>$1,541</td>
+                                                    <td>Jul 10, 2017</td>
+                                                    <td><i class="fab fa-cc-mastercard text-muted font-size-20"></i> </td>
+                                                    <td>Johan E. Knudsen</td>
+                                                    <td><span class="badge badge-danger">Chargeback</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#32569874</a>
+                                                    </td>
+                                                    <td>$54</td>
+                                                    <td>Jul 09, 2017</td>
+                                                    <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td>
+                                                    <td>Herbert C. Patton</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#52147321</a>
+                                                    </td>
+                                                    <td>$845</td>
+                                                    <td>Jul 08, 2017</td>
+                                                    <td><i class="fab fa-cc-discover text-muted font-size-20"></i> </td>
+                                                    <td>Mathias N. Klausen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#84125369</a>
+                                                    </td>
+                                                    <td>$421</td>
+                                                    <td>Jul 08, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Nikolaj S. Henriksen</td>
+                                                    <td><span class="badge badge-danger">Chargeback</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#74512368</a>
+                                                    </td>
+                                                    <td>$652</td>
+                                                    <td>Jul 02, 2017</td>
+                                                    <td><i class="fab fa-cc-mastercard text-muted font-size-20"></i> </td>
+                                                    <td>Lasse C. Overgaard</td>
+                                                    <td><span class="badge badge-danger">Chargeback</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#52140300</a>
+                                                    </td>
+                                                    <td>$45</td>
+                                                    <td>Jul 20, 2017</td>
+                                                    <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td>
+                                                    <td>Herbert C. Patton</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#85214369</a>
+                                                    </td>
+                                                    <td>$521</td>
+                                                    <td>Jul 18, 2017</td>
+                                                    <td><i class="fab fa-cc-mastercard text-muted font-size-20"></i> </td>
+                                                    <td>Mathias N. Klausen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#87412456</a>
+                                                    </td>
+                                                    <td>$241</td>
+                                                    <td>July 14, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Nikolaj S. Henriksen</td>
+                                                    <td><span class="badge badge-danger">Chargeback</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#99541241</a>
+                                                    </td>
+                                                    <td>$541.34</td>
+                                                    <td>Jul 15, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Kasper S. Jessen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#12354781</a>
+                                                    </td>
+                                                    <td>$22</td>
+                                                    <td>Jul 11, 2017</td>
+                                                    <td><i class="fab fa-cc-amex text-muted font-size-20"></i> </td>
+                                                    <td>Lasse C. Overgaard</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#95412367</a>
+                                                    </td>
+                                                    <td>$1,541</td>
+                                                    <td>Jul 10, 2017</td>
+                                                    <td><i class="fab fa-cc-mastercard text-muted font-size-20"></i> </td>
+                                                    <td>Johan E. Knudsen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#96254137</a>
+                                                    </td>
+                                                    <td>$54</td>
+                                                    <td>Jul 09, 2017</td>
+                                                    <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td>
+                                                    <td>Herbert C. Patton</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#50025441</a>
+                                                    </td>
+                                                    <td>$845</td>
+                                                    <td>Jul 08, 2017</td>
+                                                    <td><i class="fab fa-cc-discover text-muted font-size-20"></i> </td>
+                                                    <td>Mathias N. Klausen</td>
+                                                    <td><span class="badge badge-warning">Refund</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#32147851</a>
+                                                    </td>
+                                                    <td>$421</td>
+                                                    <td>Jul 08, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Nikolaj S. Henriksen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#52146321</a>
+                                                    </td>
+                                                    <td>$652</td>
+                                                    <td>Jul 02, 2017</td>
+                                                    <td><i class="fab fa-cc-mastercard text-muted font-size-20"></i> </td>
+                                                    <td>Lasse C. Overgaard</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="font-weight-bold text-muted">#32147851</a>
+                                                    </td>
+                                                    <td>$421</td>
+                                                    <td>Jul 08, 2017</td>
+                                                    <td><i class="fab fa-cc-paypal text-muted font-size-20"></i> </td>
+                                                    <td>Nikolaj S. Henriksen</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0);" class="mr-3 text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                                        <a href="javascript:void(0);" class="text-muted" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"></i></a>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+        <script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+        
+         <!-- Ecommerce init js -->
+         <script src="assets/js/pages/ecommerce.init.js"></script> 
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>
