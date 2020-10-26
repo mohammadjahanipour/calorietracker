@@ -85,7 +85,7 @@
                     <p class="mt-4 home-subtitle">No more cookie-cutter formulas. CalorieTracker.io adapts
                         it's algorithms to your personal progress every day to deliver next-level
                         individualized insights and recommendations.</p>
-                    <a href="https://calorietracker.io/login" class="btn btn-custom mt-4 mb-4">Try It Now</a>
+                    <a href="{% url 'login' %}" class="btn btn-custom mt-4 mb-4">Try It Now</a>
 
                     <img src="{% static "landingpage/images/showcasefull.png" %}" alt="" class="img-fluid">
                 </div>
@@ -324,7 +324,7 @@
                     <div class="text-center">
                         <h3 class="text-white">Try it free - indefinitely. No email required.</h3>
                         <br />
-                        <a href="https://calorietracker.io/login" class="btn btn-custom active">Sign Up Now</a>
+                        <a href="{% url 'login' %}" class="btn btn-custom active">Sign Up Now</a>
                     </div>
                 </div>
             </div>
