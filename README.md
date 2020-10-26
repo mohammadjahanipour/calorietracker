@@ -107,3 +107,7 @@
 **Allauth**
 
 - https://django-allauth.readthedocs.io/en/latest/index.html
+
+**Django-friendship**
+
+- https://github.com/revsys/django-friendship/

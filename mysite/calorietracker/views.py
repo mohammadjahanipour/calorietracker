@@ -22,6 +22,7 @@ from django.views.generic import (
     FormView,
     TemplateView,
     UpdateView,
+    ListView,
 )
 from safedelete.models import HARD_DELETE
 
@@ -39,6 +40,16 @@ from .models import Feedback, Log, MFPCredentials, Setting
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
+
+
+class Contacts(LoginRequiredMixin, TemplateView):
+    """docstring for Subscription."""
+
+    template_name = "calorietracker/contacts.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class Subscription(LoginRequiredMixin, TemplateView):
