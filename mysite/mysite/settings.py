@@ -35,7 +35,7 @@ DEBUG = os.getenv("DEBUG", False) == "True"
 
 # Sentry monitoring
 # only in production
-if DEBUG:
+if not DEBUG:
     sentry_sdk.init(
         dsn=os.getenv("SENTRY_KEY"),
         integrations=[DjangoIntegration()],
