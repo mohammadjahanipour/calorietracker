@@ -61,24 +61,18 @@
 
                     <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
                     <hr>
-                    
+
                     <a href="{% provider_login_url "discord" %}" class="btn btn-user btn-block" style="background: #697ec4; color: #fff">
                       <i class="fab fa-discord fa-fw"></i> Login with Discord
+                    </a>
+
+                    <a href="{% provider_login_url "google" %}" class="btn btn-google btn-user btn-block">
+                      <i class="fab fa-google fa-fw"></i>&nbsp;Login with Google
                     </a>
 
                     <a href="{% provider_login_url "facebook" method="js_sdk" %}" class="btn btn-facebook btn-user btn-block">
                       <i class="fab fa-facebook-f fa-fw"></i>Login with Facebook
                     </a>
-
-
-                    <!-- Social Logins   -->
-                    <!-- <hr>
-                    <a href="index.html" class="btn btn-google btn-user btn-block">
-                      <i class="fab fa-google fa-fw"></i> Login with Google
-                    </a>
-                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                    </a> -->
 
                   </form>
                   <hr>
