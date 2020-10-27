@@ -40,11 +40,9 @@ urlpatterns = [
     ),
     path("referral-program/", views.Referral.as_view(), name="referral-program"),
     path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
+    path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
     path("subscription/", views.Subscription.as_view(), name="subscription"),
     path("contacts/", views.Contacts.as_view(), name="contacts"),
-
-
-
 ]
 
 if settings.DEBUG:
@@ -53,4 +51,4 @@ if settings.DEBUG:
     def trigger_error(request):
         division_by_zero = 1 / 0
 
-    urlpatterns.append(path('sentry-debug/', trigger_error))
+    urlpatterns.append(path("sentry-debug/", trigger_error))
