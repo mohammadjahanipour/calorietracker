@@ -1,0 +1,55 @@
+{% extends "extends/base.html" %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">CalorieTracker.IO Referral Program</h1>
+  </div>
+
+
+  <div class="card w-75">
+    <div class="card-body">
+      <p>
+        Our goal is to build the best weight and fitness assistant possible and help calorietracker.io users share their journey and experiences with others. As a user, partaking in the referral program will allow you to earn rewards every time your referral link is used by your friends and family when they register and start using calorietracker.io
+        Referrals rewards are accredited for referred usesers that sign up through your unique referral link. Note that a referral reward can not be deemed retroactively after a user has already signed up without your link.
+      </p>
+      <p>
+        You and anyone using your referral link can each earn 100 gold coins on calorietracker.io.
+      </p>
+      <div class="text-center">
+        <input type="url" id="reflink" class="form-control" style="display:inline; text-align:center; " value={{ referral.url }} readonly></input>
+          <button onclick="copyRefLink();" href="#" class="mt-2 btn btn-primary">Copy to Clipboard</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Page level custom scripts -->
+<script>
+function copyRefLink() {
+  /* Get the text field */
+  var copyText = document.getElementById("reflink");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  /* Alert the copied text */
+  /*alert("Copied your referral: " + copyText.value); */
+}
+</script>
+{% endblock %}

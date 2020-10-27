@@ -1,0 +1,164 @@
+{% load static %}
+
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+  <!-- Sidebar - Brand -->
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
+      {% comment %} <img src="{% static 'favicon/favicon.ico' %}" width="20" height="20"></img> {% endcomment %}
+    <div class="sidebar-brand-icon rotate-n-15">
+      {% comment %} <i class="fab fa-gitkraken"></i> {% endcomment %}
+      <img src="{% static 'favicon/favicon.ico' %}" width="25" height="25"></img>
+    </div>
+    <div class="sidebar-brand-text mx-1">CalorieTracker.io</div>
+  </a>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block">
+
+  <!-- Heading -->
+  <div class="sidebar-heading">
+    Tools
+  </div>
+
+  <!-- Nav Item - Import Logs Collapse Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTop" aria-expanded="true" aria-controls="collapseTop">
+      <i class="far fa-calendar-alt"></i>
+      <span>Logs</span>
+    </a>
+    <div id="collapseTop" class="collapse" aria-labelledby="headingTop" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 class="collapse-header">Log Tools</h6>
+        <a class="collapse-item" href="{% url 'logdata' %}">
+          <i class="far fa-calendar-plus"></i>
+          <span>New Log Entry</span></a>
+
+        <a class="collapse-item" href="{% url 'logs' %}">
+          <i class="far fa-list-alt"></i>
+          <span>View / Edit Logs</span></a>
+      </div>
+    </div>
+  </li>
+
+  {% comment %} <!-- Nav Item - Log -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'logdata' %}">
+      <i class="far fa-calendar-plus"></i>
+      <span>New Log Entry</span></a>
+  </li>
+
+  <!-- Nav Item - Log -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'logs' %}">
+      <i class="far fa-list-alt"></i>
+      <span>View / Edit Logs</span></a>
+  </li> {% endcomment %}
+
+
+  <!-- Nav Item - Import Logs Collapse Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+      <i class="far fa-plus-square"></i>
+      <span>Import</span>
+    </a>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 class="collapse-header">Integrations:</h6>
+        <a class="collapse-item" href="{% url 'importmfp' %}"><span>MyFitnessPal</span></a>
+        <a class="collapse-item" href="{% url 'importcsv' %}"><span>CSV File</span></a>
+      </div>
+    </div>
+  </li>
+
+  <!-- Nav Item - Anayltics -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'analytics' %}">
+      <i class="fas fa-chart-bar"></i>
+      <span>Analytics</span></a>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-md-block ">
+
+  {% if user.is_authenticated %}
+
+  <!-- Heading -->
+  <div class="sidebar-heading">
+    User
+  </div>
+
+  <!-- Nav Item - Log In -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'settings' %}">
+      <i class="fas fa-cog"></i>
+      <span>Settings</span></a>
+  </li>
+
+  <!-- Nav Item - Community Collapse Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#communityCollapse" aria-expanded="true" aria-controls="communityCollapse">
+      <i class="fas fa-comments"></i>
+      <span>Community</span>
+    </a>
+    <div id="communityCollapse" class="collapse" aria-labelledby="communityCollapse" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item" href="https://discord.gg/jUhASAM">
+            <i class="fab fa-fw fa-discord"></i>
+            <span>Discord</span></a>
+          <a class="collapse-item" href="https://www.facebook.com/calorietracker.io/">
+            <i class="fab fa-fw fa-facebook"></i>
+            <span>Facebook</span></a>
+          <a class="collapse-item" href="https://www.instagram.com/calorietracker.io/">
+            <i class="fab fa-fw fa-instagram"></i>
+            <span>Instagram</span></a>
+          <a class="collapse-item" href="https://www.reddit.com/r/calorietrackerio/">
+            <i class="fab fa-fw fa-reddit"></i>
+            <span>Reddit</span></a>
+
+      </div>
+    </div>
+  </li>
+
+  {% comment %} <!-- Nav Item - Feedback -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'feedback' %}">
+      <i class="fas fa-edit"></i>
+      <span>Feedback</span></a>
+  </li> {% endcomment %}
+
+  {% comment %} <li class="nav-item">
+    <a class="nav-link" href="{% url 'contacts' %}">
+      <i class="fas fa-id-card"></i>
+      <span>Contacts</span></a>
+  </li> {% endcomment %}
+
+  {% else %}
+  <!-- Heading -->
+  <div class="sidebar-heading">
+    AUTH
+  </div>
+
+  <!-- Nav Item - Log In -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'login' %}">
+      <i class="fas fa-sign-in-alt"></i>
+      <span>Log In</span></a>
+  </li>
+
+  <!-- Nav Item - Registration -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'register' %}">
+      <i class="fas fa-user-plus"></i>
+      <span>Register</span></a>
+  </li>
+
+  {% endif %}
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+
+</ul>
+<!-- End of Sidebar -->

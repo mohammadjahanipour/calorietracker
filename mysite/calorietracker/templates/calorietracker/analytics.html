@@ -1,0 +1,423 @@
+{% extends "extends/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
+    <div class="ml-auto mt-2">
+      <form action="" method="get">
+        <select name = "rangeDrop" class="btn" onchange="this.form.submit()">
+          <option value="" disabled selected>Last {{n}} days</option>
+          <option value="7">Last 7 Days</option>
+          <option value="14">Last 14 Days</option>
+          <option value="31">Last 31 Days</option>
+          <option value="All">All Time</option>
+        </select>
+        <a href="#" data-toggle="modal" data-target="#sharemodal" class="btn btn-sm btn-primary shadow-sm float-right ml-2"><i class="fas fa-share-square fa-sm text-white-50"></i> &nbsp;Share</a>
+      </form>
+    </div>
+    
+  </div>
+  
+  <!-- Content Row -->
+  <div class="row">
+  
+    <!-- Weight Change Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div id="weightchangeTT" data-toggle="tooltip" title="" class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Weight Change</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change_smooth }} {{units_weight}}</div>
+            </div>
+            <div class="col">
+              <div class="progress progress-sm mr-2">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{percent_to_goal}}%" aria-valuenow="{{percent_to_goal}}" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="col-auto">
+              <div class="h9 mb-0 mr-3 font-weight-bold text-gray-800">{{percent_to_goal}}% to goal</div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estimated TDEE Card  -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div id="TDEETT" data-toggle="tooltip" title="" class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Estimated TDEE</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ TDEE }} Calories / day</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-fire fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projected Time to Goal Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Projected Time to Goal Weight</div>
+              <div class="row no-gutters align-items-center">
+                <div id="timetogoalTT" data-toggle="tooltip" title="" class="col-auto">
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{current_goal_date}} ({{ current_time_to_goal }} days)</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rate of Weight Loss Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div id="currentrateofweightchangeTT" data-toggle="tooltip" title="" class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Current Rate of Weight Change</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ weekly_weight_change }} {{units_weight}} / week</div>
+              <!-- <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ daily_weight_change }} {{units_weight}} / day</div> -->
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-weight fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+
+    <!-- Weight Over Time Chart -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Weight Over Time</h6>
+          <a id="downloadWC"
+              download="WeightOverTime.jpg" 
+              href=""
+              class="btn-sm btn-info float-right bg-flat-color-1"
+                  <!-- Download Icon -->
+            <i class="fa fa-download"></i>
+          </a>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="weightChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goal Summary Card -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Goals and Targets</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table">
+            <table class="table table-bordered" style="table-layout:fixed" id="summaryTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="currentweightTT" data-toggle="tooltip" title=""> Current Weight</td>
+                <td><b>{{current_weight}} {{units_weight}} </b></td>
+              </tr>
+              <tr>
+              <td>Goal Weight</td>
+              <td><b>{{goal_weight}} {{units_weight}} ({{weight_to_go}} {{units_weight}})</b></td>
+              </tr>
+              <tr>
+              <td>Goal Date</td>
+              <td><b>{{goal_date}} ({{time_left}} days)</b></td>
+              </tr>
+              <tr>
+              <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="targetweightchangeTT" data-toggle="tooltip" title=""> Goal Weight Change per Week</td>
+              <td><b>{{target_weekly_deficit}} {{units_weight}} / week</b></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table">
+            <table class="table table-bordered" style="table-layout:fixed" id="summaryTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                </tr>
+              </thead>
+              <tbody>
+              <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="targetcalintakeTT" data-toggle="tooltip" title=""> Daily Caloric Intake Target</td>
+              <td><b>{{daily_cal_target}} cal / day</b></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Calorie Over Time Chart -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Over Time</h6>
+          <a id="downloadCIC"
+              download="CaloricIntakeOverTime.jpg" 
+              href=""
+              class="btn-sm btn-info float-right bg-flat-color-1"
+                  <!-- Download Icon -->
+            <i class="fa fa-download fa"></i>
+          </a>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="calorieChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goal Summary Card -->
+    <div class="col-xl-4 col-lg-5">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Breakdown</h6>
+          <a id="downloadCIPC"
+              download="CaloricIntakeBreakdown.jpg" 
+              href=""
+              class="btn-sm btn-info float-right bg-flat-color-1"
+                  <!-- Download Icon -->
+            <i class="fa fa-download"></i>
+          </a>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="piechartCalories"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Content Row -->
+  <div class="row">
+    <!-- Logs -->
+    <div class="col-xl-12 col-lg-12">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Weekly Summaries</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered"id="weeklydataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th>Dates</th>
+                  <th>Daily Calories In</th>
+                  <th>Total Calories In</th>
+                  <th>TDEE (cal / day)</th>
+                  <th>Median Weight ({{units_weight}})</th>
+                  <th>Weekly Weight Change ({{units_weight}} / week)</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <!-- Sharing Modal-->
+    <div class="modal fade" id="sharemodal" tabindex="-1" role="dialog" aria-labelledby="sharemodal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sharemodal">Share Analytics</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">x</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            {% comment %} <i class="fab fa-facebook-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i>
+            <i class="fab fa-reddit-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i>
+            <i class="fab fa-twitter-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i>
+            <i class="fab fa-instagram-square fa-4x mb-2" style="padding-right:10px; padding-left:10px;"></i> {% endcomment %}
+            <div class="text-center">
+              <input type="url" id="sharelink" class="form-control" style="display:inline; text-align:center; " value="calorietracker.io/share/rlj4ktql4" readonly></input>
+                <button onclick="copyShareLink();" href="#" class="mt-2 btn btn-sm btn-primary shadow-sm">Copy Sharing Link</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            {% comment %} Note:   {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<!-- Page level plugins -->
+<script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
+
+<!-- Page level tooltips -->
+<script>
+document.getElementById("weightchangeTT").title = "How much weight you've gained or lost since the start of your selected date range";
+document.getElementById("TDEETT").title = "Total Daily Energy Expenditure is how many calories you burn per day when accounting for your basal metabolic rate (BMR), non exercise activity thermogenesis (NEAT), exercises etc";
+document.getElementById("timetogoalTT").title = "Days until you reach your goal based on your current rate of weight change";
+document.getElementById("currentrateofweightchangeTT").title = "How fast you're changing weight in your selected date range";
+document.getElementById("currentweightTT").title = "An average of your last several weights is the best way to account for day-to-day variation in body weight";
+document.getElementById("targetweightchangeTT").title = "The weight change needed per week to achieve your goals";
+document.getElementById("targetcalintakeTT").title = "How many calories you should eat each day to create a daily caloric balance of {{target_daily_cal_deficit}} calories / day. This is how you get to your goals";
+</script>
+
+<!-- Page level global data -->
+<script>
+var timestamps = {{data_date | safe}}
+var weights = {{data_weight}}
+var calories_in = {{data_cal_in}}
+var goal_calories_in = [];
+  for (var i = 0; i < calories_in.length; i++) {
+    goal_calories_in.push({{daily_cal_target}});
+  }
+var estimated_TDEE = [];
+  for (var i = 0; i < calories_in.length; i++) {
+    estimated_TDEE.push(Math.abs({{ TDEE }}));
+  }
+var pie_labels = {{pie_labels | safe}}
+var pie_cal_in_red = {{pie_red}}
+var pie_cal_in_yellow = {{pie_yellow}}
+var pie_cal_in_green = {{pie_green}}
+var units_weight = " ({{units_weight}})"
+var weeklyjson = {{weeklyjson_data | safe}}
+var daily_cal_target = {{daily_cal_target}}
+var goal = "{{goal}}"
+</script>
+
+
+<!-- Page level date range selector -->
+<script>
+$(".dropdown-menu li a").click(function(){
+  var selText = $(this).text();
+  $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+});
+</script>
+
+<!-- Page level weeklydataTable -->
+<script>
+
+$(document).ready(function() {
+  $('#weeklydataTable').DataTable( {
+    "data": weeklyjson.data,
+    "columns": [
+    { "data": "week_number" },
+    { "data": "weeks" },
+    { "data": "weeklycalories_in_mean" },
+    { "data": "weeklycalories_in_total" },
+    { "data": "TDEE" },
+    { "data": "weeklyweights" },
+    { "data": "weeklyweightchange" },
+    ],
+    "order": [[ 0, "desc" ]],
+  rowCallback: function(row, data, index) {
+      console.log(goal)
+      $("td", row).css('font-weight','bold');
+      if (goal == "L") {
+        if (data.weeklycalories_in_mean <= daily_cal_target) {
+        $("td:eq(2)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(2)", row).css('color','#DC143C');
+        }
+        if (data.weeklyweightchange <= 0) {
+          $("td:eq(6)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(6)", row).css('color','#DC143C');
+        }
+      }
+      if (goal == "G") {
+        if (data.weeklycalories_in_mean >= daily_cal_target) {
+        $("td:eq(2)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(2)", row).css('color','#DC143C');
+        }
+        if (data.weeklyweightchange >= 0) {
+          $("td:eq(6)", row).css('color','#3CB371');
+        } else {
+          $("td:eq(6)", row).css('color','#DC143C');
+        }
+      }
+      
+    }
+  });
+})
+</script>
+
+
+<!-- Page level charts -->
+<script src="{% static "js/line-chart-weights.js" %}"></script>
+<script src="{% static "js/line-chart-calories.js" %}"></script>
+<script src="{% static "js/pie-chart-calories.js" %}"></script>
+
+<!-- Sharing Modal -->
+<script>
+function copyShareLink() {
+  /* Get the text field */
+  var copyText = document.getElementById("sharelink");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  console.log(copyText.value)
+
+  /* Alert the copied text */
+  /*alert("Copied your referral: " + copyText.value); */
+}
+
+</script>
+{% endblock %}

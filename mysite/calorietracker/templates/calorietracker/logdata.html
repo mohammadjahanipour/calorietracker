@@ -1,0 +1,159 @@
+{% extends "extends/base.html" %}
+
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">New Log Entry</h1>
+  </div>
+
+  <div class="card w-100">
+    <div class="card-body">
+      <form class="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="control-group">
+          <label class="control-label">{{ form.date.label }} </label>
+          <div class="controls" style="width:100%">{{ form.date }}
+            {% if form.date.help_text %}
+            <span class="help-inline"><small>{{ form.date.help_text }}</small></span>
+            {% endif %}
+          </div>
+          </p>
+        </div>
+        <div class="control-group">
+          <label class="control-label">{{ form.weight.label }} </label>
+          <i id="weightTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+          <div class="controls">{{ form.weight }}
+            {% if form.weight.help_text %}
+            <span class="help-inline"><small>{{ form.weight.help_text }}</small></span>
+            {% endif %}
+          </div>
+          </p>
+        </div>
+        <div class="control-group">
+          <label class="control-label">{{ form.calories_in.label }} </label>
+          <i id="calories_inTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+          <div class="controls"style="width:100%">{{ form.calories_in }}
+            {% if form.calories_in.help_text %}
+            <span class="help-inline"><small>{{ form.calories_in.help_text }}</small></span>
+            {% endif %}
+          </div>
+          </p>
+        </div>
+
+        <button type="button" id="toggleOptionalFields" class="btn btn-info btn-sm">
+          <span class="text">Optional Data</span>
+        </button>
+        <div class="my-2"></div>
+
+        <div id="OptionalFields" style="display:none;">
+          <div class="control-group">
+            <label class="control-label">{{ form.calories_out.label }} </label>
+            <i id="calories_outTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.calories_out }}
+              {% if form.calories_out.help_text %}
+              <span class="help-inline"><small>{{ form.calories_out.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.activity_lvl.label }} </label>
+            <i id="activity_lvlTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.activity_lvl }}
+              {% if form.activity_lvl.help_text %}
+              <span class="help-inline"><small>{{ form.activity_lvl.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.front_progress_pic.label }} </label>
+            <i id="front_progress_pic" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.front_progress_pic }}
+              {% if form.front_progress_pic.help_text %}
+              <span class="help-inline"><small>{{ form.front_progress_pic.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">{{ form.side_progress_pic.label }} </label>
+            <i id="side_progress_pic" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.side_progress_pic }}
+              {% if form.side_progress_pic.help_text %}
+              <span class="help-inline"><small>{{ form.side_progress_pic.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">{{ form.back_progress_pic.label }} </label>
+            <i id="back_progress_pic" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.back_progress_pic }}
+              {% if form.back_progress_pic.help_text %}
+              <span class="help-inline"><small>{{ form.back_progress_pic.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+        </div>
+
+        <div class="my-2"></div>
+
+
+        <div class="my-2"></div>
+        <button type="submit" class="btn btn-primary btn-icon-split btn-sm">
+            <i class="fas fa-check"></i>
+          <span class="text">Submit</span>
+        </button>
+        <button type="reset" class="btn btn-danger btn-icon-split btn-sm">
+            <i class="fas fa-trash"></i>
+          <span class="text">Clear</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {% comment %} {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ error }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p> {{ error }} </p>
+        {% endfor %}
+    {% endif %} {% endcomment %}
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Page level custom scripts -->
+<script>
+document.getElementById("weightTT").title = "Try to weigh yourself at the same time every day to reduce day to day variation";
+document.getElementById("calories_inTT").title = "Your caloric intake for the day in calories";
+document.getElementById("calories_outTT").title = "Optional: Your total caloric expenditure, per your fitness tracker";
+document.getElementById("activity_lvlTT").title = "Optional: An estimate of your relative activity level for the day";
+document.getElementById("front_progress_pic").title = "Optional: A Front Facing Progress Picture Of You";
+document.getElementById("side_progress_pic").title = "Optional: A Side Facing Progress Picture Of You";
+document.getElementById("back_progress_pic").title = "Optional: A Back Facing Progress Picture Of You";
+
+$('#toggleOptionalFields').click(function() {
+   $('#OptionalFields').toggle('fast');
+});
+
+</script>
+{% endblock %}

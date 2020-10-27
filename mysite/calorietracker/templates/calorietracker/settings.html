@@ -1,0 +1,138 @@
+{% extends "extends/base.html" %}
+
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Settings</h1>
+  </div>
+
+<div class="card w-100">
+    <div class="card-body">
+      <form class="form" method="post">{% csrf_token %}
+        <div class="control-group">
+            <label class="control-label">{{ form.goal.label }} </label>
+            <i id="goalTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls" style="width:100%">{{ form.goal }}
+              {% if form.goal.help_text %}
+              <span class="help-inline"><small>{{ form.goal.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.goal_date.label }} </label>
+            <i id="goal_dateTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls" style="width:100%">{{ form.goal_date }}
+              {% if form.goal_date.help_text %}
+              <span class="help-inline"><small>{{ form.goal_date.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.goal_weight.label }} </label>
+            <i id="goal_weightTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls">{{ form.goal_weight }}
+              {% if form.goal_weight.help_text %}
+              <span class="help-inline"><small>{{ form.goal_weight.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.unit_preference.label }} </label>
+            <i id="unitpreferenceTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.unit_preference }}
+              {% if form.unit_preference.help_text %}
+              <span class="help-inline"><small>{{ form.unit_preference.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.age.label }} </label>
+            <i id="ageTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.age }}
+              {% if form.age.help_text %}
+              <span class="help-inline"><small>{{ form.age.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.sex.label }} </label>
+            <i id="sexTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.sex }}
+              {% if form.sex.help_text %}
+              <span class="help-inline"><small>{{ form.sex.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.height.label }} </label>
+            <i id="heightTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls">{{ form.height }}
+              {% if form.height.help_text %}
+              <span class="help-inline"><small>{{ form.height.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+          <div class="control-group">
+            <label class="control-label">{{ form.activity.label }} </label>
+            <i id="unitpreferenceTT" data-toggle="tooltip" title="" data-placement="right" class="far fa-question-circle"></i>
+            <div class="controls"style="width:100%">{{ form.activity }}
+              {% if form.activity.help_text %}
+              <span class="help-inline"><small>{{ form.activity.help_text }}</small></span>
+              {% endif %}
+            </div>
+            </p>
+          </div>
+
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% comment %} {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ error }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p> {{ error }} </p>
+        {% endfor %}
+    {% endif %} {% endcomment %}
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Page level custom scripts -->
+<script>
+document.getElementById("goalTT").title = "Choose to lose, gain or maintain your weight";
+document.getElementById("goal_dateTT").title = "When do you want to reach your goal by? A sustainable rate of weight changes is typically well below 2 pounds (1 kg) per week.";
+document.getElementById("goal_weightTT").title = "How much would you like to weigh?";
+document.getElementById("unitpreferenceTT").title = "Display metric or imperial units on analytics page";
+document.getElementById("ageTT").title = "Your age in years. Until we have enoguh data to calculate your TDEE from your weight change and caloric intake, we use the Harris Benedict equation to estimate your TDEE";
+document.getElementById("sexTT").title = "Your sex. Until we have enoguh data to calculate your TDEE from your weight change and caloric intake, we use the Harris Benedict equation to estimate your TDEE";
+document.getElementById("heightTT").title = "Your height in cm or inches. Until we have enoguh data to calculate your TDEE from your weight change and caloric intake, we use the Harris Benedict equation to estimate your TDEE";
+document.getElementById("activityTT").title = "Your current activity level. Until we have enoguh data to calculate your TDEE from your weight change and caloric intake, we use the Harris Benedict equation to estimate your TDEE";
+</script>
+{% endblock %}

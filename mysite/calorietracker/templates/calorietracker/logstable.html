@@ -1,0 +1,85 @@
+{% extends "extends/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">View / Edit Logs</h1>
+
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Logs -->
+    <div class="col-xl-12 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Log Entries (Click row to edit)</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover"id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Weight ({{units_weight}})</th>
+                  <th>Calories In</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /.container-fluid -->
+
+<!-- Page level plugins -->
+<script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
+
+<!-- Page level global data -->
+<script>
+var logjson = {{logjson_data | safe}}
+var units_weight = " ({{units_weight}})"
+</script>
+
+
+<!-- Page level log entries datatable -->
+<script>
+$(document).ready(function() {
+  $('#dataTable').DataTable( {
+    "data": logjson.data,
+    "columns": [
+    { "data": "date" },
+    { "data": "weight" },
+    { "data": "calories_in" },
+    ],
+    "order": [[ 0, "desc" ]]
+  });
+})
+
+$('#dataTable').on('click', 'tbody > tr > td', function (e) {
+    // 'this' refers to the current <td>, if you need information out of it
+    e.preventDefault();
+    var table = $('#dataTable').DataTable();
+    var data = table.row($(this).closest('tr')).data();
+
+    url = "/logdata/" + String(data.id) + "/update"
+    location.href=url 
+  });
+</script>
+
+
+
+{% endblock %}

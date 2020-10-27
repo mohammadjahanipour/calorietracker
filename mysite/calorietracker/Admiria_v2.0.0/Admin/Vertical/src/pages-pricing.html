@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Pricing | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-sidebar="dark">
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/topbar.html", {"title": "Pricing"})
+
+            @@include("partials/sidebar.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <div class="row text-center">
+                            <div class="col-lg-3">
+                                <div class="card plan-card mt-4">
+                                    <div class="card-body">
+                                        <div class="pt-3 pb-3">
+                                            <i class="ion ion-md-airplane plan-icon bg-primary h1"></i>
+                                            <h6 class="text-uppercase text-primary">Starter Pack</h6>
+                                        </div>
+                                        <div>
+                                            <h1 class="plan-price">$19<span class="text-muted ml-2"><sup>Per Month</sup></span></h1>
+                                            <div class="plan-div-border"></div>
+                                        </div>
+                                        <div class="plan-features pb-3 mt-3 pt-3 text-muted">
+                                            <p>Free Live Support</p>
+                                            <p>Unlimited User</p>
+                                            <p>No Time Tracking</p>
+                                            <p>Free Setup</p>
+                                            <a href="#" class="btn btn-primary">Sign Up Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card plan-card mt-4">
+                                    <div class="card-body">
+                                        <div class="pt-3 pb-3">
+                                           <i class="ion ion-md-trophy plan-icon bg-dark h1"></i>
+                                            <h6 class="text-uppercase text-dark">Professional Pack</h6>
+                                        </div>
+                                        <div>
+                                            <h1 class="plan-price">$29<span class="text-muted ml-2"><sup>Per Month</sup></span></h1>
+                                            <div class="plan-div-border"></div>
+                                        </div>
+                                        <div class="plan-features pb-3 mt-3 pt-3 text-muted">
+                                            <p>Free Live Support</p>
+                                            <p>Unlimited User</p>
+                                            <p>No Time Tracking</p>
+                                            <p>Free Setup</p>
+                                            <a href="#" class="btn btn-dark">Sign Up Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="card plan-card mt-4">
+                                    <div class="card-body">
+                                        <div class="pt-3 pb-3">
+                                            <i class="ion ion-ios-umbrella plan-icon bg-pink h1"></i>
+                                            <h6 class="text-uppercase text-pink">Enterprise Pack</h6>
+                                        </div>
+                                        <div>
+                                            <h1 class="plan-price">$39<span class="text-muted ml-2"><sup>Per Month</sup></span></h1>
+                                            <div class="plan-div-border"></div>
+                                        </div>
+                                        <div class="plan-features pb-3 mt-3 pt-3 text-muted">
+                                            <p>Free Live Support</p>
+                                            <p>Unlimited User</p>
+                                            <p>No Time Tracking</p>
+                                            <p>Free Setup</p>
+                                            <a href="#" class="btn btn-pink">Sign Up Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="card plan-card mt-4">
+                                    <div class="card-body">
+                                        <div class="pt-3 pb-3">
+                                            <i class="ion ion-md-cube plan-icon bg-teal h1"></i>
+                                            <h6 class="text-uppercase text-teal">Unlimited Pack</h6>
+                                        </div>
+                                        <div>
+                                            <h1 class="plan-price">$49<span class="text-muted ml-2"><sup>Per Month</sup></span></h1>
+                                            <div class="plan-div-border"></div>
+                                        </div>
+                                        <div class="plan-features pb-3 mt-3 pt-3 text-muted">
+                                            <p>Free Live Support</p>
+                                            <p>Unlimited User</p>
+                                            <p>No Time Tracking</p>
+                                            <p>Free Setup</p>
+                                            <a href="#" class="btn btn-teal">Sign Up Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>

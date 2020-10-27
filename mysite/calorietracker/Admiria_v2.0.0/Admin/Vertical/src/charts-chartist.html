@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>Chartist Chart | Admiria - Responsive Bootstrap 4 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <link href="assets/libs/chartist/chartist.min.css" rel="stylesheet">
+
+        <!-- Bootstrap Css -->
+        <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+    </head>
+
+    <body data-sidebar="dark">
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            @@include("partials/topbar.html", {"title": "Chartist Chart"})
+
+            @@include("partials/sidebar.html")
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Overlapping bars on mobile</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">86541</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">2541</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">102030</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="overlapping-bars" class="ct-chart ct-golden-section" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Stacked bar chart</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">5241</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">65411</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">51654</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="stacked-bar-chart" class="ct-chart ct-golden-section" dir="ltr"></div>
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Animating a Donut with Svg.animate</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">748949</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">5181</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">101025</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="animating-donut" class="ct-chart ct-golden-section" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Simple pie chart</h4>
+
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">48484</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">48652</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">85412</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="simple-pie" class="ct-chart ct-golden-section simple-pie-chart-chartist" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Advanced Smil Animations</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">45410</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">4442</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">3201</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="smil-animations" class="ct-chart ct-golden-section" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Simple line chart</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">44242</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">75221</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">65212</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="simple-line-chart" class="ct-chart ct-golden-section" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Line Scatter Diagram</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">5677</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">5542</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">12422</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="scatter-diagram" class="ct-chart ct-golden-section" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title mb-4">Line chart with area</h4>
+
+                                        <div class="row text-center mt-4">
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">4234</h5>
+                                                <p class="text-muted text-truncate">Activated</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">64521</h5>
+                                                <p class="text-muted text-truncate">Pending</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 class="mb-0 font-size-18">94521</h5>
+                                                <p class="text-muted text-truncate">Deactivated</p>
+                                            </div>
+                                        </div>
+
+                                        <div id="chart-with-area" class="ct-chart ct-golden-section" dir="ltr"></div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div> <!-- end row -->
+
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                @@include("partials/footer.html")
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        @@include("partials/right-sidebar.html")
+
+        <!-- JAVASCRIPT -->
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/metismenu/metisMenu.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+
+                <!-- Plugin Js-->
+        <script src="assets/libs/chartist/chartist.min.js"></script>
+        <script src="assets/libs/chartist-plugin-tooltips/chartist-plugin-tooltip.min.js"></script>
+        <!-- demo js-->
+        <script src="assets/js/pages/chartist.init.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+    </body>
+</html>
