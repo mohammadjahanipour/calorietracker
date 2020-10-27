@@ -33,17 +33,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 
-# Sentry monitoring
+# # Sentry Monitoring Configuration ========================================================
 # only in production
 if not DEBUG:
     sentry_sdk.init(
         dsn=os.getenv("SENTRY_KEY"),
         integrations=[DjangoIntegration()],
         traces_sample_rate=0.5,
-
         # If you wish to associate users to errors (assuming you are using
         # django.contrib.auth) you may enable sending PII data.
-        send_default_pii=True
+        send_default_pii=True,
     )
 
 
@@ -103,42 +102,43 @@ LOGIN_URL = "login"
 
 
 # # Logging Configuration ========================================================
+# Only in production
 # Get loglevel from env
 # LOGGING_CONFIG = None
 LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "info").upper()
-
-logging.config.dictConfig(
-    {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "console": {
-                "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s",
+if not DEBUG:
+    logging.config.dictConfig(
+        {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "console": {
+                    "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s",
+                },
             },
-        },
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "formatter": "console",
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "console",
+                },
+                "mail_admins": {
+                    "level": "ERROR",
+                    "class": "django.utils.log.AdminEmailHandler",
+                    "email_backend": EMAIL_BACKEND,
+                    "reporter_class": "django.views.debug.ExceptionReporter",
+                },
             },
-            "mail_admins": {
-                "level": "ERROR",
-                "class": "django.utils.log.AdminEmailHandler",
-                "email_backend": EMAIL_BACKEND,
-                "reporter_class": "django.views.debug.ExceptionReporter",
+            "loggers": {
+                "": {
+                    "level": LOGLEVEL,
+                    "handlers": [
+                        "console",
+                        "mail_admins",
+                    ],
+                },
             },
-        },
-        "loggers": {
-            "": {
-                "level": LOGLEVEL,
-                "handlers": [
-                    "console",
-                    "mail_admins",
-                ],
-            },
-        },
-    }
-)
+        }
+    )
 
 
 # # Applications Configuration ========================================================
@@ -168,7 +168,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.discord",
     "sslserver",
     "friendship",
-    'debug_toolbar',
+    "debug_toolbar",
 ]
 
 # 1 == dev domaine and sitename
@@ -181,7 +181,7 @@ PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 
 # # Middleware ========================================================
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -196,7 +196,7 @@ MIDDLEWARE = [
 # Django_debug_toolbar
 INTERNAL_IPS = [
     # ...
-    '127.0.0.1',
+    "127.0.0.1",
     # ...
 ]
 
