@@ -2,143 +2,131 @@
 {% load static %}
 {% load friendshiptags %}
 
-
-
 {% block content %}
-
-<!-- dev vue version -->
-<script src="https://unpkg.com/vue@next"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script> -->
-
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Contacts</h1>
+    <h1 class="h3 mb-0 text-gray-800">Friends</h1>
   </div>
 
+    <!-- Content Row -->
   <div class="row">
-    <!-- contacts sidebar -->
-    <div class="col-2">
-      <div class="row">
-        <a class="col" href="#">Friends</a>
-      </div>
-      <div class="row">
-        <a class="col" href="#">Coaches</a>
-      </div>
-      <div class="row">
-        <a class="col" href="#">Docs</a>
-      </div>
 
-    </div>
-
-    <div class="col-10">
-
-      <!-- topbar -->
-      <div class="row">
-        <h5 class="mx-2" ><i class="fas fa-edit"></i>Friends</h5>
-        <!-- <button v-on:click="all_friends" type="button" class="btn btn-primary mx-2">All</button>
-        <button v-on:click="pending_friends" type="button" class="btn btn-primary mx-2">Pending</button> -->
-        <a class="mx-2" href="#">All</a>
-        <a class="mx-2" href="#">Pending</a>
-        <a class="mx-2" href="#">Blocked</a>
-        <a class="mx-2" href="#">Add Friend</a>
-
-        <!-- <button v-on:click="doThis">VUECLICK TEST</button>
-
-        <button @click="increment">Up vote</button> -->
-
-      </div>
-
-      <!-- content -->
-      <div class="row">
-
-        <div class="mx-auto" id="app">
-
-          <div class="friends-div">
-
-            <div v-show="show_all_friends" class="all-friends">
-
-              <h5>all friends</h5>
-              {% friends request.user %}
-
-            </div>
-
-            <div v-if="show_pending_friends === true" class="blocked-friends">
-              <h5>pending friends</h5>
-              {% friend_requests request.user %}
-
-            </div>
-
-            <div v-show="show_blocked_friends" class="blocked-friends">
-              <h5>blocked friends</h5>
-              {% blocking request.user %}
-            </div>
-
-            <div v-show="show_pending_friends" class="add-friend">
-              <h5>add friends</h5>
-
-            </div>
-
+    <!-- Friends Main Card-->
+    <div class="col-xl-7 col-lg-7">
+      <div class="card w-100 shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header">
+          <div class="nav">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                  <a class="nav-link active" id="all-friends-tab" data-toggle="tab" href="#allfriends" role="tab" aria-controls="home" aria-selected="true">All Friends</a>
+              </li>
+              {% comment %} <li class="nav-item">
+                  <a class="nav-link" id="followers-friends-tab" data-toggle="tab" href="#followers" role="tab" aria-controls="followers" aria-selected="false">Followers</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="following-friends-tab" data-toggle="tab" href="#following" role="tab" aria-controls="following" aria-selected="false">Following</a>
+              </li> {% endcomment %}
+              <li class="nav-item">
+                  <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="blocked-friends-tab" data-toggle="tab" href="#blockedfriends" role="tab" aria-controls="blockedfriends" aria-selected="false">Blocked</a>
+              </li>
+            </ul>
+            <ul class="nav nav-tabs card-header-tabs ml-auto">
+              <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+              <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-search fa-fw"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                  <form class="form-inline mr-auto w-75 navbar-search">
+                    <div class="input-group">
+                      <input type="text" class="form-control bg-light border-0 small" placeholder="Add Friends..." aria-label="Search" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">
+                          <i class="fas fa-search fa-sm"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </li>
+              <li class="nav-item">
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-75 navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0" style="width:150px;" placeholder="Add Friends..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </li>
+            </ul>     
           </div>
         </div>
-
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="allfriends" role="tabpanel" aria-labelledby="all-friends-tab">
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <div class="font-weight-bold">
+                  <div class="mb-2 mt-2">CalorieTracker.io User0 <text class="small text-gray-500">(Coach)</text></div>
+                </div>
+              </a>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <div class="font-weight-bold">
+                  <div class="mb-2 mt-2">CalorieTracker.io User1 <text class="small text-gray-500">(Friend)</text></div>
+                </div>
+              </a>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <div class="font-weight-bold">
+                  <div class="mb-2 mt-2">CalorieTracker.io User2 <text class="small text-gray-500">(Teammate)</text></div>
+                </div>
+              </a>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <div class="font-weight-bold">
+                  <div class="mb-2 mt-2">CalorieTracker.io User3 <text class="small text-gray-500">(Friend)</text></div>
+                </div>
+              </a>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <div class="font-weight-bold">
+                  <div class="mb-2 mt-2">CalorieTracker.io User4 <text class="small text-gray-500">(Friend)</text></div>
+                </div>
+              </a>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <div class="font-weight-bold">
+                  <div class="mb-2 mt-2">CalorieTracker.io User5 <text class="small text-gray-500">(Coach)</text></div>
+                </div>
+              </a>
+              {% friends request.user %}
+            </div>
+            {% comment %} <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-friends-tab">...</div>
+            <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-friends-tab">...</div> {% endcomment %}
+            <div class="tab-pane fade" id="pendingfriends" role="tabpanel" aria-labelledby="pending-friends-tab">
+              TBD
+              {% friend_requests request.user %}
+            </div>
+            <div class="tab-pane fade" id="blockedfriends" role="tabpanel" aria-labelledby="blocked-friends-tab">
+              TBD
+              {% blocking request.user %}
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
-
-
   </div>
 
-
 </div>
-<!-- /.container-fluid -->
 
+<script>
 
-<!-- Page level custom scripts -->
-<script type="text/javascript">
-
-  const app = {
-    delimiters: ['[[', ']]'],
-    // methods: {
-    //
-    // },
-    data() {
-      return {
-        show_all_friends: true,
-        show_pending_friends: false,
-        show_blocked_friends:false,
-        count: 4,
-      }
-    },
-    methods: {
-
-
-      doThis (event) {
-        this.console.log("VUE CLICK TEST")
-        console.log("VUE CLICK TEST")
-
-      },
-      all_friends() {
-        this.console.log("All friends fired")
-        this.show_all_friends=true;
-        this.show_pending_friends=false;
-        this.show_blocked_friends=false;
-      },
-      pending_friends() {
-        this.console.log("Pending friends fired")
-        // `this` will refer to the component instance
-        this.show_all_friends=false;
-        this.show_pending_friends=true;
-        this.show_blocked_friends=false;
-      },
-  }
-}
-
-Vue.createApp(app).mount('#app')
 </script>
-
-
 {% endblock %}
