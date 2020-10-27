@@ -169,6 +169,7 @@ INSTALLED_APPS = [
     "sslserver",
     "friendship",
     'debug_toolbar',
+    'django_prometheus',
 ]
 
 # 1 == dev domaine and sitename
@@ -181,6 +182,8 @@ PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 
 # # Middleware ========================================================
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
+    # needs to be on top
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -190,6 +193,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
+    # needs to be at the bottom
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 
