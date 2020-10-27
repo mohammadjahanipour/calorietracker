@@ -166,6 +166,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.discord",
+    'allauth.socialaccount.providers.google',
     "sslserver",
     "friendship",
     'debug_toolbar',
@@ -308,4 +309,19 @@ SOCIALACCOUNT_PROVIDERS = {
             "key": os.getenv("DISCORD_KEY"),
         }
     },
+    'google': {
+        "APP": {
+            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+            "secret": os.getenv("GOOGLE_SECRET"),
+            },
+
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+    },
+
 }
