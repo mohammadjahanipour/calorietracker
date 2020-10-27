@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from sentry_sdk.integrations.django import DjangoIntegration
+import sentry_sdk
 import django_heroku
 from pathlib import Path
 import os
@@ -29,6 +31,20 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False) == "True"
+
+
+# Sentry monitoring
+# only in production
+if DEBUG:
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_KEY"),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=0.5,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
 
 
 # Specify the context processors as follows:

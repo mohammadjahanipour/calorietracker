@@ -111,3 +111,6 @@
 **Django-friendship**
 
 - https://github.com/revsys/django-friendship/
+
+**Sentry**
+- https://sentry.io/settings/calorietrackerio/usage/history/

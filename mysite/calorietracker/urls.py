@@ -1,6 +1,6 @@
 from django.urls import path
-
 from . import views
+from django.conf import settings
 
 urlpatterns = [
     path("", views.LandingPage.as_view(), name="welcome"),
@@ -40,4 +40,15 @@ urlpatterns = [
     path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
     path("subscription/", views.Subscription.as_view(), name="subscription"),
     path("contacts/", views.Contacts.as_view(), name="contacts"),
+
+
+
 ]
+
+if settings.DEBUG:
+
+    # Test Sentry error reporting
+    def trigger_error(request):
+        division_by_zero = 1 / 0
+
+    urlpatterns.append(path('sentry-debug/', trigger_error))
