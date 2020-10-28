@@ -1,6 +1,13 @@
 # Calorietracker
 
 
+### Static Type Checking
+
+  mypy and django-stubs is used for type checking
+  run below in mysite dir similair to how you would run ./manage.py <command>
+
+      mypy calorietracker/models.py
+
 ### Enviroment
 
   Pipenv by default loads in a .env file automatically see .env.example for examples
@@ -119,3 +126,7 @@
 **Django Debug Toolbar**
 
 - https://github.com/jazzband/django-debug-toolbar
+
+**Djanog-stubs**
+
+- https://github.com/typeddjango/django-stubs
