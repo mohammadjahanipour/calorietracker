@@ -14,8 +14,8 @@ from django.views.generic import CreateView, FormView, RedirectView, UpdateView
 from measurement.measures import Distance, Mass, Weight
 
 
-from .forms import ImportMFPForm
-from .models import Log, MFPCredentials
+from .. forms import ImportMFPForm
+from .. models import Log, MFPCredentials
 
 
 def start_new_thread(function):

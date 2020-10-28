@@ -13,8 +13,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, RedirectView, UpdateView
 from measurement.measures import Distance, Mass, Weight
 
-from .forms import ImportCSVForm
-from .models import Log
+from .. forms import ImportCSVForm
+from .. models import Log
 
 
 def merge_csv_weights(user, overwrite, weights_dict):

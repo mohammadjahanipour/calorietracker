@@ -26,17 +26,10 @@ from django.views.generic import (
 )
 from safedelete.models import HARD_DELETE
 
-from . import models
-from .analytics_view import Analytics
-from .csvimport_view import ImportCSV
-from .forms import LogDataForm, LoginForm, MeasurementWidget, RegisterForm, SettingForm
-from .mfpimport_views import (
-    ImportMFP,
-    ImportMFPCredentials,
-    ImportMFPCredentialsCreate,
-    ImportMFPCredentialsUpdate,
-)
-from .models import Feedback, Log, MFPCredentials, Setting
+from .. import models
+from .. forms import LogDataForm, LoginForm, MeasurementWidget, RegisterForm, SettingForm
+
+from .. models import Feedback, Log, MFPCredentials, Setting
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
