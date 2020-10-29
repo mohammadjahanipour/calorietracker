@@ -2,9 +2,10 @@
 
 ### Logging & Analytics
 
-currently in use are Sentry and Plausible
+currently in use are Sentry, Plausible and Motomo
 https://plausible.io/sites
 https://sentry.io/organizations/calorietrackerio/
+https://calorietrackerio.matomo.cloud
 
 
 
