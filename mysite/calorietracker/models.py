@@ -10,6 +10,14 @@ from safedelete.models import SafeDeleteModel
 from .base_models import DateTimeFields
 from pinax.referrals.models import Referral
 from cloudinary.models import CloudinaryField
+import uuid
+
+
+class AnalyticsShareToken(DateTimeFields, SafeDeleteModel):
+    """docstring for Feedback."""
+
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid.uuid4)
 
 
 class Wallet(DateTimeFields, SafeDeleteModel):

@@ -4,7 +4,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Setting, Streak, Wallet
+from .models import Setting, Streak, Wallet, AnalyticsShareToken
 from pinax.referrals.models import Referral, ReferralResponse
 from pinax.referrals.signals import user_linked_to_response
 
@@ -40,6 +40,15 @@ def create_user_streak_model(sender, instance, created, **kwargs):
     if created:
         user = instance
         Streak(user=user).save()
+
+
+@receiver(post_save, sender=get_user_model())
+def create_user_analytics_share_token(sender, instance, created, **kwargs):
+
+    # uuid token is automatically created by default in the model
+    if created:
+        user = instance
+        AnalyticsShareToken(user=user).save()
 
 
 # @receiver(user_logged_in)

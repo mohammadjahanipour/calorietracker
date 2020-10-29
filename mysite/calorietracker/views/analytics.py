@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+from .. models import AnalyticsShareToken
 import json
 from datetime import date, datetime, timedelta, timezone
 import pandas as pd
@@ -34,18 +36,30 @@ def interpolate(x1, x2, y1, y2, y):
     return output
 
 
-class Analytics(LoginRequiredMixin, TemplateView):
+class Analytics(TemplateView):
+
+    # TODO: Ui for shared Analytics is unclear and needs revisioning
+    # main points are
+    # no clear distinction for whos analytics it is
+    # warnings and other notification which are tailerod to the owner
+    # share button and the broken link from it when already on a shared Analytics view
+
+    user = None  # Will be set in the dispatch method and from it we will derive the Analytics data
+
     template_name = "calorietracker/analytics.html"
 
     def load_data(self, **kwargs):
+
+        user = self.user
+
         self.query_set = (
             Log.objects.all()
-            .filter(user=self.request.user)
+            .filter(user=user)
             .values("id", "date", "weight", "calories_in")
             .order_by("date")
         )
         df_query = pd.DataFrame(list(self.query_set))
-        settings_set = Setting.objects.all().filter(user=self.request.user).values()
+        settings_set = Setting.objects.all().filter(user=user).values()
         df_settings = pd.DataFrame(list(settings_set))
 
         # age, height, sex, activity, goaldate, goalweight
@@ -179,11 +193,26 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         self.weeklytabledata = self.get_weeklytabledata()
 
-    def dispatch(self, request):
+    def dispatch(self, request, *args, **kwargs):
 
-        if not self.request.user.is_authenticated:
-            return redirect(reverse_lazy("login"))
-        if not Log.objects.filter(user=self.request.user).exists():
+        # Set self.user
+        if self.kwargs.get("uuid", False):
+
+            # The analytics data of another user wants to be seen
+            token = get_object_or_404(AnalyticsShareToken, uuid=self.kwargs.get("uuid"))
+            self.user = token.user
+            user = self.user
+
+        else:
+            # User wants to see their own analytics
+            self.user = self.request.user
+            user = self.user
+
+            # no permission checks or activity checks are performed for now
+            if user.is_authenticated is False:
+                return redirect(reverse_lazy("login"))
+
+        if not Log.objects.filter(user=user).exists():
             messages.info(request, "You need to have made at least one log entry")
             return redirect(reverse_lazy("logdata"))
 
@@ -199,13 +228,13 @@ class Analytics(LoginRequiredMixin, TemplateView):
         ]
         for var in settings_vars:
             if not (
-                list(Setting.objects.filter(user=self.request.user).values(var))[0][var]
+                list(Setting.objects.filter(user=user).values(var))[0][var]
             ):
                 messages.info(request, "Please fill out your settings. Missing: " + var)
                 return redirect(reverse_lazy("settings"))
 
         # Check goal date is in the future
-        x = list(Setting.objects.filter(user=self.request.user).values("goal_date"))[0][
+        x = list(Setting.objects.filter(user=user).values("goal_date"))[0][
             "goal_date"
         ]
         if (x - datetime.now(timezone.utc)).days < 0:
@@ -217,12 +246,14 @@ class Analytics(LoginRequiredMixin, TemplateView):
         return super().dispatch(request)
 
     def smooth_zero_weights(self, method="lerp"):
+
+        user = self.user
         smoothed_weights = []
 
         if method == "lerp":
             # first get all weight, dates as list of tuples
             all_logs = (
-                Log.objects.filter(user=self.request.user)
+                Log.objects.filter(user=user)
                 .values_list("date", "weight")
                 .order_by("date")
             )  # list of tuples (date, weight)
@@ -266,7 +297,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         if method == "previous_avg":
             all_weights = list(
-                Log.objects.filter(user=self.request.user)
+                Log.objects.filter(user=user)
                 .values_list("date", "weight")
                 .order_by("date")
             )  # list of tuples (date, weight)
