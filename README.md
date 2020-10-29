@@ -1,5 +1,12 @@
 # Calorietracker
 
+### Logging & Analytics
+
+currently in use are Sentry and Plausible
+https://plausible.io/sites
+https://sentry.io/organizations/calorietrackerio/
+
+
 
 ### Enviroment
 
