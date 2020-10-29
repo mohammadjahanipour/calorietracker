@@ -2,16 +2,16 @@
 
 ---
 ## [Unreleased]
-- analytics exporting / sharing to socials
-- sign in with google
 - sign in with apple
 - bodyfat % calculator
 - share analytics view to social media (fb/twitter/ig)
 
-## 2020-10-XX
+## 2020-10-29
 ### Added
 - landing page!
+- sign in with google
 - download jpgs of analytics graphs buttons
+- referral program
 - hover effect on profile name topbar
 - up to 3 progress pics per log entry
 
