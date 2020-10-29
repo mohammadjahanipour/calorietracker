@@ -9,6 +9,15 @@ https://calorietrackerio.matomo.cloud
 
 
 
+### Gunicorn 
+WEB_CONCURRENCY is a synonym for workers or -w and is set as env var to 3
+more info can be found at the below links
+
+  - https://docs.gunicorn.org/en/stable/settings.html#worker-processes
+  - https://devcenter.heroku.com/articles/optimizing-dyno-usage#concurrent-web-servers
+
+
+
 ### Enviroment
 
   Pipenv by default loads in a .env file automatically see .env.example for examples
