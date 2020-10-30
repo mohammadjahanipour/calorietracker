@@ -2,14 +2,14 @@
 
 ### Logging & Analytics
 
-currently in use are Sentry, Plausible and Motomo
+currently in use are Sentry, Plausible django-request and Motomo
 https://plausible.io/sites
 https://sentry.io/organizations/calorietrackerio/
 https://calorietrackerio.matomo.cloud
 
 
 
-### Gunicorn 
+### Gunicorn
 WEB_CONCURRENCY is a synonym for workers or -w and is set as env var to 3
 more info can be found at the below links
 
@@ -136,3 +136,8 @@ more info can be found at the below links
 **Django Debug Toolbar**
 
 - https://github.com/jazzband/django-debug-toolbar
+
+
+**Django-request**
+
+- https://github.com/django-request/django-request

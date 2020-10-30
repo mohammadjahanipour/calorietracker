@@ -30,6 +30,7 @@ django-sslserver = "*"
 django-friendship = "*"
 sentry-sdk = "*"
 django-debug-toolbar = "*"
+django-request = "*"
 
 [requires]
 python_version = "3.7"

@@ -170,6 +170,7 @@ INSTALLED_APPS = [
     "sslserver",
     "friendship",
     "debug_toolbar",
+    "request"
 ]
 
 # 1 == dev domaine and sitename
@@ -191,6 +192,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
+    "request.middleware.RequestMiddleware"
 ]
 
 
