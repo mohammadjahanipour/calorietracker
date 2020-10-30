@@ -1,5 +1,32 @@
 # Calorietracker
 
+
+
+### Installation & Requirements
+
+   git and pip3 is assumed to be installed
+
+    pip3 install pipenv
+    git clone https://gitlab.com/balugitlab/calorietracker
+
+    cd calorietracker
+    pipenv sync    
+
+
+### Getting Started & How to Run
+
+  copy & rename the .env.example file to .env in the same dir and populate it with your data
+
+  note: you probably don't need to fill in everything
+
+  then run
+
+    pipenv shell
+    cd mysite
+    ./manage.py runserver
+
+
+
 ### Logging & Analytics
 
 currently in use are Sentry, Plausible django-request and Motomo
