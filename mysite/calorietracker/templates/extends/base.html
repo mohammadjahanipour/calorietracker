@@ -5,11 +5,7 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  {% include "includes/head_meta_tags.html" %}
 
 
   <link rel="stylesheet" href="{% static "css/main.css" %}">
@@ -25,24 +21,7 @@
 
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
 
-  <!-- plausible analytics  -->
-  <script async defer data-domain="calorietracker.io" src="https://plausible.io/js/plausible.js"></script>
-
-  <!-- Matomo -->
-  <script type="text/javascript">
-    var _paq = window._paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="https://calorietrackerio.matomo.cloud/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '1']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.src='//cdn.matomo.cloud/calorietrackerio.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-  </script>
-  <!-- End Matomo Code -->
+  {% include "includes/analytics.html" %}
 
 
   <!-- DatetimePicker -->
@@ -61,9 +40,6 @@
   <link href="{% static "vendor/datatables/dataTables.bootstrap4.min.css" %}" rel="stylesheet" type="text/css">
   <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
   <script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
-
-  <!-- Buy Me a Coffee -->
-  <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="calorietracker" data-description="Support calorietracker.io with a coffee!" data-message="Thank you for visiting! Want to support further development?" data-color="#79D6B5" data-position="right" data-x_margin="18" data-y_margin="18"></script>
 
 
   {% block extrahead %}
@@ -136,6 +112,10 @@
   $('[data-toggle="tooltip"]').tooltip();
   });
   </script>
+
+
+  <!-- Buy Me a Coffee -->
+  <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="calorietracker" data-description="Support calorietracker.io with a coffee!" data-message="Thank you for visiting! Want to support further development?" data-color="#79D6B5" data-position="right" data-x_margin="18" data-y_margin="18"></script>
 
 </body>
 
