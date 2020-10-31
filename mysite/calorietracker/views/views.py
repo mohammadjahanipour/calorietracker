@@ -362,4 +362,18 @@ class Terms(TemplateView):
 
 
 class LandingPage(TemplateView):
+
     template_name = "calorietracker/home.html"
+
+    def get(self, request, *args, **kwargs):
+        """
+        """
+
+        # Redirect loged in users to their analytics page instead of the landing page
+        if self.request.user.is_authenticated:
+
+            # cant redirect to analytics page because user has no logs
+            if request.user.log_set.count() == 0:
+                return redirect(reverse_lazy("logdata"))
+
+            return redirect(reverse_lazy("analytics"))
