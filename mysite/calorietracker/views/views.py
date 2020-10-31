@@ -205,16 +205,6 @@ class Settings(LoginRequiredMixin, UpdateView):
         return form
 
 
-class HomePage(TemplateView):
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    template_name = "calorietracker/home.html"
-
-
 class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
 
