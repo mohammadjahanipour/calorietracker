@@ -12,6 +12,12 @@ from cloudinary.forms import CloudinaryFileField
 from .models import Log, Setting, Image
 
 
+class FriendForm(forms.Form):
+    """docstring for AcceptFriendForm."""
+
+    from_user = forms.ModelChoiceField(get_user_model().objects.all())
+
+
 class MeasurementWidget(forms.MultiWidget):
     def __init__(
         self,

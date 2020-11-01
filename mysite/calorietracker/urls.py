@@ -40,4 +40,8 @@ urlpatterns = [
     path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
     path("subscription/", views.Subscription.as_view(), name="subscription"),
     path("contacts/", views.Contacts.as_view(), name="contacts"),
+
+    path("accept-friend/", views.AcceptFriend.as_view(), name="acceptfriend"),
+    path("reject-friend/", views.RejectFriend.as_view(), name="rejectfriend"),
+    path("remove-friend/", views.RemoveFriend.as_view(), name="removefriend"),
 ]

@@ -25,18 +25,24 @@
               <li class="nav-item">
                   <a class="nav-link active" id="all-friends-tab" data-toggle="tab" href="#allfriends" role="tab" aria-controls="home" aria-selected="true">All Friends</a>
               </li>
-              {% comment %} <li class="nav-item">
+
+              {% comment %}
+              <li class="nav-item">
                   <a class="nav-link" id="followers-friends-tab" data-toggle="tab" href="#followers" role="tab" aria-controls="followers" aria-selected="false">Followers</a>
               </li>
               <li class="nav-item">
                   <a class="nav-link" id="following-friends-tab" data-toggle="tab" href="#following" role="tab" aria-controls="following" aria-selected="false">Following</a>
-              </li> {% endcomment %}
+              </li>
+              {% endcomment %}
+
               <li class="nav-item">
                   <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending</a>
               </li>
-              <li class="nav-item">
+              
+              <!-- <li class="nav-item">
                   <a class="nav-link" id="blocked-friends-tab" data-toggle="tab" href="#blockedfriends" role="tab" aria-controls="blockedfriends" aria-selected="false">Blocked</a>
-              </li>
+              </li> -->
+
             </ul>
             <ul class="nav nav-tabs card-header-tabs ml-auto">
               <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -69,54 +75,66 @@
                   </div>
                 </form>
               </li>
-            </ul>     
+            </ul>
           </div>
         </div>
         <!-- Card Body -->
         <div class="card-body">
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="allfriends" role="tabpanel" aria-labelledby="all-friends-tab">
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="font-weight-bold">
-                  <div class="mb-2 mt-2">CalorieTracker.io User0 <text class="small text-gray-500">(Coach)</text></div>
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="font-weight-bold">
-                  <div class="mb-2 mt-2">CalorieTracker.io User1 <text class="small text-gray-500">(Friend)</text></div>
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="font-weight-bold">
-                  <div class="mb-2 mt-2">CalorieTracker.io User2 <text class="small text-gray-500">(Teammate)</text></div>
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="font-weight-bold">
-                  <div class="mb-2 mt-2">CalorieTracker.io User3 <text class="small text-gray-500">(Friend)</text></div>
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="font-weight-bold">
-                  <div class="mb-2 mt-2">CalorieTracker.io User4 <text class="small text-gray-500">(Friend)</text></div>
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <div class="font-weight-bold">
-                  <div class="mb-2 mt-2">CalorieTracker.io User5 <text class="small text-gray-500">(Coach)</text></div>
-                </div>
-              </a>
-              {% friends request.user %}
+
+              {% for friend in all_friends %}
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="font-weight-bold">
+                    <div class="mb-2 mt-2">{{ friend }} <text class="small text-gray-500">(Friend)</text></div>
+                  </div>
+                </a>
+
+                <!-- Reject Friend -->
+                <form class="float-right" action="{% url 'removefriend' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="id_from_user" name="from_user" value="{{ friend.id }}">
+                  <button class="btn btn-danger" type="submit" name="button">Remove</button>
+                </form>
+              {% endfor %}
+
             </div>
-            {% comment %} <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-friends-tab">...</div>
-            <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-friends-tab">...</div> {% endcomment %}
+            {% comment %}
+
+            <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-friends-tab">...</div>
+            <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-friends-tab">...</div>
+            {% endcomment %}
+
             <div class="tab-pane fade" id="pendingfriends" role="tabpanel" aria-labelledby="pending-friends-tab">
-              TBD
-              {% friend_requests request.user %}
+
+              {% for friend_request in unrejected_friend_requests %}
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="font-weight-bold">
+                    <div class="mb-2 mt-2">{{ friend_request.from_user }}
+                      <text class="small text-gray-500">
+                      </text>
+                    </div>
+                  </div>
+                </a>
+
+                <!-- Accept Friend -->
+                <form class="float-right" action="{% url 'acceptfriend' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
+                  <button class="btn btn-success" type="submit" name="button">Accept</button>
+                </form>
+
+                <!-- Reject Friend -->
+                <form class="float-right" action="{% url 'rejectfriend' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
+                  <button class="btn btn-danger" type="submit" name="button">Reject</button>
+                </form>
+
+              {% endfor %}
+
             </div>
             <div class="tab-pane fade" id="blockedfriends" role="tabpanel" aria-labelledby="blocked-friends-tab">
-              TBD
-              {% blocking request.user %}
             </div>
           </div>
         </div>

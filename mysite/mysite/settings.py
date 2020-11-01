@@ -31,6 +31,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 
+# Disable Caching in development
+if DEBUG:
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            }
+        }
+
+
 # Specify the context processors as follows:
 TEMPLATES = [
     {
