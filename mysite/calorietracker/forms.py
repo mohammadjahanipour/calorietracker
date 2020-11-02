@@ -12,6 +12,12 @@ from cloudinary.forms import CloudinaryFileField
 from .models import Log, Setting, Image
 
 
+class FriendShipRequestForm(forms.Form):
+    """docstring for AcceptFriendForm."""
+
+    to_user = forms.ModelChoiceField(get_user_model().objects.all())
+
+
 class FriendForm(forms.Form):
     """docstring for AcceptFriendForm."""
 

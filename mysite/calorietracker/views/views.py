@@ -34,13 +34,42 @@ from ..forms import (
     RegisterForm,
     SettingForm,
     FriendForm,
+    FriendShipRequestForm,
 )
 
 from ..models import Feedback, Log, MFPCredentials, Setting
-from friendship.models import Friend, Follow, Block
+from friendship.models import Friend, Follow, Block, FriendshipRequest
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
+
+
+class SendFriendRequest(LoginRequiredMixin, FormView):
+    """docstring for AcceptFriend."""
+
+    form_class = FriendShipRequestForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        to_user = form.cleaned_data.get("to_user")
+
+        Friend.objects.add_friend(
+            self.request.user,                               # The sender
+            to_user,                                 # The recipient
+            message='Hi! I would like to add you')      # This message is optional
+
+        messages.success(self.request, "Friend Request Sent")
+
+        return super().form_valid(form)
 
 
 class RemoveFriend(LoginRequiredMixin, FormView):
