@@ -2,10 +2,16 @@
 
 ---
 ## [Unreleased]
+- analytics exporting / sharing to socials
+- sign in with google
 - sign in with apple
 - bodyfat % calculator
 - share analytics view to social media (fb/twitter/ig)
 
+## 2020-10-XX
+### Added
+- landing page!
+- download jpgs of analytics graphs buttons
 ## 2020-10-29
 ### Added
 - landing page!
@@ -22,7 +28,7 @@
 
 
 ## 2020-10-22
-### Added 
+### Added
 - progress pics storage in logs using cloudinary
 - oauth2 logins via facebook, discord
 - deletion of logs
