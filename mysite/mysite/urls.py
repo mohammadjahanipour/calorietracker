@@ -21,7 +21,9 @@ import debug_toolbar
 
 urlpatterns = [
     path("", include("calorietracker.urls")),
+    path("api/", include("api.urls")),
     path("admin/", admin.site.urls),
+
     re_path(
         r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")
     ),

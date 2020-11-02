@@ -151,7 +151,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",  # needed by pinax.referrals
     "calorietracker",
+    "api",
     # third party packages/apps
+    "rest_framework",
     "safedelete",
     "crispy_forms",
     "bootstrap_datepicker_plus",
