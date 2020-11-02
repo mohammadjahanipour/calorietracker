@@ -168,7 +168,7 @@ async function fetchUsers(apiURL) {
 function updateLiveSearch(searchQuery) {
   if (searchQuery) {
     // Make Request to DRF api search endpoint asynchronously
-    let url = 'http://127.0.0.1:8001/api/usernames/'+searchQuery
+    let url = 'http://127.0.0.1:8000/api/usernames/' + searchQuery
     let searchResults = fetchUsers(url)
 
     // todo filter searchResults for usernames that are not already in all_friends
