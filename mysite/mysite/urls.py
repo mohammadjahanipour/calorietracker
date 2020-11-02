@@ -17,14 +17,20 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+import debug_toolbar
 
 urlpatterns = [
     path("", include("calorietracker.urls")),
+    path("api/", include("api.urls")),
     path("admin/", admin.site.urls),
+
     re_path(
         r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")
     ),
     re_path(r"^payments/", include("djstripe.urls", namespace="djstripe")),
     path("accounts/", include("allauth.urls")),
     path("friendship/", include("friendship.urls")),
+    path('__debug__/', include(debug_toolbar.urls)),
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

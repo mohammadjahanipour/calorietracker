@@ -1,6 +1,11 @@
 from django.urls import path
 
 from . import views
+from django.urls import include
+import debug_toolbar
+from django.urls import path
+from . import views
+from django.conf import settings
 
 urlpatterns = [
     path("", views.LandingPage.as_view(), name="welcome"),
@@ -44,4 +49,13 @@ urlpatterns = [
     path("accept-friend/", views.AcceptFriend.as_view(), name="acceptfriend"),
     path("reject-friend/", views.RejectFriend.as_view(), name="rejectfriend"),
     path("remove-friend/", views.RemoveFriend.as_view(), name="removefriend"),
-]
+    path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
+    ]
+
+if settings.DEBUG:
+
+        # Test Sentry error reporting
+    def trigger_error(request):
+        division_by_zero = 1 / 0
+
+    urlpatterns.append(path("sentry-debug/", trigger_error))

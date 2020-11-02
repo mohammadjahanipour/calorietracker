@@ -28,6 +28,10 @@ cloudinary = "*"
 django-allauth = "*"
 django-sslserver = "*"
 django-friendship = "*"
+sentry-sdk = "*"
+django-debug-toolbar = "*"
+django-request = "*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.7"

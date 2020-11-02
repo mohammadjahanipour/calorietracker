@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from sentry_sdk.integrations.django import DjangoIntegration
+import sentry_sdk
 import django_heroku
 from pathlib import Path
 import os
@@ -39,6 +41,17 @@ if DEBUG:
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
             }
         }
+# # Sentry Monitoring Configuration ========================================================
+# only in production
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_KEY"),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=0.5,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
 
 
 # Specify the context processors as follows:
@@ -97,42 +110,43 @@ LOGIN_URL = "login"
 
 
 # # Logging Configuration ========================================================
+# Only in production
 # Get loglevel from env
 # LOGGING_CONFIG = None
 LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "info").upper()
-
-logging.config.dictConfig(
-    {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "console": {
-                "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s",
+if not DEBUG:
+    logging.config.dictConfig(
+        {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "console": {
+                    "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s",
+                },
             },
-        },
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "formatter": "console",
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "console",
+                },
+                "mail_admins": {
+                    "level": "ERROR",
+                    "class": "django.utils.log.AdminEmailHandler",
+                    "email_backend": EMAIL_BACKEND,
+                    "reporter_class": "django.views.debug.ExceptionReporter",
+                },
             },
-            "mail_admins": {
-                "level": "ERROR",
-                "class": "django.utils.log.AdminEmailHandler",
-                "email_backend": EMAIL_BACKEND,
-                "reporter_class": "django.views.debug.ExceptionReporter",
+            "loggers": {
+                "": {
+                    "level": LOGLEVEL,
+                    "handlers": [
+                        "console",
+                        "mail_admins",
+                    ],
+                },
             },
-        },
-        "loggers": {
-            "": {
-                "level": LOGLEVEL,
-                "handlers": [
-                    "console",
-                    "mail_admins",
-                ],
-            },
-        },
-    }
-)
+        }
+    )
 
 
 # # Applications Configuration ========================================================
@@ -145,7 +159,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",  # needed by pinax.referrals
     "calorietracker",
+    "api",
     # third party packages/apps
+    "rest_framework",
     "safedelete",
     "crispy_forms",
     "bootstrap_datepicker_plus",
@@ -160,8 +176,11 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.discord",
+    'allauth.socialaccount.providers.google',
     "sslserver",
     "friendship",
+    "debug_toolbar",
+    "request"
 ]
 
 # 1 == dev domaine and sitename
@@ -174,6 +193,7 @@ PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 
 # # Middleware ========================================================
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -182,6 +202,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
+    "request.middleware.RequestMiddleware"
+]
+
+
+# Django_debug_toolbar
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
 ]
 
 # # URLCONF ========================================================
@@ -292,4 +321,19 @@ SOCIALACCOUNT_PROVIDERS = {
             "key": os.getenv("DISCORD_KEY"),
         }
     },
+    'google': {
+        "APP": {
+            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+            "secret": os.getenv("GOOGLE_SECRET"),
+            },
+
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+    },
+
 }

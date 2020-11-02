@@ -67,7 +67,13 @@
                         <a href="#team" class="nav-link">Team</a>
                     </li> -->
                     <li class="nav-item">
+                        <a href="#community" class="nav-link">Community</a>
+                    </li>
+                    <li class="nav-item">
                         <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'analytics' %}" class="nav-link">Log In</a>
                     </li>
                 </ul>
             </div>
@@ -322,7 +328,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-center">
-                        <h3 class="text-white">Try it free - indefinitely. No email required.</h3>
+                        <h3 class="text-white">Get started now. No email required.</h3>
                         <br />
                         <a href="{% url 'analytics' %}" class="btn btn-custom active">Sign Up Now</a>
                     </div>
@@ -489,10 +495,63 @@
             </div>
         </div>
     </section>
-    <!--START TESTIMONIALS-->
+    <!--END TESTIMONIALS-->
+
+    <section class="section bg-white" id="community">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h3>Join the Community</h3>
+                        <p class="text-muted slogan">Join the conversation in Discord & check us out on social media!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4 justify-content-center">
+                <div class="col-md-2 services-box">
+                    <div class="text-center p-3">
+                        <a href="https://discord.com/invite/jUhASAM"><i class="mdi mdi-discord text-custom"></i></a>
+                        <h5 class="pt-4">Discord</h5>
+                        <p class="text-gray pt-2"></p>
+                    </div>
+                </div>
+                <div class="col-md-2 services-box">
+                    <div class="text-center p-3">
+                        <a href="https://www.facebook.com/calorietracker.io/"><i class="mdi mdi-facebook text-custom"></i></a>
+                        <h5 class="pt-4">Facebook</h5>
+                        <p class="text-gray pt-2"></p>
+                    </div>
+                </div>
+                <div class="col-md-2 services-box">
+                    <div class="text-center p-3">
+                        <a href="https://www.instagram.com/calorietracker.io/"><i class="mdi mdi-instagram text-custom"></i><a>
+                        <h5 class="pt-4">Instagram</h5>
+                        <p class="text-gray pt-2"></p>
+                    </div>
+                </div>
+                <div class="col-md-2 services-box">
+                    <div class="text-center p-3">
+                        <a href="https://www.reddit.com/r/calorietrackerio/"><i class="mdi mdi-reddit text-custom"></i></a>
+                        <h5 class="pt-4">Reddit</h5>
+                        <p class="text-gray pt-2"></p>
+                    </div>
+                </div>
+                <div class="col-md-2 services-box">
+                    <div class="text-center p-3">
+                        <a href="https://twitter.com/calorietracker_"><i class="mdi mdi-twitter text-custom"></i></a>
+                        <h5 class="pt-4">Twitter</h5>
+                        <p class="text-gray pt-2"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <!--Form Section-->
-    <section class="section" id="contact">
+    <section class="section bg-grey" id="contact">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -565,7 +624,8 @@
                     </div>
                     <div class="pull-none">
                         <p class="copy-rights"> © CalorieTracker.io 2020 All Rights Reserved.</p>
-                        <p><a href="{% url 'privacy-policy' %}" style="text-decoration: none;color: #808080;font-size:10px">Privacy Policy <a></p>
+                        <p><a href="{% url 'privacy-policy' %}" style="text-decoration: none;color: #808080;font-size:10px">Privacy Policy <a></br>
+                        <a href="{% url 'terms-and-conditions' %}" style="text-decoration: none;color: #808080;font-size:10px">Terms and Conditions <a></p>
                     </div>
                 </div>
             </div>
