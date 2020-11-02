@@ -39,6 +39,10 @@
                   <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending</a>
               </li>
 
+              <li class="nav-item">
+                  <a class="" id="search-friends-tab" data-toggle="tab" href="#searchusers" role="tab" aria-controls="searchusers" aria-selected="false"></a>
+              </li>
+
               <!-- <li class="nav-item">
                   <a class="nav-link" id="blocked-friends-tab" data-toggle="tab" href="#blockedfriends" role="tab" aria-controls="blockedfriends" aria-selected="false">Blocked</a>
               </li>
@@ -157,10 +161,10 @@
 // Live Search Users for Adding Friends
 
 // async fetch json
-async function fetchUsers(apiURL) {
-  console.log(apiURL)
+async function fetchUsers(searchQuery) {
+  let apiURL = window.location.origin + '/api/usernames/' + searchQuery
+  // console.log(apiURL)
   const response = await fetch(apiURL)
-  console.log(response.json())
   return response.json()
 }
 
@@ -168,19 +172,21 @@ async function fetchUsers(apiURL) {
 function updateLiveSearch(searchQuery) {
   if (searchQuery) {
     // Make Request to DRF api search endpoint asynchronously
-    let url = 'http://127.0.0.1:8000/api/usernames/' + searchQuery
-    let searchResults = fetchUsers(url)
-
-    // todo filter searchResults for usernames that are not already in all_friends
+    let searchResults = fetchUsers(searchQuery)
 
     searchResults.then(function(result) {
       if (result.length) { // if there are results...
+      
         document.getElementById('ErrorText').innerHTML = ''; // remove any previous error text
         document.getElementById('search-results').innerHTML = ''; // reset search-results.innerHTML
 
         for (index = 0; index < result.length; index++) { // iteratively add result.username and form button to add user as friend
-            // console.log(result[index]);
-            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item d-flex align-items-center" href="#"> '+result[index].username+'  </li> <form class="float-right" action="{% url 'home' %}" method="POST"> {% csrf_token %} <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form>');
+            console.log('{{ user.get_username }}')
+            if (result[index].username === '{{ user.get_username }}' ) { // don't display self 
+              continue;
+            }
+            // todo filter results for usernames that are not already in all_friends
+            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" href="#"> '+result[index].username+' <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
         }
 
       } else { // if there are no results...
