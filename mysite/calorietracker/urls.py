@@ -49,6 +49,7 @@ urlpatterns = [
     path("accept-friend/", views.AcceptFriend.as_view(), name="acceptfriend"),
     path("reject-friend/", views.RejectFriend.as_view(), name="rejectfriend"),
     path("remove-friend/", views.RemoveFriend.as_view(), name="removefriend"),
+    path("send-friend-request/", views.SendFriendRequest.as_view(), name="sendfriendrequest"),
     path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
     ]
 
