@@ -180,12 +180,16 @@ INSTALLED_APPS = [
     "sslserver",
     "friendship",
     "debug_toolbar",
-    "request"
+    "request",
+    'corsheaders',
 ]
 
 # 1 == dev domaine and sitename
 # 2 == production domaine and sitename
 SITE_ID = 1 if DEBUG else 2  # see migration 0008_Configure_Site_Names for more info
+
+
+CORS_ALLOW_ALL_ORIGINS = True if DEBUG else False
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
@@ -194,6 +198,7 @@ PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 # # Middleware ========================================================
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -202,7 +207,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
-    "request.middleware.RequestMiddleware"
+    "request.middleware.RequestMiddleware",
+
 ]
 
 

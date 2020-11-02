@@ -32,6 +32,7 @@ sentry-sdk = "*"
 django-debug-toolbar = "*"
 django-request = "*"
 djangorestframework = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"
