@@ -12,6 +12,7 @@
 ### Added
 - Friends tab - add friends & view each other's profiles
 - Share your analytics to social media using share button
+- MyFitnessPal autosync - MFP logs can be automatically imported
 
 ### Changed
 - Cleaned up UI - Log buttons, font-weight and colors

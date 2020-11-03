@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, timezone
 from threading import Thread
 import myfitnesspal
 
@@ -12,10 +12,11 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, RedirectView, UpdateView
 from measurement.measures import Distance, Mass, Weight
+from bootstrap_datepicker_plus import DatePickerInput
 
 
-from .. forms import ImportMFPForm
-from .. models import Log, MFPCredentials
+from ..forms import ImportMFPForm
+from ..models import Log, MFPCredentials
 
 
 def start_new_thread(function):
@@ -54,7 +55,34 @@ def merge_helper(user, form, client):
         )
 
 
-def get_days_by_range(client, start_date, end_date=date.today() - timedelta(days=1)):
+@start_new_thread
+def auto_sync_helper(user, start_date, client):
+    connection.close()
+    start_date = start_date.replace(tzinfo=timezone.utc).date()
+    end_date = datetime.today().replace(tzinfo=timezone.utc).date()
+
+    weights_dict = get_weights_by_range(
+        client=client, start_date=start_date, end_date=end_date
+    )
+    merge_mfp_weights(
+        user=user,
+        overwrite=False,
+        weights_dict=weights_dict,
+    )
+
+    days_dict = get_days_by_range(
+        client=client, start_date=start_date, end_date=end_date
+    )
+    merge_mfp_calories_in(
+        user=user,
+        overwrite=False,
+        days_dict=days_dict,
+    )
+
+    # todo implement updating model MFPCredentials attribute last_mfp_log_date_synced to most recent mfp date with weight or calories
+
+
+def get_days_by_range(client, start_date, end_date):
     """
     Parameters:
         client
@@ -78,7 +106,7 @@ def get_days_by_range(client, start_date, end_date=date.today() - timedelta(days
     return output
 
 
-def get_weights_by_range(client, start_date, end_date=date.today() - timedelta(days=1)):
+def get_weights_by_range(client, start_date, end_date):
     """
     Parameters:
         client
@@ -141,6 +169,11 @@ def merge_mfp_weights(user, overwrite, weights_dict):
             if overwrite:
                 Log.objects.filter(user=user).filter(date=date).update(weight=weight)
                 # print("Overwrite is True! Updated Weight")
+            elif Log.objects.filter(user=user).filter(date=date).values_list("weight")[
+                0
+            ][0] == Weight(lb=0):
+                Log.objects.filter(user=user).filter(date=date).update(weight=weight)
+                # print("Weight is 0 for date! Updated Weight")
         else:
             # print("no data for date", date, "exists. Creating a new entry")
             Log.objects.create(
@@ -162,8 +195,10 @@ def merge_mfp_calories_in(user, overwrite, days_dict):
     """
 
     for date, day in days_dict.items():
-        calories_in = day.totals["calories"].C
-        # print(date, calories_in)
+        try:
+            calories_in = day.totals["calories"].C
+        except:
+            continue
         # print("Resolving date", date, "calories_in:", calories_in)
 
         if Log.objects.filter(user=user).filter(date=date):
@@ -172,6 +207,17 @@ def merge_mfp_calories_in(user, overwrite, days_dict):
                     calories_in=calories_in
                 )
                 # print("Overwrite is True! Updated calories_in")
+            elif (
+                Log.objects.filter(user=user)
+                .filter(date=date)
+                .values_list("calories_in")[0][0]
+                == 0
+            ):
+                Log.objects.filter(user=user).filter(date=date).update(
+                    calories_in=calories_in
+                )
+                # print("Calories for date is 0! Updated calories_in")
+
         else:
             # print("no data for date", date, "exists. Creating a new entry")
             Log.objects.create(
@@ -212,10 +258,7 @@ class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
     # Todo: Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
 
     model = MFPCredentials
-    fields = (
-        "username",
-        "password",
-    )
+    fields = ("username", "password", "mfp_autosync", "mfp_autosync_startdate")
 
     success_url = reverse_lazy("importmfp")
 
@@ -241,26 +284,47 @@ class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
             )
             return super().form_invalid(form)
 
-        messages.success(self.request, "MyFitnessPal Credentials Saved")
+        messages.success(self.request, "MyFitnessPal Settings Saved")
+
+        # if auto-sync is checked, we should do a full import of the user's logs
+        mfp_autosync = form.cleaned_data["mfp_autosync"]
+        if mfp_autosync:
+            # run full sync here
+            auto_sync_helper(
+                user=self.request.user,
+                start_date=form.cleaned_data["mfp_autosync_startdate"],
+                client=client,
+            )
+            messages.info(
+                self.request,
+                "MFP Auto-sync: Importing! For large imports, this may take some time. Thank you for your patience!",
+            )
+            success_url = reverse_lazy("logs")
+
         return super().form_valid(form)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["password"].widget = forms.PasswordInput()
+        form.fields["mfp_autosync"].label = "MFP Auto-sync"
+        form.fields[
+            "mfp_autosync"
+        ].help_text = "Checking this box will automatically import ALL your caloric intake and weight data from MFP. This will pull in new data as you enter it in MFP and will not overwrite any logs entered on CalorieTracker.io."
+        form.fields["mfp_autosync_startdate"].label = "MFP Auto-sync Start Date"
+        form.fields[
+            "mfp_autosync_startdate"
+        ].help_text = "The starting date from which to automatically import MFP logs to CalorieTracker.io"
+        form.fields["mfp_autosync_startdate"].widget = DatePickerInput(
+            format="%m/%d/%Y"
+        )
         return form
 
 
 class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
     """docstring for MFPCredentials."""
 
-    # Todo: Catch login errors: myfitnesspal.exceptions.MyfitnesspalLoginError
-
     model = MFPCredentials
-    fields = (
-        "username",
-        "password",
-    )
-
+    fields = ("username", "password", "mfp_autosync", "mfp_autosync_startdate")
     success_url = reverse_lazy("importmfp")
 
     def get(self, request, *args, **kwargs):
@@ -285,12 +349,38 @@ class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
             )
             return super().form_invalid(form)
 
-        messages.success(self.request, "MyFitnessPal Credentials Updated")
+        messages.success(self.request, "MyFitnessPal Settings Updated")
+        # if auto-sync is checked, we should do a full import of the user's logs
+        mfp_autosync = form.cleaned_data["mfp_autosync"]
+        if mfp_autosync:
+            # run full sync here
+            auto_sync_helper(
+                user=self.request.user,
+                start_date=form.cleaned_data["mfp_autosync_startdate"],
+                client=client,
+            )
+            messages.info(
+                self.request,
+                "MFP Auto-sync: Importing! For large imports, this may take some time. Thank you for your patience!",
+            )
+            success_url = reverse_lazy("logs")
+
         return super().form_valid(form)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["password"].widget = forms.PasswordInput()
+        form.fields["mfp_autosync"].label = "MFP Auto-sync"
+        form.fields[
+            "mfp_autosync"
+        ].help_text = "Checking this box will automatically import ALL your caloric intake and weight data from MFP. This will pull in new data as you enter it in MFP and will not overwrite any logs entered on CalorieTracker.io."
+        form.fields["mfp_autosync_startdate"].label = "MFP Auto-sync Start Date"
+        form.fields[
+            "mfp_autosync_startdate"
+        ].help_text = "The starting date from which to automatically import MFP logs to CalorieTracker.io"
+        form.fields["mfp_autosync_startdate"].widget = DatePickerInput(
+            format="%m/%d/%Y"
+        )
         return form
 
     def get_object(self):

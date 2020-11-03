@@ -12,6 +12,10 @@ from pinax.referrals.models import Referral
 from cloudinary.models import CloudinaryField
 
 
+def get_today():
+    return datetime.datetime.today()
+
+
 class Wallet(DateTimeFields, SafeDeleteModel):
     """docstring for Feedback."""
 
@@ -25,6 +29,12 @@ class MFPCredentials(DateTimeFields, SafeDeleteModel):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     username = models.CharField(max_length=255)
     password = encrypt(models.CharField(max_length=255))
+    mfp_autosync = models.BooleanField(default=False)
+    mfp_autosync_startdate = models.DateTimeField(
+        default=get_today() - datetime.timedelta(days=30),
+        blank=True,
+    )
+    last_mfp_log_date_synced = models.DateTimeField(null=True, blank=True)
 
 
 class Feedback(DateTimeFields, SafeDeleteModel):
@@ -160,7 +170,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         measurement=Weight, null=True, blank=True, default=80
     )  # default weight is in kg
     goal_date = models.DateTimeField(
-        blank=True, null=True, default=datetime.datetime.now
+        blank=True, null=True, default=get_today() + datetime.timedelta(days=30)
     )
     unit_choices = [
         ("I", "Imperial (pounds, feet, inches etc.)"),
