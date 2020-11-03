@@ -3,15 +3,17 @@
 ---
 ## [Unreleased]
 - analytics exporting / sharing to socials
-- sign in with google
 - sign in with apple
 - bodyfat % calculator
 - share analytics view to social media (fb/twitter/ig)
 
-## 2020-10-XX
+
+## 2020-11-XX
 ### Added
-- landing page!
-- download jpgs of analytics graphs buttons
+- Friends tab - share and view each others' progress
+- Share your analytics to social media using share button
+
+
 ## 2020-10-29
 ### Added
 - landing page!

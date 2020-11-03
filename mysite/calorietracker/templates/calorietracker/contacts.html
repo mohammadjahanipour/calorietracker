@@ -85,68 +85,65 @@
         <!-- Card Body -->
         <div class="card-body">
           <div class="tab-content" id="myTabContent">
+          
             <div class="tab-pane fade show active" id="allfriends" role="tabpanel" aria-labelledby="all-friends-tab">
-
-              {% for friend in all_friends %}
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="font-weight-bold">
-                    <div class="mb-2 mt-2">{{ friend }} <text class="small text-gray-500">(Friend)</text></div>
-                  </div>
-                </a>
-
-                <!-- Reject Friend -->
-                <form class="float-right" action="{% url 'removefriend' %}" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" id="id_from_user" name="from_user" value="{{ friend.id }}">
-                  <button class="btn btn-danger" type="submit" name="button">Remove</button>
-                </form>
-              {% endfor %}
-
+              <ul>
+                {% for friend in all_friends %}
+                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" href="#">
+                    {{ friend }} <text class="small text-gray-500">(Friend)</text>
+                  
+                    <!-- Remove Friend -->
+                    <form class="float-right" action="{% url 'removefriend' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_from_user" name="from_user" value="{{ friend.id }}">
+                      <button class="btn btn-sm btn-danger" type="submit" name="button">Remove</button>
+                    </form>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-            {% comment %}
 
+            {% comment %}
             <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-friends-tab">...</div>
             <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-friends-tab">...</div>
             {% endcomment %}
 
             <div class="tab-pane fade" id="pendingfriends" role="tabpanel" aria-labelledby="pending-friends-tab">
+              <ul>
+                {% for friend_request in unrejected_friend_requests %}
+                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" href="#">
+                      {{ friend_request.from_user }}<text class="small text-gray-500"></text>               
 
-              {% for friend_request in unrejected_friend_requests %}
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="font-weight-bold">
-                    <div class="mb-2 mt-2">{{ friend_request.from_user }}
-                      <text class="small text-gray-500">
-                      </text>
-                    </div>
-                  </div>
-                </a>
+                    <!-- Accept Friend -->
+                    <form class="float-right" action="{% url 'acceptfriend' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
+                      <button class="btn btn-sm btn-success ml-2" type="submit" name="button">Accept</button>
+                    </form>
 
-                <!-- Accept Friend -->
-                <form class="float-right" action="{% url 'acceptfriend' %}" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
-                  <button class="btn btn-success" type="submit" name="button">Accept</button>
-                </form>
+                    <!-- Reject Friend -->
+                    <form class="float-right" action="{% url 'rejectfriend' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
+                      <button class="btn btn-sm btn-danger" type="submit" name="button">Reject</button>
+                    </form>
+                  </li>
 
-                <!-- Reject Friend -->
-                <form class="float-right" action="{% url 'rejectfriend' %}" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
-                  <button class="btn btn-danger" type="submit" name="button">Reject</button>
-                </form>
-
-              {% endfor %}
-
+                {% endfor %}
+              </ul>
             </div>
+
             <div class="tab-pane fade" id="blockedfriends" role="tabpanel" aria-labelledby="blocked-friends-tab">
             </div>
+
             <div class="tab-pane fade" id="searchusers" role="tabpanel" area-labelledby="search-users-tab">
-              <!-- User Livesearch List Results -->
               <div id="ErrorText">Search for a user</div>
+              <!-- User Livesearch List Results -->
               <ul id='search-results'>
                 <li class="dropdown-item d-flex align-items-center" href="#"></li>
               </ul>
             </div>
+
           </div>
         </div>
       </div>
@@ -158,13 +155,18 @@
 
 <script>
 
+var all_friends = [] // store current friends list for filtering search later
+{% for friend in all_friends %}
+  all_friends += '{{ friend }}'
+{% endfor %}
+
 // Live Search Users for Adding Friends
 
 // async fetch json
 async function fetchUsers(searchQuery) {
-  let apiURL = window.location.origin + '/api/usernames/' + searchQuery
+  let apiURL = window.location.origin + '/api/usernames/' + searchQuery;
   // console.log(apiURL)
-  const response = await fetch(apiURL)
+  const response = await fetch(apiURL);
   return response.json()
 }
 
@@ -172,7 +174,7 @@ async function fetchUsers(searchQuery) {
 function updateLiveSearch(searchQuery) {
   if (searchQuery) {
     // Make Request to DRF api search endpoint asynchronously
-    let searchResults = fetchUsers(searchQuery)
+    let searchResults = fetchUsers(searchQuery);
 
     searchResults.then(function(result) {
       if (result.length) { // if there are results...
@@ -185,7 +187,9 @@ function updateLiveSearch(searchQuery) {
             if (result[index].username === '{{ user.get_username }}' ) { // don't display self 
               continue;
             }
-            // todo filter results for usernames that are not already in all_friends
+            if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
+              continue
+            }
             document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" href="#"> '+result[index].username+' <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
         }
 
