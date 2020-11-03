@@ -10,8 +10,12 @@
 
 ## 2020-11-XX
 ### Added
-- Friends tab - share and view each others' progress
+- Friends tab - add friends & view each other's profiles
 - Share your analytics to social media using share button
+
+### Changed
+- Cleaned up UI - Log buttons, font-weight and colors
+- Redirect to analytics over landing page when user is logged in
 
 
 ## 2020-10-29

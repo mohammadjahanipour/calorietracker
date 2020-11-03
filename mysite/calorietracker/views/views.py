@@ -63,9 +63,10 @@ class SendFriendRequest(LoginRequiredMixin, FormView):
         to_user = form.cleaned_data.get("to_user")
 
         Friend.objects.add_friend(
-            self.request.user,                               # The sender
-            to_user,                                 # The recipient
-            message='Hi! I would like to add you')      # This message is optional
+            self.request.user,  # The sender
+            to_user,  # The recipient
+            message="Hi! I would like to add you",
+        )  # This message is optional
 
         messages.success(self.request, "Friend Request Sent")
 
@@ -490,7 +491,7 @@ class LandingPage(TemplateView):
 
     template_name = "calorietracker/home.html"
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request):
         """"""
 
         # Redirect loged in users to their analytics page instead of the landing page
@@ -501,3 +502,4 @@ class LandingPage(TemplateView):
                 return redirect(reverse_lazy("logdata"))
 
             return redirect(reverse_lazy("analytics"))
+        return super().dispatch(request)

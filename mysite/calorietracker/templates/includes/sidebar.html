@@ -89,11 +89,11 @@
     User
   </div>
 
-  <!-- Nav Item - Log In -->
+  <!-- Nav Item - Friends -->
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'settings' %}">
-      <i class="fas fa-cog"></i>
-      <span>Settings</span></a>
+    <a class="nav-link" href="{% url 'contacts' %}">
+      <i class="fas fa-users"></i>
+      <span>Friends</span></a>
   </li>
 
   <!-- Nav Item - Community Collapse Menu -->
@@ -121,6 +121,15 @@
     </div>
   </li>
 
+  <!-- Nav Item - Settings -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'settings' %}">
+      <i class="fas fa-cog"></i>
+      <span>Settings</span></a>
+  </li>
+
+  
+
   {% comment %} <!-- Nav Item - Feedback -->
   <li class="nav-item">
     <a class="nav-link" href="{% url 'feedback' %}">
@@ -128,11 +137,6 @@
       <span>Feedback</span></a>
   </li> {% endcomment %}
 
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'contacts' %}">
-      <i class="fas fa-id-card"></i>
-      <span>Contacts</span></a>
-  </li>
 
   {% else %}
   <!-- Heading -->
