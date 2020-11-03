@@ -199,7 +199,6 @@ def merge_mfp_calories_in(user, overwrite, days_dict):
             calories_in = day.totals["calories"].C
         except:
             continue
-        # print(date, calories_in)
         # print("Resolving date", date, "calories_in:", calories_in)
 
         if Log.objects.filter(user=user).filter(date=date):
@@ -300,7 +299,7 @@ class ImportMFPCredentialsCreate(LoginRequiredMixin, CreateView):
                 self.request,
                 "MFP Auto-sync: Importing! For large imports, this may take some time. Thank you for your patience!",
             )
-            return redirect(reverse_lazy("logs"))
+            success_url = reverse_lazy("logs")
 
         return super().form_valid(form)
 
@@ -364,7 +363,7 @@ class ImportMFPCredentialsUpdate(LoginRequiredMixin, UpdateView):
                 self.request,
                 "MFP Auto-sync: Importing! For large imports, this may take some time. Thank you for your patience!",
             )
-            return redirect(reverse_lazy("logs"))
+            success_url = reverse_lazy("logs")
 
         return super().form_valid(form)
 
