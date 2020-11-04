@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "996cfdba1bffd025289c3e669d8ba4261b11232900316ac4e9000d4e7620eaee"
+            "sha256": "f023402774d7e4a2a18eb83e5be59d7cdd7ac41fade5d2ecc30b354be4dd97ee"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -150,14 +150,6 @@
                 "sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9"
             ],
             "version": "==0.5.0"
-        },
-        "dj-stripe": {
-            "hashes": [
-                "sha256:92b82db5205093b08aff7d6ea615cf260eb0f1dc1f60bddbbba81a8b7ec2e9e7",
-                "sha256:9a6a6c7303dc5870bb88dbb8ce214b66c8508ebb486f3231f3a59770ff0695e5"
-            ],
-            "index": "pypi",
-            "version": "==2.3.0"
         },
         "django": {
             "hashes": [
@@ -340,14 +332,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==0.17.0"
-        },
-        "jsonfield": {
-            "hashes": [
-                "sha256:7e4e84597de21eeaeeaaa7cc5da08c61c48a9b64d0c446b2d71255d01812887a",
-                "sha256:df857811587f252b97bafba42e02805e70a398a7a47870bc6358a0308dd689ed"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==3.1.0"
         },
         "keyring": {
             "hashes": [

@@ -87,13 +87,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
+# Deprecated
 # # Stripe Configuration ========================================================
-STRIPE_LIVE_PUBLIC_KEY = os.getenv("STRIPE_LIVE_PUBLIC_KEY")
-STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
-STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
-STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
-STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
-DJSTRIPE_WEBHOOK_VALIDATION = None
+# STRIPE_LIVE_PUBLIC_KEY = os.getenv("STRIPE_LIVE_PUBLIC_KEY")
+# STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
+# STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
+# STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
+# STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
+# DJSTRIPE_WEBHOOK_VALIDATION = None
 
 # # Cloudinary Configuration ========================================================
 cloudinary.config(
@@ -169,7 +170,7 @@ INSTALLED_APPS = [
     "chartjs",
     "measurement",
     "pinax.referrals",
-    "djstripe",
+    # "djstripe", deprecated
     "cloudinary",
     "allauth",
     "allauth.account",

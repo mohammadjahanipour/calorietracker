@@ -30,8 +30,11 @@
 ### Logging & Analytics
 
 currently in use are Sentry, Plausible django-request and Motomo
+
 https://plausible.io/sites
+
 https://sentry.io/organizations/calorietrackerio/
+
 https://calorietrackerio.matomo.cloud
 
 
@@ -168,3 +171,7 @@ more info can be found at the below links
 **Django-request**
 
 - https://github.com/django-request/django-request
+
+**Django-friendship**
+
+- https://github.com/revsys/django-friendship/
