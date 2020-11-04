@@ -33,6 +33,7 @@ django-request = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
 pylibmc = "*"
+python-memcached = "*"
 
 [requires]
 python_version = "3.7"
