@@ -175,3 +175,7 @@ more info can be found at the below links
 **Django-friendship**
 
 - https://github.com/revsys/django-friendship/
+
+**django-cors-headers**
+
+- https://github.com/adamchainz/django-cors-headers
