@@ -9,9 +9,49 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Profile Name</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="far fa-edit fa-sm text-white-50"></i> Edit Profile</a>
+    <h1 class="h3 mb-0 text-gray-800">{{view.request.user.username}}</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+        class="far fa-edit fa-sm text-white-50"></i> Edit Profile</a>
   </div>
+
+
+  {% verbatim %}
+  <div id="vue-app-2">
+    <span v-bind:title="message">
+      Hover your mouse over me for a few seconds
+      to see my dynamically bound title!
+
+    </span>
+  </div>
+
+  <div id="vue-notes-app" class="mt-4">
+    <h3>Vue Notes:</h3>
+    <ol>
+      <todo-item v-for="item in todoList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+    </ol>
+  </div>
+
+
+  <div id="todoApp">
+    <form name="todo-form" method="post" action="" v-on:submit.prevent="addTask">
+      <input name="add-todo" class="mb-2 mt-2" type="text" v-model="addTodoInput" v-bind:class="{error: hasError}" />
+      <button class="btn btn-sm btn-primary" type="submit">Add Task</button>
+    </form>
+
+    <div class="todo-lists" v-if="lists.length">
+      <h3>My Other Todo List</h3>
+      <ul>
+        <li v-for="list in filterLists" :key="list.id">
+          <input type="checkbox" v-on:change="completeTask(list)" v-bind:checked="list.isComplete" />
+          <span class="tasktitle" contenteditable="true" v-on:keydown.enter="updateTask($event, list)"
+            v-on:blur="updateTask($event, list)" v-bind:class="{taskcompleted: list.isComplete}">{{list.title}}</span>
+          <span class="btn btn-danger" v-on:click="removeTask(list)">x</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  {% endverbatim %}
 
 
 </div>
@@ -19,6 +59,162 @@
 
 
 <!-- Page level custom scripts -->
+<style>
+  :root {
+    font-family: Arial;
+  }
 
+  input[type=text] {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #c4c4c4;
+  }
+
+
+  input[type=text].error {
+    border: 1px solid red;
+  }
+
+  [contenteditable=true]:focus {
+
+
+    overflow: hidden;
+    border: 1px solid transparent;
+
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+
+    white-space: nowrap;
+    border-radius: 10px;
+
+
+
+  }
+
+  .tasktitle {
+    display: inline-block;
+    width: 200px;
+    border: 1px solid transparent;
+    padding: 8px;
+    font-size: 16px;
+    vertical-align: middle;
+  }
+
+  .tasktitle:hover {
+    border: 1px solid #c4c4c4;
+    border-radius: 10px;
+  }
+
+  .taskcompleted {
+    text-decoration: line-through;
+  }
+</style>
+
+<script type="text/javascript">
+  {% verbatim %}
+  var app2 = new Vue({
+    el: '#vue-app-2',
+    // delimiters: ['[[', ']]'],
+    data: {
+      message: 'You loaded this page on ' + new Date().toLocaleString()
+    }
+  })
+  {% endverbatim %}
+
+  {% verbatim %}
+  Vue.component('todo-item', {
+    props: ['todo'],
+    template: '<li>{{ todo.text }}</li>'
+  })
+  {% endverbatim %}
+
+  {% verbatim %}
+  var vueToDo = new Vue({
+    el: '#vue-notes-app',
+    data: {
+      todoList: [
+        { id: 0, text: 'Resolve vue/django delimeter conflict: A) delimiters: [[ ]] attribute on Vue instances OR B) Preferred: Wrap your Vue templates in verbatim tag blocks, so it’s not interpreted by Django (https://vsupalov.com/vue-js-delimiters-django/)' },
+      ]
+    },
+  })
+  {% endverbatim %}
+
+  vueToDo.todoList.push({ text: "do vue reactive stuff!" })
+  vueToDo.todoList.push({ text: "On production, change vue CDN import from https://cdn.jsdelivr.net/npm/vue/dist/vue.js to https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js" })
+
+
+  {% verbatim %}
+  var todoApp = new Vue({
+    el: '#todoApp',
+    data: {
+      addTodoInput: '',
+      lists: [],
+      hasError: false
+    },
+    computed: {
+      filterLists: function () {
+        return this.lists.sort(function (a, b) { return a.isComplete - b.isComplete })
+      }
+    },
+    methods: {
+      addTask: function () {
+
+        if (!this.addTodoInput) {
+          this.hasError = true;
+          return;
+        }
+
+        this.hasError = false;
+
+        this.lists.push({
+          id: this.lists.length + 1,
+          title: this.addTodoInput,
+          isComplete: false
+        });
+
+        this.addTodoInput = '';
+      },
+
+      updateTask: function (e, list) {
+        e.preventDefault();
+        list.title = e.target.innerText;
+        e.target.blur();
+      },
+
+      completeTask: function (list) {
+        list.isComplete = !list.isComplete;
+      },
+
+      removeTask: function (list) {
+        var index = this.lists.indexOf(list);
+        this.lists.splice(index, 1);
+      }
+
+    }
+  });
+  {% endverbatim %}
+
+  {% verbatim %}
+  //generate dummy data for demo purpose
+  todoApp.lists = [{
+    id: 1,
+    title: 'complete me',
+    isComplete: false
+  },
+  {
+    id: 2,
+    title: 'remove me',
+    isComplete: false
+  },
+  {
+    id: 3,
+    title: 'edit me',
+    isComplete: false
+  }];
+  {% endverbatim %}
+
+</script>
 
 {% endblock %}
