@@ -45,7 +45,7 @@ else:
 
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
             'LOCATION': os.getenv("MEMCACHED_URL"),  # set by dokku automatically when linking apps
             }
         }
