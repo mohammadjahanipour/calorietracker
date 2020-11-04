@@ -43,12 +43,15 @@ if DEBUG:
         }
 else:
 
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': os.getenv("MEMCACHED_URL"),  # set by dokku automatically when linking apps
-            }
-        }
+    import django_cache_url
+    CACHES = {'default': django_cache_url.parse(os.getenv("MEMCACHED_URL"))}
+
+    # CACHES = {
+    #     'default': {
+    #         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    #         'LOCATION': os.getenv("MEMCACHED_URL"),  # set by dokku automatically when linking apps
+    #         }
+    #     }
 
 # # Sentry Monitoring Configuration ========================================================
 # only in production
