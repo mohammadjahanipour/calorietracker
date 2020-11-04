@@ -32,6 +32,7 @@ django-debug-toolbar = "*"
 django-request = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+pylibmc = "*"
 
 [requires]
 python_version = "3.7"
