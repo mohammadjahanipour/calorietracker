@@ -22,6 +22,9 @@ class Wallet(DateTimeFields, SafeDeleteModel):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     coins = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f"Wallet from {self.user}: {self.coins}"
+
 
 class MFPCredentials(DateTimeFields, SafeDeleteModel):
     """docstring for Feedback."""
@@ -35,6 +38,9 @@ class MFPCredentials(DateTimeFields, SafeDeleteModel):
         blank=True,
     )
     last_mfp_log_date_synced = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"MFPCredentials from {self.user}"
 
 
 class Feedback(DateTimeFields, SafeDeleteModel):
@@ -188,6 +194,9 @@ class Setting(DateTimeFields, SafeDeleteModel):
         default="M",
     )
 
+    def __str__(self):
+        return f"Settings from {self.user}"
+
 
 class Image(DateTimeFields, SafeDeleteModel):
 
@@ -247,3 +256,6 @@ class Log(DateTimeFields, SafeDeleteModel):
     front_progress_pic = CloudinaryField("image", null=True, blank=True)
     side_progress_pic = CloudinaryField("image", null=True, blank=True)
     back_progress_pic = CloudinaryField("image", null=True, blank=True)
+
+    def __str__(self):
+        return f"Log from {self.user}"
