@@ -23,7 +23,7 @@ class Endpoints(object):
         return Response({'ping': "pong"})
 
 
-class UsernameList(generics.ListCreateAPIView):
+class UsernameList(generics.ListAPIView):
 
     """
     Returns a list of all usernames
