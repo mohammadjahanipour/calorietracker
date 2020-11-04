@@ -17,6 +17,7 @@ from pathlib import Path
 import os
 import logging.config
 import cloudinary
+import django_cache_url
 
 
 # # Base Configuration ========================================================
@@ -43,15 +44,8 @@ if DEBUG:
         }
 else:
 
-    import django_cache_url
-    CACHES = {'default': django_cache_url.parse(os.getenv("MEMCACHED_URL"))}
+    CACHES = {'default': django_cache_url.parse(os.getenv("MEMCACHED_URL"))}  # set by dokku automatically when linking apps
 
-    # CACHES = {
-    #     'default': {
-    #         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-    #         'LOCATION': os.getenv("MEMCACHED_URL"),  # set by dokku automatically when linking apps
-    #         }
-    #     }
 
 # # Sentry Monitoring Configuration ========================================================
 # only in production
