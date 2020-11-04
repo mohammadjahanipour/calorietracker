@@ -44,6 +44,9 @@ class Feedback(DateTimeFields, SafeDeleteModel):
     comment = models.TextField()
     contact_email = models.EmailField()
 
+    def __str__(self):
+        return f"Feedback from {self.user}: {self.comment[0:10]}"
+
 
 class Subscription(DateTimeFields, SafeDeleteModel):
     """docstring for Subscription."""
