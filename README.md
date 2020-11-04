@@ -115,67 +115,64 @@ more info can be found at the below links
 
     Hourly DB backups
 
-    * 1 * * * dokku postgres:export djangodb > djangodb.db
+    0 * * * * dokku postgres:export djangodb > djangodb.db
+
+
+    Daily MFP Auto Sync
+    0 0 * * * dokku run calorietracker python mysite/manage.py mfp_sync
 
 
 
 ### Package Documentation
 
-<br>
-
-
-  **DateTimePicker**  
+**DateTimePicker**  
 
   - https://monim67.github.io/django-bootstrap-datepicker-plus/configure/
   - https://github.com/monim67/django-bootstrap-datepicker-plus
 
-<br>
 
 **django-activity-stream**
 
   - https://django-activity-stream.readthedocs.io/en/latest
 
-<br>
 
 **Django encrypted model fields**
 
  - https://github.com/georgemarshall/django-cryptography
 
 
-<br>
-
 **Pinax-referrals**
 
 
   There is some funny business going on with the 004 Migration file
 
-- https://github.com/pinax/pinax-referrals
+  - https://github.com/pinax/pinax-referrals
 
 **Allauth**
 
-- https://django-allauth.readthedocs.io/en/latest/index.html
+  - https://django-allauth.readthedocs.io/en/latest/index.html
 
 **Django-friendship**
 
-- https://github.com/revsys/django-friendship/
+  - https://github.com/revsys/django-friendship/
 
 **Sentry**
 
-- https://sentry.io/settings/calorietrackerio/usage/history/
+  - https://sentry.io/settings/calorietrackerio/usage/history/
 
 **Django Debug Toolbar**
 
-- https://github.com/jazzband/django-debug-toolbar
+  - https://github.com/jazzband/django-debug-toolbar
 
 
 **Django-request**
 
-- https://github.com/django-request/django-request
+  - https://github.com/django-request/django-request
 
 **Django-friendship**
 
-- https://github.com/revsys/django-friendship/
+  - https://github.com/revsys/django-friendship/
 
 **django-cors-headers**
 
-- https://github.com/adamchainz/django-cors-headers
+  - https://github.com/adamchainz/django-cors-headers
