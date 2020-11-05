@@ -124,13 +124,11 @@
     {% if user.is_authenticated %}
 
     <li class="nav-item dropdown no-arrow">
-      <a class="nav-link:hover dropdown-toggle text-decoration-none" style="height: 50px;line-height: 50px;" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-800 font-weight-bold">
+      <a class="nav-link:hover dropdown-toggle text-decoration-none" style="line-height: 50px;" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="text-gray-800 font-weight-bold">
         {{ user.username }} <i class="fas fa-angle-down"></i>
         </span>
       </a>
-
-      <img src="{% static 'img/coin.svg' %}" alt="Gold Coin" height="28px" width="28px" > <span class="mx-1 align-middle pt-1"> {{ user.wallet.coins|default:"0" }}</span>
 
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -163,7 +161,10 @@
         </a>
       </div>
     </li>
-
+    <div class="topbar-divider"></div>
+    <li class="nav-item" >
+      <img src="{% static 'img/coin.svg' %}" alt="Gold Coin" height="22px" width="22px" style="display: inline-block; vertical-align: middle;"> <span style="line-height: 50px;" class="mx-1 text-gray-800 font-weight-bold"> {{ user.wallet.coins|default:"0" }}</span>
+    </li>
     {% endif %}
 
   </ul>
