@@ -1,19 +1,22 @@
 import datetime
 
+from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
 from django.db import models
 from django_cryptography.fields import encrypt
 from django_measurement.models import MeasurementField
-from measurement.measures import Distance, Weight
+from pinax.referrals.models import Referral
 from safedelete.models import SafeDeleteModel
 
-from .base_models import DateTimeFields
-from pinax.referrals.models import Referral
-from cloudinary.models import CloudinaryField
+from .base_models import DateTimeFields, Distance, Weight
 
 
-def get_today():
-    return datetime.datetime.today()
+def get_default_goal_date():
+    return datetime.datetime.today() + datetime.timedelta(days=30)
+
+
+def get_default_goal_mfp_autosync_startdate():
+    return datetime.datetime.today() - datetime.timedelta(days=90)
 
 
 class Wallet(DateTimeFields, SafeDeleteModel):
@@ -34,7 +37,7 @@ class MFPCredentials(DateTimeFields, SafeDeleteModel):
     password = encrypt(models.CharField(max_length=255))
     mfp_autosync = models.BooleanField(default=False)
     mfp_autosync_startdate = models.DateTimeField(
-        default=get_today() - datetime.timedelta(days=30),
+        default=get_default_goal_mfp_autosync_startdate,
         blank=True,
     )
     last_mfp_log_date_synced = models.DateTimeField(null=True, blank=True)
@@ -142,7 +145,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         max_length=1, choices=sex_choices, blank=True, null=True, default="M"
     )
     height = MeasurementField(
-        measurement=Distance, null=True, blank=True, default=1.75
+        measurement=Distance, null=True, blank=True, default=Distance(m=1.75)
     )  # height in metres
 
     activity_choices = [
@@ -176,10 +179,10 @@ class Setting(DateTimeFields, SafeDeleteModel):
     )
 
     goal_weight = MeasurementField(
-        measurement=Weight, null=True, blank=True, default=80
+        measurement=Weight, null=True, blank=True, default=Weight(kg=80)
     )  # default weight is in kg
     goal_date = models.DateTimeField(
-        blank=True, null=True, default=get_today() + datetime.timedelta(days=30)
+        blank=True, null=True, default=get_default_goal_date
     )
     unit_choices = [
         ("I", "Imperial (pounds, feet, inches etc.)"),

@@ -17,6 +17,7 @@ from pathlib import Path
 import os
 import logging.config
 import cloudinary
+import django_cache_url
 
 
 # # Base Configuration ========================================================
@@ -33,6 +34,26 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 
+# AXES_ONLY_ADMIN_SITE = True #Only apply restricitons to admin sites
+
+# WARNING: this has to be true if the real ip address is not passed through usually behind a proxy or this will cause everyone to be blocked
+AXES_ONLY_USER_FAILURES = True  # only apply restrictions based on username
+
+AXES_NEVER_LOCKOUT_GET = True  # never lock out get requests
+
+
+# Axes Proxy stuff is not working
+AXES_PROXY_COUNT = 1
+
+# AXES_META_PRECEDENCE_ORDER = [
+#    'HTTP_X_FORWARDED_FOR',
+#    'REMOTE_ADDR',
+# ]
+
+AXES_COOLOFF_TIME = 1  # 1 hour cooloff time
+AXES_FAILURE_LIMIT = 100
+
+
 # Disable Caching in development
 if DEBUG:
 
@@ -41,6 +62,11 @@ if DEBUG:
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
             }
         }
+else:
+
+    CACHES = {'default': django_cache_url.parse(os.getenv("MEMCACHED_URL"))}  # set by dokku automatically when linking apps
+
+
 # # Sentry Monitoring Configuration ========================================================
 # only in production
 if not DEBUG:
@@ -183,6 +209,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "request",
     'corsheaders',
+    'axes',
 ]
 
 # 1 == dev domaine and sitename
@@ -209,6 +236,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
     "request.middleware.RequestMiddleware",
+    'axes.middleware.AxesMiddleware',
 
 ]
 
@@ -287,6 +315,7 @@ MEDIA_URL = "/media/"
 django_heroku.settings(locals())
 
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail

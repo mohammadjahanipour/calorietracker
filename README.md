@@ -176,3 +176,20 @@ more info can be found at the below links
 **django-cors-headers**
 
   - https://github.com/adamchainz/django-cors-headers
+
+**python-memcached**
+
+ - https://github.com/linsomniac/python-memcached
+
+**django-cache-url**
+
+ - https://github.com/epicserve/django-cache-url
+
+**django-axes**
+
+ - https://github.com/jazzband/django-axes
+
+
+
+Attributions:
+Icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
