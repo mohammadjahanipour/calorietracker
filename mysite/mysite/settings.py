@@ -37,16 +37,21 @@ DEBUG = os.getenv("DEBUG", False) == "True"
 # AXES_ONLY_ADMIN_SITE = True #Only apply restricitons to admin sites
 
 # WARNING: this has to be true if the real ip address is not passed through usually behind a proxy or this will cause everyone to be blocked
-# AXES_ONLY_USER_FAILURES = True  # only apply restrictions based on username
+AXES_ONLY_USER_FAILURES = True  # only apply restrictions based on username
 
 AXES_NEVER_LOCKOUT_GET = True  # never lock out get requests
 
+
+# Axes Proxy stuff is not working
 AXES_PROXY_COUNT = 1
 
-AXES_META_PRECEDENCE_ORDER = [
-   'HTTP_X_FORWARDED_FOR',
-   'REMOTE_ADDR',
-]
+# AXES_META_PRECEDENCE_ORDER = [
+#    'HTTP_X_FORWARDED_FOR',
+#    'REMOTE_ADDR',
+# ]
+
+AXES_COOLOFF_TIME = 1  # 1 hour cooloff time
+AXES_FAILURE_LIMIT = 100
 
 
 # Disable Caching in development

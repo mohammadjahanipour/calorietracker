@@ -184,3 +184,7 @@ more info can be found at the below links
 **django-cache-url**
 
  - https://github.com/epicserve/django-cache-url
+
+**django-axes**
+
+ - https://github.com/jazzband/django-axes
