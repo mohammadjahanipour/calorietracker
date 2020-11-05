@@ -35,6 +35,7 @@ django-cors-headers = "*"
 pylibmc = "*"
 python-memcached = "*"
 django-cache-url = "*"
+django-axes = "*"
 
 [requires]
 python_version = "3.7"
