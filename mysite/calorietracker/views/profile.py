@@ -1,31 +1,52 @@
+import json
 from datetime import datetime, timedelta, timezone
 
 from django.views.generic import TemplateView
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from ..base_models import Weight
 from ..models import Log, Setting, Streak
-from ..utilities import moving_average
+from ..utilities import (
+    moving_average,
+    rate,
+    interpolate,
+    smooth_zero_weights_lerp,
+    smooth_zero_weights_previous_avg,
+)
+from friendship.models import Friend, FriendshipRequest
 
 
-class Profile(TemplateView):
+class Profile(LoginRequiredMixin, TemplateView):
     template_name = "calorietracker/profile.html"
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
 
-        user = request.user
-        # Querysets
-        logs = Log.objects.all().filter(user=user).order_by("date")
-        settings = Setting.objects.get(user=user)
+        return self.render_to_response(context)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get user from slug if present
+        if not self.kwargs.get("slug"):
+            user = self.request.user
+        else:
+            user = User.objects.get(username=self.kwargs.get("slug"))
+
+        # Querysets
+        logs = user.log_set.all().order_by("date")
+        settings = user.setting
         # Actualize input streak before querying streaks
-        Streak.objects.get(user=user).actualize_input_streak()
-        streaks = Streak.objects.get(user=user)
+        user.streak.actualize_input_streak()
+        streaks = user.streak
 
         # Context Data
-        # Top row cards
+        # Header and Top row cards
         context.update(
             {
+                "username": user.username,
                 "join_date": user.date_joined.date,
                 "last_seen_date": user.last_login.date,
                 "log_count": len(logs),
@@ -34,39 +55,83 @@ class Profile(TemplateView):
             }
         )
 
-        # Unit Handling
         current_weight = self.get_current_weight(logs)
-        weight_to_go = settings.goal_weight - current_weight
+        goal_weight = settings.goal_weight
+        weight_to_go = goal_weight - current_weight
+        raw_measures = [current_weight, goal_weight, weight_to_go]  # of type Weight
+
+        # Unit Handling
         if settings.unit_preference == "M":
-            units_weight = "kgs"
-            current_weight = current_weight.kg
-            goal_weight = settings.goal_weight.kg
-            weight_to_go = weight_to_go.kg
+            weights_label = "kgs"
+            units_weight = "kg"
         else:
-            units_weight = "lbs"
-            current_weight = current_weight.lb
-            goal_weight = settings.goal_weight.lb
-            weight_to_go = weight_to_go.lb
+            weights_label = "lbs"
+            units_weight = "lb"
+
+        # Convert each value of type Weight to Weight.lb or Weight.kg
+        current_weight, goal_weight, weight_to_go = [
+            self.handle_weight_units(i, units_weight) for i in raw_measures
+        ]
 
         # Goals Card data
         context.update(
             {
-                "units_weight": units_weight,
-                "current_weight": round(current_weight, 1),
-                "weight_to_go": "{:+}".format(round(weight_to_go, 1)),
-                "goal_weight": round(goal_weight, 1),
+                "weights_label": weights_label,
+                "current_weight": current_weight,
+                "weight_to_go": "{:+}".format(weight_to_go),
+                "goal_weight": goal_weight,
                 "goal_date": settings.goal_date.strftime("%b. %-d"),
-                "time_left": settings.time_to_goal(),
+                "time_left": settings.time_to_goal,
             }
         )
 
-        # Logging Heatmap Data
-        # todo
+        # Smooth weights where weight == Weight(g=0) for charts
+        date_weight_tuples = logs.values_list("date", "weight").order_by("date")
+        smoothed_date_weight_tuples = smooth_zero_weights_lerp(date_weight_tuples)
+        smoothed_date_weight_tuples = smooth_zero_weights_previous_avg(
+            date_weight_tuples
+        )
+        # Weight over Time Chart Data: timestamps, weights
+        timestamps = [i[0] for i in smoothed_date_weight_tuples]
+        weights = [i[1] for i in smoothed_date_weight_tuples]
+
+        # Handle Units
+        weights = [self.handle_weight_units(i, units_weight) for i in weights]
+
+        context.update(
+            {
+                "timestamps": json.dumps(
+                    [date.strftime("%b-%d") for date in timestamps]
+                ),
+                "weights": weights,
+            }
+        )
+
+        # Check if self.request.user is friend of user
+        request_user_friends_list = Friend.objects.friends(self.request.user)
+        if user in request_user_friends_list:
+            isFriend = True
+        else:
+            isFriend = False
+        context.update(
+            {
+                "isFriend": isFriend,
+            }
+        )
 
         # Debug print context keys and vals
         # print("\n".join("{!r}: {!r},".format(k, v) for k, v in context.items()))
 
-        return self.render_to_response(context)
+        return context
+
+    @staticmethod
+    def handle_weight_units(x, units):
+        # if x is measurement object return x.units rounded to 1 decimal place
+        # else returns x
+        if not type(x) == Weight:
+            return x
+        else:
+            return round(getattr(x, units), 1)
 
     @staticmethod
     def get_current_weight(logs):

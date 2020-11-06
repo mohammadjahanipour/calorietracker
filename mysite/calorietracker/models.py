@@ -195,6 +195,7 @@ class Setting(DateTimeFields, SafeDeleteModel):
         default="M",
     )
 
+    @property
     def time_to_goal(self):
         # Returns int days until goal_date
         return (self.goal_date - datetime.datetime.now(datetime.timezone.utc)).days

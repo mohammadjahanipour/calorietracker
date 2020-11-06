@@ -11,6 +11,7 @@ urlpatterns = [
     path("", views.LandingPage.as_view(), name="welcome"),
     path("home/", views.LandingPage.as_view(), name="home"),
     path("profile/", views.Profile.as_view(), name="profile"),
+    path("profile/<slug:slug>", views.Profile.as_view(), name="profile"),
     path("logdata/", views.LogData.as_view(), name="logdata"),
     path("logs/", views.ViewLogs.as_view(), name="logs"),
     path("logdata/<pk>/update/", views.UpdateLogData.as_view(), name="UpdateLogData"),
@@ -45,17 +46,20 @@ urlpatterns = [
     path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
     path("subscription/", views.Subscription.as_view(), name="subscription"),
     path("contacts/", views.Contacts.as_view(), name="contacts"),
-
     path("accept-friend/", views.AcceptFriend.as_view(), name="acceptfriend"),
     path("reject-friend/", views.RejectFriend.as_view(), name="rejectfriend"),
     path("remove-friend/", views.RemoveFriend.as_view(), name="removefriend"),
-    path("send-friend-request/", views.SendFriendRequest.as_view(), name="sendfriendrequest"),
+    path(
+        "send-friend-request/",
+        views.SendFriendRequest.as_view(),
+        name="sendfriendrequest",
+    ),
     path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
-    ]
+]
 
 if settings.DEBUG:
 
-        # Test Sentry error reporting
+    # Test Sentry error reporting
     def trigger_error(request):
         division_by_zero = 1 / 0
 

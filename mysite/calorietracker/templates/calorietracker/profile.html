@@ -1,21 +1,50 @@
 {% extends "extends/base.html" %}
 {% load static %}
+{% load friendshiptags %}
 
 {% block content %}
 
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
-  
+
   <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">{{view.request.user.username}}</h1>
-    {% comment %} <a href="#" class="btn btn-icon-split btn-primary btn-sm shadow-sm float-right ml-2">
-      <span class="icon text-white-50">
-        <i class="far fa-edit fa-sm text-white-50"></i>
-      </span>
-      <span class="text">Edit Profile</span>
-    </a> {% endcomment %}
+  <div class="d-sm-flex align-items-center justify-content-start mb-4">
+    <h1 class="h3 mb-0 text-gray-800">{{username}}</h1>
+
+
+    {% if not view.request.user.username == username %}
+
+      {% if isFriend %}
+        <!-- Send Message Button -->
+        <form class="ml-auto" action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="" name="" value="">
+          <button class="btn btn-sm btn-info my-1 mx-2" type="submit" name="button">Send Message</button>
+        </form>
+
+      {% else %}
+        <!-- Add Friend Button -->
+        <form class="ml-auto" action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="" name="" value="">
+          <button class="btn btn-sm btn-success my-1 mx-2" type="submit" name="button">Add Friend</button>
+        </form>
+      {% endif %}
+
+
+    {% else %}
+      <!-- Edit Profile Button -->
+      <a href="#" class="btn btn-icon-split btn-primary btn-sm ml-auto my-1 mx-2">
+        <span class="icon text-white-50">
+          <i class="far fa-edit fa-sm text-white-50"></i>
+        </span>
+        <span class="text">Edit Profile</span>
+      </a>
+
+    {% endif %}
+
+
   </div>
 
   <!-- Content Row -->
@@ -99,20 +128,61 @@
     </div>
   </div>
 
+
+  {% if isFriend or view.request.user.username == username %}
   <!-- Content Row -->
   <div class="row">
 
-    <!-- Logging Heat Map Chart -->
+    <!-- Weight Over Time Chart -->
     <div class="col-xl-8 col-lg-7">
       <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Logging Heatmap</h6>
+
+        <!-- Card Header Nav Tabs -->
+        <div class="card-header">
+          <div class="nav">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+
+              <li class="nav-item">
+                <a class="nav-link active" id="log-chart-tab" data-toggle="tab" href="#logchart" role="tab"
+                  aria-controls="home" aria-selected="true">
+                  <h6 class="m-0 font-weight-bold text-primary">Log Heatmap</h6>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" id="weight-chart-tab" data-toggle="tab" href="#weightchart" role="tab"
+                  aria-controls="home" aria-selected="true">
+                  <h6 class="m-0 font-weight-bold text-primary">Weight Over Time</h6>
+                </a>
+              </li>
+
+            </ul>
+          </div>
+
         </div>
+
         <!-- Card Body -->
-        <div id="loggingHeatChart"></div>
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+
+            <div class="tab-pane fade show active" id="logchart" role="tabpanel" aria-labelledby="log-chart-tab">
+              <div class="chart-area">
+                <canvas id="logChart"></canvas>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="weightchart" role="tabpanel" aria-labelledby="weight-chart-tab">
+              <div class="chart-area">
+                <canvas id="weightChart"></canvas>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </div>
+
 
     <!-- User Goals Card -->
     <div class="col-xl-4 col-lg-7">
@@ -133,11 +203,11 @@
               <tbody>
                 <tr>
                   <td title=""> Current Weight </td>
-                  <td><b> {{current_weight}} {{units_weight}} </b></td>
+                  <td><b> {{current_weight}} {{weights_label}} </b></td>
                 </tr>
                 <tr>
                   <td title=""> Goal Weight </td>
-                  <td><b> {{goal_weight}} {{units_weight}} ({{weight_to_go}} {{units_weight}})</b></td>
+                  <td><b> {{goal_weight}} {{weights_label}} ({{weight_to_go}} {{weights_label}})</b></td>
                 </tr>
                 <tr>
                   <td title=""> Goal Date </td>
@@ -150,273 +220,28 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
 </div>
 <!-- /.container-fluid -->
 
+<!-- Page level plugins -->
+<script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
 
-<!-- Page level custom scripts -->
-
-<!-- Log Heatmap Chart -->
-<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
-{% verbatim %}
+<!-- Page level global data -->
 <script>
-var myConfig = {
-  type: 'calendar',
-  options: {
-    year: {
-      text: '2016',
-      visible: false
-    },
-    startMonth: 1,
-    endMonth: 6,
-    palette: ['none', '#2196F3'],
-    month: {
-      item: {
-        fontColor: 'gray',
-        fontSize: 9
-      }
-    },
-    weekday: {
-      values: ['', 'M', '', 'W', '', 'F', ''],
-      item: {
-        fontColor: 'gray',
-        fontSize: 9
-      }
-    },
-    values: [
-      ['2016-01-01', 3],
-      ['2016-01-04', 12],
-      ['2016-01-05', 3],
-      ['2016-01-06', 4],
-      ['2016-01-07', 9],
-      ['2016-01-08', 11],
-      ['2016-01-09', 3],
-      ['2016-01-11', 5],
-      ['2016-01-12', 5],
-      ['2016-01-13', 9],
-      ['2016-01-14', 9],
-      ['2016-01-15', 9],
-      ['2016-01-18', 4],
-      ['2016-01-19', 6],
-      ['2016-01-20', 5],
-      ['2016-01-21', 6],
-      ['2016-01-22', 2],
-      ['2016-01-25', 5],
-      ['2016-01-26', 9],
-      ['2016-01-27', 6],
-      ['2016-01-28', 6],
-      ['2016-01-29', 7],
-      ['2016-02-01', 7],
-      ['2016-02-02', 12],
-      ['2016-02-03', 3],
-      ['2016-02-04', 3],
-      ['2016-02-05', 9],
-      ['2016-02-08', 9],
-      ['2016-02-09', 9],
-      ['2016-02-10', 4],
-      ['2016-02-11', 5],
-      ['2016-02-12', 8],
-      ['2016-02-15', 8],
-      ['2016-02-16', 3],
-      ['2016-02-17', 7],
-      ['2016-02-18', 5],
-      ['2016-02-19', 9],
-      ['2016-02-22', 6],
-      ['2016-02-23', 5],
-      ['2016-02-24', 8],
-      ['2016-02-25', 10],
-      ['2016-02-26', 4],
-      ['2016-02-29', 5],
-      ['2016-03-01', 9],
-      ['2016-03-02', 9],
-      ['2016-03-03', 3],
-      ['2016-03-04', 3],
-      ['2016-03-07', 4],
-      ['2016-03-08', 2],
-      ['2016-03-09', 10],
-      ['2016-03-10', 9],
-      ['2016-03-11', 7],
-      ['2016-03-14', 8],
-      ['2016-03-15', 7],
-      ['2016-03-16', 8],
-      ['2016-03-17', 8],
-      ['2016-03-18', 2],
-      ['2016-03-21', 3],
-      ['2016-03-22', 4],
-      ['2016-03-23', 5],
-      ['2016-03-24', 6],
-      ['2016-03-25', 7],
-      ['2016-03-28', 8],
-      ['2016-03-29', 8],
-      ['2016-03-30', 9],
-      ['2016-03-31', 7],
-      ['2016-04-01', 9],
-      ['2016-04-04', 7],
-      ['2016-04-05', 5],
-      ['2016-04-06', 6],
-      ['2016-04-07', 9],
-      ['2016-04-08', 4],
-      ['2016-04-11', 8],
-      ['2016-04-12', 9],
-      ['2016-04-13', 3],
-      ['2016-04-14', 5],
-      ['2016-04-15', 5],
-      ['2016-04-18', 8],
-      ['2016-04-19', 8],
-      ['2016-04-20', 9],
-      ['2016-04-21', 3],
-      ['2016-04-22', 6],
-      ['2016-04-25', 12],
-      ['2016-04-26', 6],
-      ['2016-04-27', 5],
-      ['2016-04-28', 5],
-      ['2016-04-29', 11],
-      ['2016-05-02', 9],
-      ['2016-05-03', 3],
-      ['2016-05-04', 5],
-      ['2016-05-05', 4],
-      ['2016-05-06', 9],
-      ['2016-05-09', 5],
-      ['2016-05-10', 5],
-      ['2016-05-11', 7],
-      ['2016-05-12', 7],
-      ['2016-05-13', 5],
-      ['2016-05-16', 3],
-      ['2016-05-17', 2],
-      ['2016-05-18', 7],
-      ['2016-05-19', 5],
-      ['2016-05-20', 3],
-      ['2016-05-23', 9],
-      ['2016-05-24', 11],
-      ['2016-05-25', 5],
-      ['2016-05-26', 9],
-      ['2016-05-27', 4],
-      ['2016-05-30', 5],
-      ['2016-05-31', 7],
-      ['2016-06-01', 9],
-      ['2016-06-02', 5],
-      ['2016-06-03', 5],
-      ['2016-06-06', 6],
-      ['2016-06-07', 7],
-      ['2016-06-08', 8],
-      ['2016-06-09', 5],
-      ['2016-06-10', 8],
-      ['2016-06-13', 6],
-      ['2016-06-14', 6],
-      ['2016-06-15', 2],
-      ['2016-06-16', 7],
-      ['2016-06-17', 5],
-      ['2016-06-20', 5],
-      ['2016-06-21', 8],
-      ['2016-06-22', 8],
-      ['2016-06-23', 8],
-      ['2016-06-24', 10],
-      ['2016-06-27', 7],
-      ['2016-06-28', 12],
-      ['2016-06-29', 7],
-      ['2016-06-30', 6],
-    ]
-  },
-  labels: [{ //Lefthand Label (container portion)
-      borderColor: 'gray',
-      borderWidth: 1,
-      x: '8%',
-      y: '60%',
-      width: '40%',
-      height: '30%'
-    },
-    { //Lefthand Label (top portion)
-      text: 'Daily Contribution',
-      fontColor: '#212121',
-      textAlign: 'center',
-      x: '10%',
-      y: '65%',
-      width: '36%'
-    },
-    { //Lefthand Label (middle portion)
-      text: '%plot-value',
-      fontColor: '#2196F3',
-      fontFamily: 'Georgia',
-      fontSize: 35,
-      textAlign: 'center',
-      x: '10%',
-      y: '68%',
-      width: '36%'
-    },
-    // Note: the bottom portion of the Bottom-Left Label is the fixed tooltip, below.
- 
-    { //Rightside Label (container portion)
-      borderColor: 'gray',
-      borderWidth: 1,
-      x: '52%',
-      y: '60%',
-      width: '40%',
-      height: '30%',
-    },
-    { //Rightside Label (top portion)
-      text: 'Total Contributions',
-      fontColor: '#212121',
-      textAlign: 'center',
-      x: '54%',
-      y: '65%',
-      width: '36%'
-    },
-    { //Rightside Label (middle portion)
-      text: '1414',
-      fontColor: '#2196F3',
-      fontFamily: 'Georgia',
-      fontSize: 35,
-      textAlign: 'center',
-      x: '54%',
-      y: '68%',
-      width: '36%'
-    },
-    { //Rightside Label (bottom portion)
-      text: 'Jan 1 - Jun 30',
-      fontColor: '#212121',
-      padding: 2,
-      textAlign: 'center',
-      x: '54%',
-      y: '80%',
-      width: '36%'
-    }
-  ],
- 
-  tooltip: { //Lefthand Label (bottom portion)
-    text: '%data-day',
-    backgroundColor: 'none',
-    borderColor: 'none',
-    fontColor: '#212121',
-    padding: 2,
-    //textAlign: 'center',
-    align: 'center',
-    sticky: true,
-    timeout: 30000,
-    x: '10%',
-    y: '80%',
-    width: '36%'
-  },
- 
-  plotarea: {
-    marginTop: '15%',
-    marginBottom: '55%',
-    marginLeft: '8%',
-    marginRight: '8%'
-  }
-};
+  var timestamps = {{ timestamps | safe}}
+  var weights = {{ weights }}
+  var units_weight = " ({{weights_label}})"
 
-zingchart.MODULESDIR="http://cdn.zingchart.com/modules/";
-zingchart.loadModules('calendar', function() {
-  zingchart.render({
-    id: 'loggingHeatChart',
-    data: myConfig,
-    height: 400,
-    width: '100%'
-  });
-});
+</script>
 
-{% endverbatim %}
+<!-- Page level charts -->
+<script src="{% static "js/line-chart-weights.js" %}"></script>
+
+
+
+<script>
 
 </script>
 
