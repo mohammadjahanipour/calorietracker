@@ -102,8 +102,6 @@ class Streak(DateTimeFields, SafeDeleteModel):
         last_log = None
 
         for log in logs:
-            print(log.date)
-
             if last_log is None:
                 last_log = log
                 continue
@@ -196,6 +194,11 @@ class Setting(DateTimeFields, SafeDeleteModel):
         help_text="Display metric or imperial units on analytics page",
         default="M",
     )
+
+    @property
+    def time_to_goal(self):
+        # Returns int days until goal_date
+        return (self.goal_date - datetime.datetime.now(datetime.timezone.utc)).days
 
     def __str__(self):
         return f"Settings from {self.user}"

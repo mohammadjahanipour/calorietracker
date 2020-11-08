@@ -1,5 +1,6 @@
 {% extends "extends/base.html" %}
 {% load static %}
+{% load friendshiptags %}
 
 {% block content %}
 
@@ -8,17 +9,260 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Profile Name</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="far fa-edit fa-sm text-white-50"></i> Edit Profile</a>
+  <div class="d-sm-flex align-items-center justify-content-start mb-4">
+    <h1 class="h3 mb-0 text-gray-800">{{username}}</h1>
+
+
+    {% if not view.request.user.username == username %}
+
+      {% if isFriend %}
+        <!-- Send Message Button -->
+        <!-- <form class="ml-auto" action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="" name="" value="">
+          <button class="btn btn-sm btn-info my-1 mx-2" type="submit" name="button">Send Message</button>
+        </form> -->
+
+      {% else %}
+        <!-- Add Friend Button -->
+        <form class="ml-auto" action="{% url 'sendfriendrequest' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" id="id_to_user" name="to_user" value="{{userID}}">
+          <button class="btn btn-sm btn-success my-1 mx-2" type="submit" name="button">Add Friend</button>
+        </form>
+      {% endif %}
+
+
+    {% else %}
+      <!-- Edit Profile Button -->
+      <!-- <a href="#" class="btn btn-icon-split btn-primary btn-sm ml-auto my-1 mx-2">
+        <span class="icon text-white-50">
+          <i class="far fa-edit fa-sm text-white-50"></i>
+        </span>
+        <span class="text">Edit Profile</span>
+      </a> -->
+
+    {% endif %}
+
+
   </div>
 
+  <!-- Content Row -->
+  <div class="row">
+
+    <!-- Join Date Card  -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div id="joindateTT" data-toggle="tooltip" title="" class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Member Since</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{join_date}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Last Seen Card  -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div id="lastseenTT" data-toggle="tooltip" title="" class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                Last Online</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{last_seen_date}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-list-alt fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logging Streak Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                Logging Streak</div>
+              <div class="row no-gutters align-items-center">
+                <div id="timetogoalTT" data-toggle="tooltip" title="" class="col-auto">
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{log_count}} Days</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-fire fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- % Days Logged Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div id="percentdaysloggedTT" data-toggle="tooltip" title="" class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                Logging Rate</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{log_rate}} %
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {% if isFriend or view.request.user.username == username %}
+  <!-- Content Row -->
+  <div class="row">
+
+    <!-- Weight Over Time Chart -->
+    <div class="col-xl-8 col-lg-7">
+      <div class="card shadow mb-4">
+
+        <!-- Card Header Nav Tabs -->
+        <div class="card-header">
+          <div class="nav">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+
+              {% comment %} <li class="nav-item">
+                <a class="nav-link active" id="log-chart-tab" data-toggle="tab" href="#logchart" role="tab"
+                  aria-controls="home" aria-selected="true">
+                  <h6 class="m-0 font-weight-bold text-primary">Log Heatmap</h6>
+                </a>
+              </li> {% endcomment %}
+
+              <li class="nav-item">
+                <a class="nav-link active" id="weight-chart-tab" data-toggle="tab" href="#weightchart" role="tab"
+                  aria-controls="home" aria-selected="true">
+                  <h6 class="m-0 font-weight-bold text-primary">Weight</h6>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" id="calorie-chart-tab" data-toggle="tab" href="#caloriechart" role="tab"
+                  aria-controls="home" aria-selected="true">
+                  <h6 class="m-0 font-weight-bold text-primary">Caloric Intake</h6>
+                </a>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+
+            {% comment %} <div class="tab-pane fade show active" id="logchart" role="tabpanel"
+              aria-labelledby="log-chart-tab">
+              <div class="chart-area">
+                <canvas id="logChart"></canvas>
+              </div>
+            </div> {% endcomment %}
+
+
+
+            <div class="tab-pane fade show active" id="weightchart" role="tabpanel" aria-labelledby="weight-chart-tab">
+              <div class="chart-area">
+                <canvas id="weightChart"></canvas>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="caloriechart" role="tabpanel" aria-labelledby="calorie-chart-tab">
+              <div class="chart-area">
+                <canvas id="calorieChart"></canvas>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- User Goals Card -->
+    <div class="col-xl-4 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Goals and Targets</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table">
+            <table class="table table-bordered" style="table-layout:fixed" id="summaryTable" width="100%"
+              cellspacing="0">
+              <thead>
+                <tr>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td title=""> Current Weight </td>
+                  <td><b> {{current_weight}} {{weights_label}} </b></td>
+                </tr>
+                <tr>
+                  <td title=""> Goal Weight </td>
+                  <td><b> {{goal_weight}} {{weights_label}} ({{weight_to_go}} {{weights_label}})</b></td>
+                </tr>
+                <tr>
+                  <td title=""> Goal Date </td>
+                  <td><b>{{goal_date}} ({{time_left}} days) </b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
 </div>
 <!-- /.container-fluid -->
 
+<!-- Page level plugins -->
+<script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
 
-<!-- Page level custom scripts -->
+<!-- Page level global data -->
+<script>
+  var timestamps = {{ timestamps | safe}}
+  var weights = {{ weights }}
+  var units_weight = " ({{weights_label}})"
+  var calories_in = {{ calories }}
+</script>
+
+<!-- Page level charts -->
+<script src="{% static "js/line-chart-weights.js" %}"></script>
+<script src="{% static "js/line-chart-calories-profile.js" %}"></script>
+
+
+
+
+
+<script>
+
+</script>
 
 
 {% endblock %}

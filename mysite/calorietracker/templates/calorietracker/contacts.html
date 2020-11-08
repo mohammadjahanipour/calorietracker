@@ -89,7 +89,7 @@
             <div class="tab-pane fade show active" id="allfriends" role="tabpanel" aria-labelledby="all-friends-tab">
               <ul>
                 {% for friend in all_friends %}
-                  <li class="dropdown-item mb-2 mt-2" style="display: inline-block;" href="#">
+                  <li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend%}';" >
                     <text style='text-decoration: none; font-size: 1.15rem;'>{{friend}}</text>
                   
                     <!-- Remove Friend -->
@@ -111,7 +111,7 @@
             <div class="tab-pane fade" id="pendingfriends" role="tabpanel" aria-labelledby="pending-friends-tab">
               <ul>
                 {% for friend_request in unrejected_friend_requests %}
-                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" href="#">
+                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend_request.from_user%}';">
                       <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.from_user }}</text>               
 
                     <!-- Accept Friend -->
@@ -183,14 +183,16 @@ function updateLiveSearch(searchQuery) {
         document.getElementById('search-results').innerHTML = ''; // reset search-results.innerHTML
 
         for (index = 0; index < result.length; index++) { // iteratively add result.username and form button to add user as friend
-            console.log('{{ user.get_username }}')
             if (result[index].username === '{{ user.get_username }}' ) { // don't display self 
               continue;
             }
             if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
               continue
             }
-            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" style="display: inline-block;" href="#"><text style="text-decoration: none; font-size: 1.15rem;"">'+result[index].username+'</text> <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
+
+            // todo fix url building here so its more readable.
+            let prof_url = "'/profile/" + result[index].username + "'"
+            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href='+prof_url+';"><text style="text-decoration: none; font-size: 1.15rem;"">'+result[index].username+'</text> <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
         }
 
       } else { // if there are no results...

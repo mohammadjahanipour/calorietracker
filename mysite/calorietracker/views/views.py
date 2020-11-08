@@ -341,10 +341,6 @@ class Settings(LoginRequiredMixin, UpdateView):
         return form
 
 
-class Profile(TemplateView):
-    template_name = "calorietracker/profile.html"
-
-
 class ViewLogs(TemplateView):
     template_name = "calorietracker/logstable.html"
 
