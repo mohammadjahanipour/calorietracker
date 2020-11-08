@@ -20,7 +20,7 @@ statsmodels = "*"
 django-chartjs = "*"
 stripe = "*"
 django-measurement = "*"
-myfitnesspal = {git = "https://github.com/kb1900/python-myfitnesspal"}
+myfitnesspal = {ref = "master", git = "https://github.com/kb1900/python-myfitnesspal.git"}
 django-cryptography = "*"
 pinax-referrals = "*"
 cloudinary = "*"
