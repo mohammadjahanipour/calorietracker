@@ -21,11 +21,13 @@ import debug_toolbar
 
 urlpatterns = [
     path("", include("calorietracker.urls")),
+    path("api/", include("api.urls")),
     path("admin/", admin.site.urls),
+
     re_path(
         r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")
     ),
-    re_path(r"^payments/", include("djstripe.urls", namespace="djstripe")),
+    # re_path(r"^payments/", include("djstripe.urls", namespace="djstripe")), deprecated
     path("accounts/", include("allauth.urls")),
     path("friendship/", include("friendship.urls")),
     path('__debug__/', include(debug_toolbar.urls)),

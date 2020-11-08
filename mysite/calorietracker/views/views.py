@@ -27,22 +27,158 @@ from django.views.generic import (
 from safedelete.models import HARD_DELETE
 
 from .. import models
-from .. forms import LogDataForm, LoginForm, MeasurementWidget, RegisterForm, SettingForm
+from ..forms import (
+    LogDataForm,
+    LoginForm,
+    MeasurementWidget,
+    RegisterForm,
+    SettingForm,
+    FriendForm,
+    FriendShipRequestForm,
+)
 
-from .. models import Feedback, Log, MFPCredentials, Setting
+from ..models import Feedback, Log, MFPCredentials, Setting
+from friendship.models import Friend, Follow, Block, FriendshipRequest
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
 
 
+class SendFriendRequest(LoginRequiredMixin, FormView):
+    """docstring for AcceptFriend."""
+
+    form_class = FriendShipRequestForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        to_user = form.cleaned_data.get("to_user")
+
+        Friend.objects.add_friend(
+            self.request.user,  # The sender
+            to_user,  # The recipient
+            message="Hi! I would like to add you",
+        )  # This message is optional
+
+        messages.success(self.request, "Friend Request Sent")
+
+        return super().form_valid(form)
+
+
+class RemoveFriend(LoginRequiredMixin, FormView):
+    """docstring for RemoveFriend."""
+
+    # Removes an existing aka previously accepted friend
+
+    form_class = FriendForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        from_user = form.cleaned_data.get("from_user")
+        # Remove friend request
+        Friend.objects.remove_friend(self.request.user, from_user)
+
+        messages.info(self.request, "Friend Removed")
+
+        return super().form_valid(form)
+
+
+class RejectFriend(LoginRequiredMixin, FormView):
+    """Rejects a friend request not to be confused with removing a existing friend"""
+
+    form_class = FriendForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        from_user = form.cleaned_data.get("from_user")
+        # Reject friend request
+        friend_request = FriendshipRequest.objects.get(
+            to_user=self.request.user, from_user=from_user
+        )
+        friend_request.reject()
+
+        messages.info(self.request, "Friend Request Rejected")
+
+        return super().form_valid(form)
+
+
+class AcceptFriend(LoginRequiredMixin, FormView):
+    """docstring for AcceptFriend."""
+
+    form_class = FriendForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        from_user = form.cleaned_data.get("from_user")
+        # Accept friend request
+        friend_request = FriendshipRequest.objects.get(
+            to_user=self.request.user, from_user=from_user
+        )
+        friend_request.accept()
+
+        messages.success(self.request, "Friend Request Accepted")
+
+        return super().form_valid(form)
+
+
 class Contacts(LoginRequiredMixin, TemplateView):
-    """docstring for Subscription."""
+    """"""
+
+    # The forms for this view/template are built manually in the template
+
+    # TODO: find out if friendships go both ways seems not to
+    # OPTIMIZE: refreshing the page causes the state to be lost in the tabs
 
     template_name = "calorietracker/contacts.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["all_friends"] = Friend.objects.friends(self.request.user)
+        context["unrejected_friend_requests"] = Friend.objects.unrejected_requests(
+            user=self.request.user
+        )
         return context
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
 
 
 class Subscription(LoginRequiredMixin, TemplateView):
@@ -205,16 +341,6 @@ class Settings(LoginRequiredMixin, UpdateView):
         return form
 
 
-class HomePage(TemplateView):
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    template_name = "calorietracker/home.html"
-
-
 class Profile(TemplateView):
     template_name = "calorietracker/profile.html"
 
@@ -362,4 +488,18 @@ class Terms(TemplateView):
 
 
 class LandingPage(TemplateView):
+
     template_name = "calorietracker/home.html"
+
+    def dispatch(self, request):
+        """"""
+
+        # Redirect loged in users to their analytics page instead of the landing page
+        if self.request.user.is_authenticated:
+
+            # cant redirect to analytics page because user has no logs
+            if request.user.log_set.count() == 0:
+                return redirect(reverse_lazy("logdata"))
+
+            return redirect(reverse_lazy("analytics"))
+        return super().dispatch(request)

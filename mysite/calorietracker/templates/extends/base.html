@@ -5,11 +5,7 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  {% include "includes/head_meta_tags.html" %}
 
 
   <link rel="stylesheet" href="{% static "css/main.css" %}">
@@ -25,8 +21,11 @@
 
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
 
+  {% include "includes/analytics.html" %}
+
+
   <!-- DatetimePicker -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet"/>
+  {% comment %} <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet"/> {% endcomment %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"></script>
 
@@ -41,9 +40,6 @@
   <link href="{% static "vendor/datatables/dataTables.bootstrap4.min.css" %}" rel="stylesheet" type="text/css">
   <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
   <script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
-
-  <!-- Buy Me a Coffee -->
-  <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="calorietracker" data-description="Support calorietracker.io with a coffee!" data-message="Thank you for visiting! Want to support further development?" data-color="#79D6B5" data-position="right" data-x_margin="18" data-y_margin="18"></script>
 
 
   {% block extrahead %}
@@ -116,6 +112,10 @@
   $('[data-toggle="tooltip"]').tooltip();
   });
   </script>
+
+
+  <!-- Buy Me a Coffee -->
+  <script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="calorietracker" data-description="Support calorietracker.io with a coffee!" data-message="Thank you for visiting! Want to support further development?" data-color="#79D6B5" data-position="right" data-x_margin="18" data-y_margin="18"></script>
 
 </body>
 

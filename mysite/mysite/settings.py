@@ -17,6 +17,7 @@ from pathlib import Path
 import os
 import logging.config
 import cloudinary
+import django_cache_url
 
 
 # # Base Configuration ========================================================
@@ -31,6 +32,39 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False) == "True"
+
+
+# AXES_ONLY_ADMIN_SITE = True #Only apply restricitons to admin sites
+
+# WARNING: this has to be true if the real ip address is not passed through usually behind a proxy or this will cause everyone to be blocked
+AXES_ONLY_USER_FAILURES = True  # only apply restrictions based on username
+
+AXES_NEVER_LOCKOUT_GET = True  # never lock out get requests
+
+
+# Axes Proxy stuff is not working
+AXES_PROXY_COUNT = 1
+
+# AXES_META_PRECEDENCE_ORDER = [
+#    'HTTP_X_FORWARDED_FOR',
+#    'REMOTE_ADDR',
+# ]
+
+AXES_COOLOFF_TIME = 1  # 1 hour cooloff time
+AXES_FAILURE_LIMIT = 100
+
+
+# Disable Caching in development
+if DEBUG:
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+            }
+        }
+else:
+
+    CACHES = {'default': django_cache_url.parse(os.getenv("MEMCACHED_URL"))}  # set by dokku automatically when linking apps
 
 
 # # Sentry Monitoring Configuration ========================================================
@@ -79,13 +113,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
+# Deprecated
 # # Stripe Configuration ========================================================
-STRIPE_LIVE_PUBLIC_KEY = os.getenv("STRIPE_LIVE_PUBLIC_KEY")
-STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
-STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
-STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
-STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
-DJSTRIPE_WEBHOOK_VALIDATION = None
+# STRIPE_LIVE_PUBLIC_KEY = os.getenv("STRIPE_LIVE_PUBLIC_KEY")
+# STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
+# STRIPE_TEST_PUBLIC_KEY = os.getenv("STRIPE_TEST_PUBLIC_KEY")
+# STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
+# STRIPE_LIVE_MODE = os.getenv("STRIPE_LIVE_MODE", False)
+# DJSTRIPE_WEBHOOK_VALIDATION = None
 
 # # Cloudinary Configuration ========================================================
 cloudinary.config(
@@ -151,7 +186,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",  # needed by pinax.referrals
     "calorietracker",
+    "api",
     # third party packages/apps
+    "rest_framework",
     "safedelete",
     "crispy_forms",
     "bootstrap_datepicker_plus",
@@ -159,7 +196,7 @@ INSTALLED_APPS = [
     "chartjs",
     "measurement",
     "pinax.referrals",
-    "djstripe",
+    # "djstripe", deprecated
     "cloudinary",
     "allauth",
     "allauth.account",
@@ -170,11 +207,17 @@ INSTALLED_APPS = [
     "sslserver",
     "friendship",
     "debug_toolbar",
+    "request",
+    'corsheaders',
+    'axes',
 ]
 
 # 1 == dev domaine and sitename
 # 2 == production domaine and sitename
 SITE_ID = 1 if DEBUG else 2  # see migration 0008_Configure_Site_Names for more info
+
+
+CORS_ALLOW_ALL_ORIGINS = True if DEBUG else False
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
@@ -183,6 +226,7 @@ PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 # # Middleware ========================================================
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -191,6 +235,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
+    "request.middleware.RequestMiddleware",
+    'axes.middleware.AxesMiddleware',
+
 ]
 
 
@@ -268,6 +315,7 @@ MEDIA_URL = "/media/"
 django_heroku.settings(locals())
 
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail

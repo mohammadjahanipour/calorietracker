@@ -3,15 +3,28 @@
 ---
 ## [Unreleased]
 - analytics exporting / sharing to socials
-- sign in with google
 - sign in with apple
 - bodyfat % calculator
 - share analytics view to social media (fb/twitter/ig)
 
-## 2020-10-XX
+
+## 2020-11-XX
+### Added
+- Friends tab - add friends & view each other's profiles
+- Share your analytics to social media using share button
+- MyFitnessPal autosync - MFP logs can be automatically imported
+
+### Changed
+- Cleaned up UI - Log buttons, font-weight and colors
+- Redirect to analytics over landing page when user is logged in
+
+
+## 2020-10-29
 ### Added
 - landing page!
+- sign in with google
 - download jpgs of analytics graphs buttons
+- referral program
 - hover effect on profile name topbar
 - up to 3 progress pics per log entry
 
@@ -22,7 +35,7 @@
 
 
 ## 2020-10-22
-### Added 
+### Added
 - progress pics storage in logs using cloudinary
 - oauth2 logins via facebook, discord
 - deletion of logs

@@ -120,47 +120,51 @@
     <div class="topbar-divider d-none d-sm-block"></div>
 
     <!-- Nav Item - User Information -->
+
+    {% if user.is_authenticated %}
+
     <li class="nav-item dropdown no-arrow">
-      <a class="nav-link:hover dropdown-toggle" style="height: 50px;line-height: 50px;" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-800 small font-weight-bold">
-        {% if user.is_authenticated %}
-        {{ user.username }}
-        {% else %}
-            <p></p>
-        {% endif %}
+      <a class="nav-link:hover dropdown-toggle text-decoration-none" style="height: 50px;line-height: 50px;" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="mr-2 d-none d-lg-inline text-gray-800 font-weight-bold">
+        {{ user.username }} <i class="fas fa-angle-down"></i>
         </span>
       </a>
+
+      <img src="{% static 'img/coin.svg' %}" alt="Gold Coin" height="28px" width="28px" > <span class="mx-1 align-middle pt-1"> {{ user.wallet.coins|default:"0" }}</span>
+
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="{% url 'analytics' %}">
+        <a class="dropdown-item" style="display: inline-block;" href="{% url 'analytics' %}">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
           Profile
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="{% url 'settings' %}">
+        <a class="dropdown-item" style="display: inline-block;" href="{% url 'settings' %}">
           <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
           Settings
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="{% url 'change-password' %}">
+        <a class="dropdown-item" style="display: inline-block;" href="{% url 'change-password' %}">
           <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
           Change Password
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="{% url 'feedback' %}">
+        <a class="dropdown-item" style="display: inline-block;" href="{% url 'feedback' %}">
           <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
           <span>Feedback</span></a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="{% url 'referral-program' %}">
+        <a class="dropdown-item" style="display: inline-block;" href="{% url 'referral-program' %}">
           <i class="fas fa-gift fa-sm fa-fw mr-2 text-gray-400"></i>
           <span>Referrals</span></a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+        <a class="dropdown-item" style="display: inline-block;" href="#" data-toggle="modal" data-target="#logoutModal">
           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
           Logout
         </a>
       </div>
     </li>
+
+    {% endif %}
 
   </ul>
 

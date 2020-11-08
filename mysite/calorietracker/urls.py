@@ -1,3 +1,6 @@
+from django.urls import path
+
+from . import views
 from django.urls import include
 import debug_toolbar
 from django.urls import path
@@ -42,14 +45,19 @@ urlpatterns = [
     ),
     path("referral-program/", views.Referral.as_view(), name="referral-program"),
     path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
-    path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
     path("subscription/", views.Subscription.as_view(), name="subscription"),
     path("contacts/", views.Contacts.as_view(), name="contacts"),
-]
+
+    path("accept-friend/", views.AcceptFriend.as_view(), name="acceptfriend"),
+    path("reject-friend/", views.RejectFriend.as_view(), name="rejectfriend"),
+    path("remove-friend/", views.RemoveFriend.as_view(), name="removefriend"),
+    path("send-friend-request/", views.SendFriendRequest.as_view(), name="sendfriendrequest"),
+    path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
+    ]
 
 if settings.DEBUG:
 
-    # Test Sentry error reporting
+        # Test Sentry error reporting
     def trigger_error(request):
         division_by_zero = 1 / 0
 

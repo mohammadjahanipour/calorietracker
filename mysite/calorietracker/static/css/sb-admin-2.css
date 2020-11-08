@@ -3219,18 +3219,21 @@ input[type="button"].btn-block {
   white-space: nowrap;
   background-color: transparent;
   border: 0;
+  cursor:pointer;
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-  color: #2e2f37;
-  text-decoration: none;
+  color: #6C7BD0;
+  font-weight: bold;
+  text-decoration: underline;
   background-color: #f8f9fc;
 }
 
 .dropdown-item.active, .dropdown-item:active {
-  color: #fff;
-  text-decoration: none;
-  background-color: #4e73df;
+  color: #6C7BD0;
+  font-weight: bold;
+  text-decoration: underline;
+  background-color: #ECECEC;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {

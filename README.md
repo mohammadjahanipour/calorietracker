@@ -1,6 +1,53 @@
 # Calorietracker
 
 
+
+### Installation & Requirements
+
+   git and pip3 is assumed to be installed
+
+    pip3 install pipenv
+    git clone https://gitlab.com/balugitlab/calorietracker
+
+    cd calorietracker
+    pipenv sync    
+
+
+### Getting Started & How to Run
+
+  copy & rename the .env.example file to .env in the same dir and populate it with your data
+
+  note: you probably don't need to fill in everything
+
+  then run
+
+    pipenv shell
+    cd mysite
+    ./manage.py runserver
+
+
+
+### Logging & Analytics
+
+currently in use are Sentry, Plausible django-request and Motomo
+
+https://plausible.io/sites
+
+https://sentry.io/organizations/calorietrackerio/
+
+https://calorietrackerio.matomo.cloud
+
+
+
+### Gunicorn
+WEB_CONCURRENCY is a synonym for workers or -w and is set as env var to 3
+more info can be found at the below links
+
+  - https://docs.gunicorn.org/en/stable/settings.html#worker-processes
+  - https://devcenter.heroku.com/articles/optimizing-dyno-usage#concurrent-web-servers
+
+
+
 ### Enviroment
 
   Pipenv by default loads in a .env file automatically see .env.example for examples
@@ -68,54 +115,81 @@
 
     Hourly DB backups
 
-    * 1 * * * dokku postgres:export djangodb > djangodb.db
+    0 * * * * dokku postgres:export djangodb > djangodb.db
+
+
+    Daily MFP Auto Sync
+    0 0 * * * dokku run calorietracker python mysite/manage.py mfp_sync
 
 
 
 ### Package Documentation
 
-<br>
-
-
-  **DateTimePicker**  
+**DateTimePicker**  
 
   - https://monim67.github.io/django-bootstrap-datepicker-plus/configure/
   - https://github.com/monim67/django-bootstrap-datepicker-plus
 
-<br>
 
 **django-activity-stream**
 
   - https://django-activity-stream.readthedocs.io/en/latest
 
-<br>
 
 **Django encrypted model fields**
 
  - https://github.com/georgemarshall/django-cryptography
 
 
-<br>
-
 **Pinax-referrals**
 
 
   There is some funny business going on with the 004 Migration file
 
-- https://github.com/pinax/pinax-referrals
+  - https://github.com/pinax/pinax-referrals
 
 **Allauth**
 
-- https://django-allauth.readthedocs.io/en/latest/index.html
+  - https://django-allauth.readthedocs.io/en/latest/index.html
 
 **Django-friendship**
 
-- https://github.com/revsys/django-friendship/
+  - https://github.com/revsys/django-friendship/
 
 **Sentry**
 
-- https://sentry.io/settings/calorietrackerio/usage/history/
+  - https://sentry.io/settings/calorietrackerio/usage/history/
 
 **Django Debug Toolbar**
 
-- https://github.com/jazzband/django-debug-toolbar
+  - https://github.com/jazzband/django-debug-toolbar
+
+
+**Django-request**
+
+  - https://github.com/django-request/django-request
+
+**Django-friendship**
+
+  - https://github.com/revsys/django-friendship/
+
+**django-cors-headers**
+
+  - https://github.com/adamchainz/django-cors-headers
+
+**python-memcached**
+
+ - https://github.com/linsomniac/python-memcached
+
+**django-cache-url**
+
+ - https://github.com/epicserve/django-cache-url
+
+**django-axes**
+
+ - https://github.com/jazzband/django-axes
+
+
+
+Attributions:
+Icons made by <a href="http://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

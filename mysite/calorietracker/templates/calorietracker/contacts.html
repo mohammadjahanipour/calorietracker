@@ -2,143 +2,225 @@
 {% load static %}
 {% load friendshiptags %}
 
-
-
 {% block content %}
-
-<!-- dev vue version -->
-<script src="https://unpkg.com/vue@next"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script> -->
-
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Contacts</h1>
+    <h1 class="h3 mb-0 text-gray-800">Friends</h1>
   </div>
 
+    <!-- Content Row -->
   <div class="row">
-    <!-- contacts sidebar -->
-    <div class="col-2">
-      <div class="row">
-        <a class="col" href="#">Friends</a>
-      </div>
-      <div class="row">
-        <a class="col" href="#">Coaches</a>
-      </div>
-      <div class="row">
-        <a class="col" href="#">Docs</a>
-      </div>
 
-    </div>
+    <!-- Friends Main Card-->
+    <div class="col-xl-7 col-lg-7">
+      <div class="card w-100 shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header">
+          <div class="nav">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                  <a class="nav-link active" id="all-friends-tab" data-toggle="tab" href="#allfriends" role="tab" aria-controls="home" aria-selected="true">All Friends</a>
+              </li>
 
-    <div class="col-10">
+              {% comment %}
+              <li class="nav-item">
+                  <a class="nav-link" id="followers-friends-tab" data-toggle="tab" href="#followers" role="tab" aria-controls="followers" aria-selected="false">Followers</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="following-friends-tab" data-toggle="tab" href="#following" role="tab" aria-controls="following" aria-selected="false">Following</a>
+              </li>
+              {% endcomment %}
 
-      <!-- topbar -->
-      <div class="row">
-        <h5 class="mx-2" ><i class="fas fa-edit"></i>Friends</h5>
-        <!-- <button v-on:click="all_friends" type="button" class="btn btn-primary mx-2">All</button>
-        <button v-on:click="pending_friends" type="button" class="btn btn-primary mx-2">Pending</button> -->
-        <a class="mx-2" href="#">All</a>
-        <a class="mx-2" href="#">Pending</a>
-        <a class="mx-2" href="#">Blocked</a>
-        <a class="mx-2" href="#">Add Friend</a>
+              <li class="nav-item">
+                  <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending</a>
+              </li>
 
-        <!-- <button v-on:click="doThis">VUECLICK TEST</button>
+              <li class="nav-item">
+                  <a class="" id="search-friends-tab" data-toggle="tab" href="#searchusers" role="tab" aria-controls="searchusers" aria-selected="false"></a>
+              </li>
 
-        <button @click="increment">Up vote</button> -->
+              <!-- <li class="nav-item">
+                  <a class="nav-link" id="blocked-friends-tab" data-toggle="tab" href="#blockedfriends" role="tab" aria-controls="blockedfriends" aria-selected="false">Blocked</a>
+              </li>
 
-      </div>
+            </ul>
+            <ul class="nav nav-tabs card-header-tabs ml-auto">
+              <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+              <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-search fa-fw"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-left p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                  <form class="form-inline mr-auto w-75 navbar-search">
+                    <div class="input-group">
+                      <input id="searchbarSm" type="text" oninput="updateLiveSearchSm();" class="form-control bg-light border-0 small" placeholder="Add..." aria-label="Search" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" onclick="updateLiveSearchSm();">
+                          <i class="fas fa-search fa-sm"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </li>
+              <li class="nav-item">
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-75 navbar-search">
+                  <div class="input-group">
+                    <input id="searchbarLg" type="text" oninput="updateLiveSearchLg();" class="form-control bg-light border-0" style="width:150px;" placeholder="Add Friends..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button" onclick="updateLiveSearchLg();">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
 
-      <!-- content -->
-      <div class="row">
-
-        <div class="mx-auto" id="app">
-
-          <div class="friends-div">
-
-            <div v-show="show_all_friends" class="all-friends">
-
-              <h5>all friends</h5>
-              {% friends request.user %}
-
+            <div class="tab-pane fade show active" id="allfriends" role="tabpanel" aria-labelledby="all-friends-tab">
+              <ul>
+                {% for friend in all_friends %}
+                  <li class="dropdown-item mb-2 mt-2" style="display: inline-block;" href="#">
+                    <text style='text-decoration: none; font-size: 1.15rem;'>{{friend}}</text>
+                  
+                    <!-- Remove Friend -->
+                    <form class="float-right" action="{% url 'removefriend' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_from_user" name="from_user" value="{{ friend.id }}">
+                      <button class="btn btn-circle btn-sm" type="submit" onclick="return confirm('Are you sure you would like to remove this friend?');" name="button">X</button>
+                    </form>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
 
-            <div v-if="show_pending_friends === true" class="blocked-friends">
-              <h5>pending friends</h5>
-              {% friend_requests request.user %}
+            {% comment %}
+            <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-friends-tab">...</div>
+            <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-friends-tab">...</div>
+            {% endcomment %}
 
+            <div class="tab-pane fade" id="pendingfriends" role="tabpanel" aria-labelledby="pending-friends-tab">
+              <ul>
+                {% for friend_request in unrejected_friend_requests %}
+                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" href="#">
+                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.from_user }}</text>               
+
+                    <!-- Accept Friend -->
+                    <form class="float-right" action="{% url 'acceptfriend' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
+                      <button class="btn btn-sm btn-success ml-2" type="submit" name="button">Accept</button>
+                    </form>
+
+                    <!-- Reject Friend -->
+                    <form class="float-right" action="{% url 'rejectfriend' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
+                      <button class="btn btn-sm btn-danger" type="submit" name="button">Reject</button>
+                    </form>
+                  </li>
+
+                {% endfor %}
+              </ul>
             </div>
 
-            <div v-show="show_blocked_friends" class="blocked-friends">
-              <h5>blocked friends</h5>
-              {% blocking request.user %}
+            <div class="tab-pane fade" id="blockedfriends" role="tabpanel" aria-labelledby="blocked-friends-tab">
             </div>
 
-            <div v-show="show_pending_friends" class="add-friend">
-              <h5>add friends</h5>
-
+            <div class="tab-pane fade" id="searchusers" role="tabpanel" area-labelledby="search-users-tab">
+              <div id="ErrorText">Search for a user</div>
+              <!-- User Livesearch List Results -->
+              <ul id='search-results'>
+                <li class="dropdown-item d-flex align-items-center" style="display: inline-block;" href="#"></li>
+              </ul>
             </div>
 
           </div>
         </div>
-
       </div>
-
     </div>
-
-
   </div>
 
 
 </div>
-<!-- /.container-fluid -->
 
+<script>
 
-<!-- Page level custom scripts -->
-<script type="text/javascript">
+var all_friends = [] // store current friends list for filtering search later
+{% for friend in all_friends %}
+  all_friends += '{{ friend }}'
+{% endfor %}
 
-  const app = {
-    delimiters: ['[[', ']]'],
-    // methods: {
-    //
-    // },
-    data() {
-      return {
-        show_all_friends: true,
-        show_pending_friends: false,
-        show_blocked_friends:false,
-        count: 4,
+// Live Search Users for Adding Friends
+
+// async fetch json
+async function fetchUsers(searchQuery) {
+  let apiURL = window.location.origin + '/api/usernames/' + searchQuery;
+  // console.log(apiURL)
+  const response = await fetch(apiURL);
+  return response.json()
+}
+
+// Update the list of users displayed
+function updateLiveSearch(searchQuery) {
+  if (searchQuery) {
+    // Make Request to DRF api search endpoint asynchronously
+    let searchResults = fetchUsers(searchQuery);
+
+    searchResults.then(function(result) {
+      if (result.length) { // if there are results...
+      
+        document.getElementById('ErrorText').innerHTML = ''; // remove any previous error text
+        document.getElementById('search-results').innerHTML = ''; // reset search-results.innerHTML
+
+        for (index = 0; index < result.length; index++) { // iteratively add result.username and form button to add user as friend
+            console.log('{{ user.get_username }}')
+            if (result[index].username === '{{ user.get_username }}' ) { // don't display self 
+              continue;
+            }
+            if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
+              continue
+            }
+            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" style="display: inline-block;" href="#"><text style="text-decoration: none; font-size: 1.15rem;"">'+result[index].username+'</text> <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
+        }
+
+      } else { // if there are no results...
+        document.getElementById('ErrorText').innerHTML = ('No users found matching: ' + searchQuery);
       }
-    },
-    methods: {
-
-
-      doThis (event) {
-        this.console.log("VUE CLICK TEST")
-        console.log("VUE CLICK TEST")
-
-      },
-      all_friends() {
-        this.console.log("All friends fired")
-        this.show_all_friends=true;
-        this.show_pending_friends=false;
-        this.show_blocked_friends=false;
-      },
-      pending_friends() {
-        this.console.log("Pending friends fired")
-        // `this` will refer to the component instance
-        this.show_all_friends=false;
-        this.show_pending_friends=true;
-        this.show_blocked_friends=false;
-      },
+    })
+  } else {
+    document.getElementById('ErrorText').innerHTML = ('Search for a username above')
   }
 }
 
-Vue.createApp(app).mount('#app')
-</script>
+// Input change small search bar or Small button click triggers this
+function updateLiveSearchSm() {
+  displaySearchNavTab()
+  var searchQuery = document.getElementById("searchbarSm").value
+  updateLiveSearch(searchQuery)
+}
 
+// Input change large search bar or Large button click triggers this
+function updateLiveSearchLg() {
+  displaySearchNavTab()
+  var searchQuery = document.getElementById("searchbarLg").value
+  updateLiveSearch(searchQuery)
+}
+
+// Display search nav tab
+function displaySearchNavTab() {
+  $('.nav-tabs a[href="#searchusers"]').tab('show')
+}
+
+</script>
 
 {% endblock %}
