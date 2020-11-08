@@ -32,9 +32,9 @@ django-debug-toolbar = "*"
 django-request = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
-python-memcached = "*"
-django-cache-url = "*"
 django-axes = "*"
+django-cache-url = "*"
+pylibmc = "*"
 
 [requires]
 python_version = "3.7"
