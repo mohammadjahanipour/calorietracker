@@ -95,6 +95,9 @@ class Profile(LoginRequiredMixin, TemplateView):
         timestamps = [i[0] for i in smoothed_date_weight_tuples]
         weights = [i[1] for i in smoothed_date_weight_tuples]
 
+        # Caloric Intake over Time Chart Data: timestamps, calories
+        calories = list(logs.values_list("calories_in", flat=True).order_by("date"))
+
         # Handle Units
         weights = [self.handle_weight_units(i, units_weight) for i in weights]
 
@@ -104,6 +107,7 @@ class Profile(LoginRequiredMixin, TemplateView):
                     [date.strftime("%b-%d") for date in timestamps]
                 ),
                 "weights": weights,
+                "calories": calories,
             }
         )
 

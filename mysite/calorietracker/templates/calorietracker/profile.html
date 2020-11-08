@@ -142,17 +142,24 @@
           <div class="nav">
             <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
 
-              <li class="nav-item">
+              {% comment %} <li class="nav-item">
                 <a class="nav-link active" id="log-chart-tab" data-toggle="tab" href="#logchart" role="tab"
                   aria-controls="home" aria-selected="true">
                   <h6 class="m-0 font-weight-bold text-primary">Log Heatmap</h6>
                 </a>
+              </li> {% endcomment %}
+
+              <li class="nav-item">
+                <a class="nav-link active" id="weight-chart-tab" data-toggle="tab" href="#weightchart" role="tab"
+                  aria-controls="home" aria-selected="true">
+                  <h6 class="m-0 font-weight-bold text-primary">Weight</h6>
+                </a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" id="weight-chart-tab" data-toggle="tab" href="#weightchart" role="tab"
+                <a class="nav-link" id="calorie-chart-tab" data-toggle="tab" href="#caloriechart" role="tab"
                   aria-controls="home" aria-selected="true">
-                  <h6 class="m-0 font-weight-bold text-primary">Weight Over Time</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Caloric Intake</h6>
                 </a>
               </li>
 
@@ -165,15 +172,23 @@
         <div class="card-body">
           <div class="tab-content" id="myTabContent">
 
-            <div class="tab-pane fade show active" id="logchart" role="tabpanel" aria-labelledby="log-chart-tab">
+            {% comment %} <div class="tab-pane fade show active" id="logchart" role="tabpanel" aria-labelledby="log-chart-tab">
               <div class="chart-area">
                 <canvas id="logChart"></canvas>
               </div>
-            </div>
+            </div> {% endcomment %}
 
-            <div class="tab-pane fade" id="weightchart" role="tabpanel" aria-labelledby="weight-chart-tab">
+            
+
+            <div class="tab-pane fade show active" id="weightchart" role="tabpanel" aria-labelledby="weight-chart-tab">
               <div class="chart-area">
                 <canvas id="weightChart"></canvas>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="caloriechart" role="tabpanel" aria-labelledby="calorie-chart-tab">
+              <div class="chart-area">
+                <canvas id="calorieChart"></canvas>
               </div>
             </div>
 
@@ -233,11 +248,14 @@
   var timestamps = {{ timestamps | safe}}
   var weights = {{ weights }}
   var units_weight = " ({{weights_label}})"
-
+  var calories_in = {{ calories }}
 </script>
 
 <!-- Page level charts -->
 <script src="{% static "js/line-chart-weights.js" %}"></script>
+<script src="{% static "js/line-chart-calories-profile.js" %}"></script>
+
+
 
 
 
