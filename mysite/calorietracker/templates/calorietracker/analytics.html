@@ -24,12 +24,14 @@
           <option value="31">Last 31 Days</option>
           <option value="All">All Time</option>
         </select>
+        {% if view.request.user.username == username %}
         <a href="#" data-toggle="modal" data-target="#sharemodal" class="btn btn-icon-split btn-primary btn-sm shadow-sm float-right ml-2">
           <span class="icon text-white-50">
             <i class="fas fa-share-square fa-sm text-white-50"></i> 
             </span>
           <span class="text">Share</span>
         </a>
+        {% endif %}
       </form>
     </div>
 
@@ -306,7 +308,12 @@
 
             <div class="text-center">
               <input type="url" id="sharelink" class="form-control" style="display:inline; text-align:center; " value="{{ request.build_absolute_uri  }}{{ user.analyticssharetoken.uuid }}" readonly></input>
-                <button onclick="copyShareLink();" href="#" class="mt-2 btn btn-sm btn-primary shadow-sm">Copy Sharing Link</button>
+                <button onclick="copyShareLink();" href="#" class="mt-2 btn btn-sm btn-primary btn-icon-split shadow-sm">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-copy"></i>
+                  </span>
+                  <span class="text">Copy Sharing Link</span>
+                </button>
             </div>
           </div>
           <div class="modal-footer">
