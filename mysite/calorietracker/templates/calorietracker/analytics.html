@@ -9,7 +9,12 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
+    {% if not view.request.user.username == username %}
+      <h1 class="h3 mb-0 text-gray-800">{{username}}'s Analytics (Last {{ n }} days)</h1>
+    {% else %}
+      <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
+    {% endif %}
+
     <div class="ml-auto mt-2">
       <form action="" method="get">
         <select name = "rangeDrop" class="btn" onchange="this.form.submit()">
@@ -121,6 +126,7 @@
         <!-- Card Header - Dropdown -->
         <div class="card-header d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Weight Over Time</h6>
+          {% if view.request.user.username == username %}
           <a id="downloadWC"
               download="WeightOverTime.jpg"
               href=""
@@ -128,6 +134,7 @@
                   <!-- Download Icon -->
             <i class="fa fa-download"></i>
           </a>
+          {% endif %}
         </div>
         <!-- Card Body -->
         <div class="card-body">
@@ -199,6 +206,7 @@
         <!-- Card Header - Dropdown -->
         <div class="card-header d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Over Time</h6>
+          {% if view.request.user.username == username %}
           <a id="downloadCIC"
               download="CaloricIntakeOverTime.jpg"
               href=""
@@ -206,6 +214,7 @@
                   <!-- Download Icon -->
             <i class="fa fa-download fa"></i>
           </a>
+          {% endif %}
         </div>
         <!-- Card Body -->
         <div class="card-body">
@@ -222,6 +231,7 @@
         <!-- Card Header - Dropdown -->
         <div class="card-header d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Caloric Intake Breakdown</h6>
+          {% if view.request.user.username == username %}
           <a id="downloadCIPC"
               download="CaloricIntakeBreakdown.jpg"
               href=""
@@ -229,6 +239,7 @@
                   <!-- Download Icon -->
             <i class="fa fa-download"></i>
           </a>
+          {% endif %}
         </div>
         <!-- Card Body -->
         <div class="card-body">
