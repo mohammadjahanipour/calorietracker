@@ -47,6 +47,7 @@ class Profile(LoginRequiredMixin, TemplateView):
         context.update(
             {
                 "username": user.username,
+                "userID": user.id,
                 "join_date": user.date_joined.date,
                 "last_seen_date": user.last_login.date,
                 "log_count": len(logs),

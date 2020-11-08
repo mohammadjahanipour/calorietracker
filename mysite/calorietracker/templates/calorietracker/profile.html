@@ -17,17 +17,17 @@
 
       {% if isFriend %}
         <!-- Send Message Button -->
-        <form class="ml-auto" action="" method="POST">
+        <!-- <form class="ml-auto" action="" method="POST">
           {% csrf_token %}
           <input type="hidden" id="" name="" value="">
           <button class="btn btn-sm btn-info my-1 mx-2" type="submit" name="button">Send Message</button>
-        </form>
+        </form> -->
 
       {% else %}
         <!-- Add Friend Button -->
-        <form class="ml-auto" action="" method="POST">
+        <form class="ml-auto" action="{% url 'sendfriendrequest' %}" method="POST">
           {% csrf_token %}
-          <input type="hidden" id="" name="" value="">
+          <input type="hidden" id="id_to_user" name="to_user" value="{{userID}}">
           <button class="btn btn-sm btn-success my-1 mx-2" type="submit" name="button">Add Friend</button>
         </form>
       {% endif %}
@@ -35,12 +35,12 @@
 
     {% else %}
       <!-- Edit Profile Button -->
-      <a href="#" class="btn btn-icon-split btn-primary btn-sm ml-auto my-1 mx-2">
+      <!-- <a href="#" class="btn btn-icon-split btn-primary btn-sm ml-auto my-1 mx-2">
         <span class="icon text-white-50">
           <i class="far fa-edit fa-sm text-white-50"></i>
         </span>
         <span class="text">Edit Profile</span>
-      </a>
+      </a> -->
 
     {% endif %}
 
@@ -172,13 +172,14 @@
         <div class="card-body">
           <div class="tab-content" id="myTabContent">
 
-            {% comment %} <div class="tab-pane fade show active" id="logchart" role="tabpanel" aria-labelledby="log-chart-tab">
+            {% comment %} <div class="tab-pane fade show active" id="logchart" role="tabpanel"
+              aria-labelledby="log-chart-tab">
               <div class="chart-area">
                 <canvas id="logChart"></canvas>
               </div>
             </div> {% endcomment %}
 
-            
+
 
             <div class="tab-pane fade show active" id="weightchart" role="tabpanel" aria-labelledby="weight-chart-tab">
               <div class="chart-area">
