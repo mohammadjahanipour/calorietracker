@@ -16,6 +16,8 @@ urlpatterns = [
     path("logs/", views.ViewLogs.as_view(), name="logs"),
     path("logdata/<pk>/update/", views.UpdateLogData.as_view(), name="UpdateLogData"),
     path("logdata/<pk>/delete/", views.DeleteLogData.as_view(), name="DeleteLogData"),
+
+    path("analytics/<uuid>/", views.Analytics.as_view(), name="analytics"),
     path("analytics/", views.Analytics.as_view(), name="analytics"),
     # AUTH
     path("register/", views.Register.as_view(), name="register"),
