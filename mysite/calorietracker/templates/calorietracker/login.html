@@ -5,6 +5,10 @@
 {% block content %}
 
 <body class="bg-gradient-primary">
+  <!-- <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous"
+    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0&appId=2442088766092949&autoLogAppEvents=1"
+    nonce="v9Uxgbz8"></script> -->
 
   <div class="container">
     <!-- Outer Row -->
@@ -16,7 +20,7 @@
             <div class="row">
               <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
               <div class="col-lg-6">
-                <div class="p-5">
+                <div class="p-5" style="text-align: center">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div>
@@ -62,17 +66,37 @@
                     <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
                     <hr>
 
-                    <a href="{% provider_login_url "discord" %}" class="btn btn-user btn-block" style="background: #697ec4; color: #fff">
-                      <i class="fab fa-discord fa-fw"></i> Login with Discord
+                    <a href="{% provider_login_url "discord" %}" class="btn btn-discord btn-icon-split shadow my-2"
+                      style="display: inline-block">
+                      <span class="icon text-white-50">
+                        <i class="fab fa-discord"></i>
+                      </span>
+                      <span class="text" style="font-size: 90%">Login with Discord</span>
                     </a>
 
+                    <a href="{% provider_login_url "facebook" method="js_sdk" %}"
+                      class="btn btn-facebook btn-icon-split shadow my-2" style="display: inline-block">
+                      <span class="icon text-white-50">
+                        <i class="fab fa-facebook"></i>
+                      </span>
+                      <span class="text" style="font-size: 90%">Login with Facebook</span>
+                      <!-- <i class="fab fa-facebook-f fa-fw"></i> -->
+                    </a>
+
+                    <div class="my-2"></div>
+                    <a href="{% provider_login_url "google" %}">
+                      <img src="{% static 'img/btn_google_signin_light_normal_web.png' %}"></img>
+                    </a>
+
+                    <!-- Old google button
                     <a href="{% provider_login_url "google" %}" class="btn btn-google btn-user btn-block">
                       <i class="fab fa-google fa-fw"></i>&nbsp;Login with Google
-                    </a>
+                    </a> -->
 
-                    <a href="{% provider_login_url "facebook" method="js_sdk" %}" class="btn btn-facebook btn-user btn-block">
-                      <i class="fab fa-facebook-f fa-fw"></i>Login with Facebook
-                    </a>
+                    <!-- Official fb button
+                    <div class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="default"
+                      data-auto-logout-link="false" data-use-continue-as="false" data-width="">
+                    </div> -->
 
                   </form>
                   <hr>

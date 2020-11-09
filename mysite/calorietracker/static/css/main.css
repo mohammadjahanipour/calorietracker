@@ -1,0 +1,36 @@
+.btn-discord {
+    color: #fff;
+    background-color: #697ec4;
+    border-color: #fff;
+}
+  
+.btn-discord:hover {
+    color: #fff;
+    background-color: #4a598a;
+    border-color: #e6e6e6;
+}
+
+.btn-discord:focus, .btn-discord.focus {
+    color: #fff;
+    background-color: #30497c;
+    border-color: #e6e6e6;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5);
+}
+
+.btn-discord.disabled, .btn-discord:disabled {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: #fff;
+}
+
+.btn-discord:not(:disabled):not(.disabled):active, .btn-discord:not(:disabled):not(.disabled).active,
+.show > .btn-facebook.dropdown-toggle {
+    color: #fff;
+    background-color: #2d4373;
+    border-color: #dfdfdf;
+}
+
+.btn-discord:not(:disabled):not(.disabled):active:focus, .btn-discord:not(:disabled):not(.disabled).active:focus,
+.show > .btn-discord.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5);
+}
