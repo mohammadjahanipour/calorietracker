@@ -151,9 +151,12 @@ class Analytics(TemplateView):
 
         # Time to goal
         if len(self.weights) > 1:
-            self.currenttimetogoal = abs(
-                round((self.weighttogo) / (self.dailyweightchange), 0)
-            )
+            if self.dailyweightchange != 0:
+                self.currenttimetogoal = abs(
+                    round((self.weighttogo) / (self.dailyweightchange), 0)
+                )
+            else:
+                self.currenttimetogoal = float("inf")
             if self.currenttimetogoal != float("inf"):
                 self.currentgoaldate = (
                     date.today() + timedelta(days=self.currenttimetogoal)
