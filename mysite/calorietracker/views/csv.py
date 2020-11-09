@@ -138,12 +138,15 @@ class ImportCSV(FormView):
             if not validation_error_messages:
                 for row in reader:
                     row_number += 1
-                    # Skip rows with empty cells
-                    if row[Date_index] in (None, ""):
-                        continue
-                    if row[Weight_index] in (None, ""):
-                        continue
-                    if row[CaloriesIn_index] in (None, ""):
+                    try:
+                        # Skip rows with empty cells
+                        if row[Date_index] in (None, ""):
+                            continue
+                        if row[Weight_index] in (None, ""):
+                            continue
+                        if row[CaloriesIn_index] in (None, ""):
+                            continue
+                    except:
                         continue
                     try:
                         # Parse out the date format
