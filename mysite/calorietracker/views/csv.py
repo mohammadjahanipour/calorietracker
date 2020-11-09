@@ -4,6 +4,7 @@ import dateutil.parser
 import pandas as pd
 
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
@@ -13,8 +14,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, RedirectView, UpdateView
 from measurement.measures import Distance, Mass, Weight
 
-from .. forms import ImportCSVForm
-from .. models import Log
+from ..forms import ImportCSVForm
+from ..models import Log
 
 
 def merge_csv_weights(user, overwrite, weights_dict):
@@ -100,10 +101,10 @@ class ImportCSV(FormView):
                 "Invalid file extension - only csv files are accepted"
             )
 
-        MAX_UPLOAD_SIZE = 5242880
+        MAX_UPLOAD_SIZE = 104857600  # 100MB
         if data_file.size > MAX_UPLOAD_SIZE:
             validation_error_messages.append(
-                "File size too large. Max upload size is 5MB"
+                "File size too large. Max upload size is 100MB"
             )
 
         with TextIOWrapper(
@@ -196,7 +197,17 @@ class ImportCSV(FormView):
             validation_error_messages = [
                 "Failed to validate CSV file:"
             ] + validation_error_messages
-            raise ValidationError(" ".join(validation_error_messages))
+
+            if settings.DEBUG:
+                raise ValidationError(" ".join(validation_error_messages))
+            else:
+                for i in validation_error_messages:
+                    messages.info(
+                        self.request,
+                        i,
+                    )
+                return False
+
         else:
             messages.info(
                 self.request,

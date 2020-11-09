@@ -33,7 +33,9 @@ django-request = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
 django-axes = "*"
+django-cache-url = "*"
 psycopg2-binary = "*"
+pylibmc = "*"
 
 [requires]
 python_version = "3.7"
