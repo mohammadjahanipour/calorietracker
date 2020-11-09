@@ -152,7 +152,10 @@ class Profile(LoginRequiredMixin, TemplateView):
                 log_weight["weight"] for log_weight in list(logs.values("weight"))
             ]
             all_nonzero_weights = [w for w in all_weights if not w == Weight(g=0.0)]
-            current_weight = moving_average(all_nonzero_weights)[-1]
+            if len(all_nonzero_weights):
+                current_weight = moving_average(all_nonzero_weights)[-1]
+            else:
+                current_weight = logs[len(logs) - 1].weight
         return current_weight
 
     @staticmethod
