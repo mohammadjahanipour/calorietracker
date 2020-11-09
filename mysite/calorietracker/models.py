@@ -9,6 +9,16 @@ from pinax.referrals.models import Referral
 from safedelete.models import SafeDeleteModel
 
 from .base_models import DateTimeFields, Distance, Weight
+from pinax.referrals.models import Referral
+from cloudinary.models import CloudinaryField
+import uuid
+
+
+class AnalyticsShareToken(DateTimeFields, SafeDeleteModel):
+    """docstring for Feedback."""
+
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid.uuid4)
 
 
 def get_default_goal_date():
@@ -102,8 +112,6 @@ class Streak(DateTimeFields, SafeDeleteModel):
         last_log = None
 
         for log in logs:
-            print(log.date)
-
             if last_log is None:
                 last_log = log
                 continue
@@ -196,6 +204,11 @@ class Setting(DateTimeFields, SafeDeleteModel):
         help_text="Display metric or imperial units on analytics page",
         default="M",
     )
+
+    @property
+    def time_to_goal(self):
+        # Returns int days until goal_date
+        return (self.goal_date - datetime.datetime.now(datetime.timezone.utc)).days
 
     def __str__(self):
         return f"Settings from {self.user}"

@@ -7,6 +7,8 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from sklearn.linear_model import LinearRegression
 
+from .base_models import Weight
+
 
 # Regression - Single Variable
 def single_regression(X, Y):
@@ -243,6 +245,129 @@ def unit_conv(x, unit):
         return x * 2.54
     if unit == "cm":
         return x * 0.393701
+
+
+def rate(x1, x2, y1, y2):
+    """
+    Calculate change in weight (Measurement object Weight) over change in time (Days).
+
+    Parameters
+    ----------
+    x1, x2: measurement objects for which we calculate the change in weight
+        Weight
+    y1, y2: date objects for which we calculate the time delta in days
+        datetime
+    Returns
+    -------
+    Weight / days
+    """
+    # x1, x2 are measurement objects for which we calculate the change
+    # y1, y2 are date objects for which we calculate the time delta in days
+    weight_change = x2 - x1
+    time_delta = int((y2 - y1).days)
+    # print("weight_change", weight_change.lb)
+    # print("time_delta", time_delta, "days")
+    return weight_change / time_delta
+
+
+def interpolate(x1, x2, y1, y2, y):
+    """
+    Linearlly interpolates a weight for day y given surrounding data points
+
+    Parameters
+    ----------
+    x1, x2: measurement objects
+        Weight
+    y1, y2: date objects
+        datetime
+    y: date object between y1 and y2
+        datetime
+    Returns
+    -------
+    lerped_weight: measurment object
+        Weight
+    """
+
+    slope = rate(x1, x2, y1, y2)
+    days_since_x1 = int((y - y1).days)
+    lerped_weight = x1 + (slope * days_since_x1)
+
+    return lerped_weight
+
+
+def smooth_zero_weights_lerp(date_weight_tuples_list):
+    # weights is a list of tuples: (weight, date)
+    smoothed_weights = []
+    all_logs = date_weight_tuples_list  # list of tuples (date, weight)
+
+    dates, weights = [e[0] for e in all_logs], [e[1] for e in all_logs]
+    nonzeroweight_indices = [i for i, e in enumerate(weights) if e != Weight(g=0)]
+
+    for i in range(len(dates)):
+        if weights[i] == Weight(g=0):
+            # print("index", i, "has weight 0")
+            # find previous date and weight that is non zero
+            previous_found = next_found = False
+            prev_search_index = next_search_index = i
+            while prev_search_index >= 0 and previous_found == False:
+                if prev_search_index in nonzeroweight_indices:
+                    w1 = weights[prev_search_index]
+                    y1 = dates[prev_search_index]
+                    previous_found = True
+                else:
+                    prev_search_index -= 1
+
+            # find next date and weight that is non zero
+            while next_search_index < len(weights) and next_found == False:
+                if next_search_index in nonzeroweight_indices:
+                    w2 = weights[next_search_index]
+                    y2 = dates[next_search_index]
+                    next_found = True
+                else:
+                    next_search_index += 1
+
+            if not (next_found and previous_found):
+                smoothed_weights.append(weights[i])
+                continue
+            else:
+                interpolated_weight = interpolate(w1, w2, y1, y2, dates[i])
+                smoothed_weights.append(interpolated_weight)
+        else:
+            smoothed_weights.append(weights[i])
+    return [
+        (dates[i], smoothed_weights[i]) for i in range(0, len(dates))
+    ]  # list of tuples (date, weight)
+
+
+def smooth_zero_weights_previous_avg(date_weight_tuples_list):
+    # weights is a list of tuples: (weight, date)
+    smoothed_weights = []
+    all_logs = date_weight_tuples_list  # list of tuples (date, weight)
+
+    dates, weights = [e[0] for e in all_logs], [e[1] for e in all_logs]
+    n = 11
+
+    for i in range(len(dates)):
+        if weights[i] == Weight(g=0.0):
+            # get last n weights
+            previous = weights[i - n : i - 1]
+            previous = [weight for weight in previous if weight != Weight(g=0.0)]
+            # calculate average.
+            if len((previous)):
+                average = sum([value.lb for value in previous]) / len(previous)
+            else:
+                # if there is no elements in previous, set average to last 10 elements of nonzeroweights
+                nonzeroweights = [
+                    value[1].lb for value in all_logs if value[1] != Weight(g=0.0)
+                ]
+                if len(nonzeroweights[-10:-1]) != 0:
+                    average = sum(nonzeroweights[-10:-1]) / len(nonzeroweights[-10:-1])
+                else:
+                    average = 0
+            smoothed_weights.append(Weight(lb=average))
+        else:
+            smoothed_weights.append(weights[i])
+    return [(dates[i], smoothed_weights[i]) for i in range(0, len(dates))]
 
 
 if __name__ == "__main__":

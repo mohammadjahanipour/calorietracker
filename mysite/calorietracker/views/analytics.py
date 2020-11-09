@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+from ..models import AnalyticsShareToken
 import json
 from datetime import date, datetime, timedelta, timezone
 import pandas as pd
@@ -9,10 +11,10 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django_measurement.forms import MeasurementField
-from measurement.measures import Distance, Mass, Weight
+from measurement.measures import Distance, Weight
 
-from .. models import Log, Setting
-from .. utilities import calculate_TDEE, moving_average, unit_conv, weight_change
+from ..models import Log, Setting
+from ..utilities import calculate_TDEE, moving_average, unit_conv, weight_change
 
 
 def rate(x1, x2, y1, y2):
@@ -34,18 +36,30 @@ def interpolate(x1, x2, y1, y2, y):
     return output
 
 
-class Analytics(LoginRequiredMixin, TemplateView):
+class Analytics(TemplateView):
+
+    # TODO: Ui for shared Analytics is unclear and needs revisioning
+    # main points are
+    # no clear distinction for whos analytics it is
+    # warnings and other notification which are tailerod to the owner
+    # share button and the broken link from it when already on a shared Analytics view
+
+    user = None  # Will be set in the dispatch method and from it we will derive the Analytics data
+
     template_name = "calorietracker/analytics.html"
 
     def load_data(self, **kwargs):
+
+        user = self.user
+
         self.query_set = (
             Log.objects.all()
-            .filter(user=self.request.user)
+            .filter(user=user)
             .values("id", "date", "weight", "calories_in")
             .order_by("date")
         )
         df_query = pd.DataFrame(list(self.query_set))
-        settings_set = Setting.objects.all().filter(user=self.request.user).values()
+        settings_set = Setting.objects.all().filter(user=user).values()
         df_settings = pd.DataFrame(list(settings_set))
 
         # age, height, sex, activity, goaldate, goalweight
@@ -65,7 +79,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
         if Weight(lb=0) in self.weights:
             messages.info(
                 self.request,
-                "Found some log entries weight is 0. We use smoothing to extrapolate your correct weight for these logs.",
+                "Found some log entries weight is 0. We use smoothing to extrapolate the correct weight for these logs.",
             )
             self.smoothed_weights = self.smooth_zero_weights(method="lerp")
             self.smoothed_weights = self.smooth_zero_weights(method="previous_avg")
@@ -137,9 +151,12 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         # Time to goal
         if len(self.weights) > 1:
-            self.currenttimetogoal = abs(
-                round((self.weighttogo) / (self.dailyweightchange), 0)
-            )
+            if self.dailyweightchange != 0:
+                self.currenttimetogoal = abs(
+                    round((self.weighttogo) / (self.dailyweightchange), 0)
+                )
+            else:
+                self.currenttimetogoal = float("inf")
             if self.currenttimetogoal != float("inf"):
                 self.currentgoaldate = (
                     date.today() + timedelta(days=self.currenttimetogoal)
@@ -179,11 +196,30 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         self.weeklytabledata = self.get_weeklytabledata()
 
-    def dispatch(self, request):
+    def dispatch(self, request, *args, **kwargs):
 
-        if not self.request.user.is_authenticated:
-            return redirect(reverse_lazy("login"))
-        if not Log.objects.filter(user=self.request.user).exists():
+        # Set self.user
+        if self.kwargs.get("uuid", False):
+
+            # The analytics data of another user wants to be seen
+            token = get_object_or_404(AnalyticsShareToken, uuid=self.kwargs.get("uuid"))
+            self.user = token.user
+            user = self.user
+            info_string = (
+                "You are viewing " + str(user.username) + "'s analytics dashboard"
+            )
+            messages.warning(request, info_string)
+
+        else:
+            # User wants to see their own analytics
+            self.user = self.request.user
+            user = self.user
+
+            # no permission checks or activity checks are performed for now
+            if user.is_authenticated is False:
+                return redirect(reverse_lazy("login"))
+
+        if not Log.objects.filter(user=user).exists():
             messages.info(request, "You need to have made at least one log entry")
             return redirect(reverse_lazy("logdata"))
 
@@ -198,16 +234,12 @@ class Analytics(LoginRequiredMixin, TemplateView):
             "unit_preference",
         ]
         for var in settings_vars:
-            if not (
-                list(Setting.objects.filter(user=self.request.user).values(var))[0][var]
-            ):
+            if not (list(Setting.objects.filter(user=user).values(var))[0][var]):
                 messages.info(request, "Please fill out your settings. Missing: " + var)
                 return redirect(reverse_lazy("settings"))
 
         # Check goal date is in the future
-        x = list(Setting.objects.filter(user=self.request.user).values("goal_date"))[0][
-            "goal_date"
-        ]
+        x = list(Setting.objects.filter(user=user).values("goal_date"))[0]["goal_date"]
         if (x - datetime.now(timezone.utc)).days < 0:
             messages.info(
                 request,
@@ -217,12 +249,14 @@ class Analytics(LoginRequiredMixin, TemplateView):
         return super().dispatch(request)
 
     def smooth_zero_weights(self, method="lerp"):
+
+        user = self.user
         smoothed_weights = []
 
         if method == "lerp":
             # first get all weight, dates as list of tuples
             all_logs = (
-                Log.objects.filter(user=self.request.user)
+                Log.objects.filter(user=user)
                 .values_list("date", "weight")
                 .order_by("date")
             )  # list of tuples (date, weight)
@@ -266,7 +300,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
         if method == "previous_avg":
             all_weights = list(
-                Log.objects.filter(user=self.request.user)
+                Log.objects.filter(user=user)
                 .values_list("date", "weight")
                 .order_by("date")
             )  # list of tuples (date, weight)
@@ -276,9 +310,9 @@ class Analytics(LoginRequiredMixin, TemplateView):
                 entry = all_weights[i]  # (date, weight)
                 if entry[1] == Weight(g=0.0):
                     # get last n weights
-                    previous = all_weights[i - n: i - 1]
+                    previous = all_weights[i - n : i - 1]
                     previous = [
-                        value[1] for value in previous if value[1] != Mass(g=0.0)
+                        value[1] for value in previous if value[1] != Weight(g=0.0)
                     ]
                     # calculate average.
                     if len((previous)):
@@ -288,7 +322,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
                         nonzeroweights = [
                             value[1].lb
                             for value in all_weights
-                            if value[1] != Mass(g=0.0)
+                            if value[1] != Weight(g=0.0)
                         ]
                         if len(nonzeroweights[-10:-1]) != 0:
                             average = sum(nonzeroweights[-10:-1]) / len(
@@ -341,7 +375,7 @@ class Analytics(LoginRequiredMixin, TemplateView):
     def get_pie_chart_data(self):
         TDEE = abs(self.TDEE)
         dailycaltarget = abs(self.dailycaltarget)
-        calories_in = self.calories_in[-self.n:]
+        calories_in = self.calories_in[-self.n :]
         if self.goal == "L" or self.goal == "M":
             pie_labels = [
                 "Days Above TDEE",
@@ -416,8 +450,8 @@ class Analytics(LoginRequiredMixin, TemplateView):
                     weeklyweights[i] - weeklyweights[i - 1], 2
                 )
                 entry["TDEE"] = calculate_TDEE(
-                    self.calories_in[(i - 1) * 7: (i + 1) * 7],
-                    self.weights[(i - 1) * 7: (i + 1) * 7],
+                    self.calories_in[(i - 1) * 7 : (i + 1) * 7],
+                    self.weights[(i - 1) * 7 : (i + 1) * 7],
                     n=len(self.weights),
                     units=self.unitsweight,
                     smooth=True,
@@ -434,41 +468,44 @@ class Analytics(LoginRequiredMixin, TemplateView):
         self.load_data()
         self.warning_catches()
 
-        context = {
-            "units": self.units,
-            "units_weight": self.unitsweight,
-            "n": self.n,
-            # "chartVar": self.chartVar,
-            "TDEE": self.TDEE,
-            "weight_change_raw": self.weightchangeraw,
-            "weight_change_smooth": self.weightchangesmooth,
-            "daily_weight_change": self.dailyweightchange,
-            "weekly_weight_change": self.weeklyweightchange,
-            "goal_date": self.goaldate.strftime("%b-%-d"),
-            "time_left": self.timeleft,
-            "goal": self.goal,
-            "goal_weight": self.goalweight,
-            "current_weight": round(self.currentweight, 1),
-            "weight_to_go": self.weighttogo,
-            "weight_to_go_abs": self.weighttogoabs,
-            "target_weekly_deficit": self.targetweeklydeficit,
-            "target_daily_cal_deficit": self.targetdailycaldeficit,
-            "daily_cal_target": self.dailycaltarget,
-            "current_time_to_goal": self.currenttimetogoal,
-            "current_goal_date": self.currentgoaldate,
-            "percent_to_goal": self.percenttogoal,
-            "data_weight": self.weights[-self.n:],
-            "data_cal_in": self.calories_in[-self.n:],
-            "data_date": json.dumps(
-                [date.strftime("%b-%d") for date in self.dates][-self.n:]
-            ),
-            "weeklyjson_data": json.dumps(
-                {"data": self.weeklytabledata},
-                sort_keys=True,
-                indent=1,
-                cls=DjangoJSONEncoder,
-            ),
-        }
+        context.update(
+            {
+                "username": self.user.username,
+                "units": self.units,
+                "units_weight": self.unitsweight,
+                "n": self.n,
+                # "chartVar": self.chartVar,
+                "TDEE": self.TDEE,
+                "weight_change_raw": self.weightchangeraw,
+                "weight_change_smooth": self.weightchangesmooth,
+                "daily_weight_change": self.dailyweightchange,
+                "weekly_weight_change": self.weeklyweightchange,
+                "goal_date": self.goaldate.strftime("%b-%-d"),
+                "time_left": self.timeleft,
+                "goal": self.goal,
+                "goal_weight": self.goalweight,
+                "current_weight": round(self.currentweight, 1),
+                "weight_to_go": self.weighttogo,
+                "weight_to_go_abs": self.weighttogoabs,
+                "target_weekly_deficit": self.targetweeklydeficit,
+                "target_daily_cal_deficit": self.targetdailycaldeficit,
+                "daily_cal_target": self.dailycaltarget,
+                "current_time_to_goal": self.currenttimetogoal,
+                "current_goal_date": self.currentgoaldate,
+                "percent_to_goal": self.percenttogoal,
+                "data_weight": self.weights[-self.n :],
+                "data_cal_in": self.calories_in[-self.n :],
+                "data_date": json.dumps(
+                    [date.strftime("%b-%d") for date in self.dates][-self.n :]
+                ),
+                "weeklyjson_data": json.dumps(
+                    {"data": self.weeklytabledata},
+                    sort_keys=True,
+                    indent=1,
+                    cls=DjangoJSONEncoder,
+                ),
+            }
+        )
 
         # Populate red, green, yellow for pie chart
         (

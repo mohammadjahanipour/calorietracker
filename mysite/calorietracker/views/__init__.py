@@ -1,5 +1,5 @@
-
-from . views import *
-from . analytics import Analytics
-from . csv import ImportCSV
-from . mfp import *
+from .views import *
+from .analytics import Analytics
+from .csv import ImportCSV
+from .mfp import *
+from .profile import Profile
