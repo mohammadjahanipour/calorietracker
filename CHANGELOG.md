@@ -8,15 +8,22 @@
 - share analytics view to social media (fb/twitter/ig)
 
 
-## 2020-11-XX
+## 2020-11-09
 ### Added
-- Friends tab - add friends & view each other's profiles
+- Friends tab - add friends & view each other's profiles!
+- Profile page - check out your own profile
 - Share your analytics to social media using share button
 - MyFitnessPal autosync - MFP logs can be automatically imported
 
 ### Changed
 - Cleaned up UI - Log buttons, font-weight and colors
 - Redirect to analytics over landing page when user is logged in
+- CSV upload errors will now display to users without 500-ing
+
+### Fixed
+- Numerous MFP import bugs relating to unhandeled measurement types
+- Default goal weight, dates should be dynamic based a user's join date
+
 
 
 ## 2020-10-29
