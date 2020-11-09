@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django_measurement.forms import MeasurementField
-from measurement.measures import Distance, Mass, Weight
+from measurement.measures import Distance, Weight
 
 from ..models import Log, Setting
 from ..utilities import calculate_TDEE, moving_average, unit_conv, weight_change
@@ -309,7 +309,7 @@ class Analytics(TemplateView):
                     # get last n weights
                     previous = all_weights[i - n : i - 1]
                     previous = [
-                        value[1] for value in previous if value[1] != Mass(g=0.0)
+                        value[1] for value in previous if value[1] != Weight(g=0.0)
                     ]
                     # calculate average.
                     if len((previous)):
@@ -319,7 +319,7 @@ class Analytics(TemplateView):
                         nonzeroweights = [
                             value[1].lb
                             for value in all_weights
-                            if value[1] != Mass(g=0.0)
+                            if value[1] != Weight(g=0.0)
                         ]
                         if len(nonzeroweights[-10:-1]) != 0:
                             average = sum(nonzeroweights[-10:-1]) / len(
