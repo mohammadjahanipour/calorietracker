@@ -1,10 +1,10 @@
-from django.conf import settings
 import json
 import logging
 from datetime import datetime, timezone
 import pandas as pd
 
 from chartjs.views.lines import BaseLineChartView
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,25 +20,25 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     FormView,
+    ListView,
     TemplateView,
     UpdateView,
-    ListView,
 )
+from friendship.models import Block, Follow, Friend, FriendshipRequest
+from measurement.measures import Weight
 from safedelete.models import HARD_DELETE
 
 from .. import models
 from ..forms import (
+    FriendForm,
+    FriendShipRequestForm,
     LogDataForm,
     LoginForm,
     MeasurementWidget,
     RegisterForm,
     SettingForm,
-    FriendForm,
-    FriendShipRequestForm,
 )
-
 from ..models import Feedback, Log, MFPCredentials, Setting
-from friendship.models import Friend, Follow, Block, FriendshipRequest
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
@@ -283,6 +283,25 @@ class LogData(LoginRequiredMixin, CreateView):
 
     def get_form(self):
         form = super().get_form()
+
+        # We can initialize fields here as needed
+        user_weight_units = Setting.objects.get(user=self.request.user).unit_preference
+        if user_weight_units == "M":
+            # Show metric units first
+            form["weight"].field.widget.widgets[1].choices = [
+                ("kg", "kgs"),
+                ("lb", "lbs"),
+            ]
+        else:
+            # Show imperial units first
+            form["weight"].field.widget.widgets[1].choices = [
+                ("lb", "lbs"),
+                ("kg", "kgs"),
+            ]
+
+        # Default the date to today
+        form.initial["date"] = datetime.today()
+
         return form
 
     def form_valid(self, form):
