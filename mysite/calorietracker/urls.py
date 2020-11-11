@@ -9,10 +9,6 @@ from . import views
 
 urlpatterns = [
     path("", views.LandingPage.as_view(), name="welcome"),
-    path(
-        "favicon.ico/",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon/favicon.ico")),
-    ),
     path("home/", views.LandingPage.as_view(), name="home"),
     path("profile/", views.Profile.as_view(), name="profile"),
     path("profile/<slug:slug>", views.Profile.as_view(), name="profile"),
