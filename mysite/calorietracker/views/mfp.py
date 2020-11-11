@@ -99,8 +99,13 @@ def get_days_by_range(client, start_date, end_date):
     delta = timedelta(days=1)
     output = {}
     while start_date <= end_date:
-        data = client.get_date(start_date)
-        output[start_date] = data
+        try:
+            data = client.get_date(start_date)
+            output[start_date] = data
+            # print("Recieved data for", start_date)
+        except:
+            # print("Error for", start_date)
+            pass
         start_date += delta
 
     return output
@@ -198,6 +203,10 @@ def merge_mfp_calories_in(user, overwrite, days_dict):
         try:
             calories_in = day.totals["calories"].C
         except:
+            # print(
+            #     "Error doing day.totals['calories']; likely no day totals are present"
+            # )
+            # print(day.__dict__)
             continue
         # print("Resolving date", date, "calories_in:", calories_in)
 
