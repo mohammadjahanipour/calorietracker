@@ -8,7 +8,7 @@ from ...models import AnalyticsShareToken
 
 
 class Command(BaseCommand):
-    help = "Syncs MFP Data to our DB"
+    help = "Creates share tokens that do not already exists"
 
     def handle(self, *args, **options):
 
@@ -23,4 +23,6 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 AnalyticsShareToken(user=user).save()
 
-        self.stdout.write(self.style.SUCCESS("Share Tokens Created Much success very noice"))
+        self.stdout.write(
+            self.style.SUCCESS("Share Tokens Created Much success very noice")
+        )
