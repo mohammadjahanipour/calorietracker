@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import include, path
 from django.views.generic import RedirectView
+from allauth.account.views import LoginView as AllAuthLoginView
 
 from . import views
 
@@ -23,7 +24,7 @@ urlpatterns = [
     path("analytics/", views.Analytics.as_view(), name="analytics"),
     # AUTH
     path("register/", views.Register.as_view(), name="register"),
-    path("login/", views.Login.as_view(), name="login"),
+    path("login/", AllAuthLoginView.as_view(), name="login"),
     path("logout/", views.Logout.as_view(), name="logout"),
     path("change-password/", views.PasswordChange.as_view(), name="change-password"),
     path("settings/", views.Settings.as_view(), name="settings"),

@@ -474,9 +474,10 @@ class Register(CreateView):
         return super().get_success_url()
 
 
-class Login(LoginView):
-    form_class = LoginForm
-    template_name = "calorietracker/login.html"
+# Deprecated in favor of AllAuthLogin
+# class Login(LoginView):
+#     form_class = LoginForm
+#     template_name = "calorietracker/login.html"
 
 
 class Logout(LogoutView):

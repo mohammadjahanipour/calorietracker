@@ -3,7 +3,7 @@
     background-color: #697ec4;
     border-color: #fff;
 }
-  
+
 .btn-discord:hover {
     color: #fff;
     background-color: #4a598a;
@@ -33,4 +33,15 @@
 .btn-discord:not(:disabled):not(.disabled):active:focus, .btn-discord:not(:disabled):not(.disabled).active:focus,
 .show > .btn-discord.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.5);
+}
+
+
+/* Login Page */
+
+#div_id_login label{
+  display: none;
+}
+
+#div_id_password label{
+  display: none;
 }

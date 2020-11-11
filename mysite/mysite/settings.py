@@ -34,6 +34,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+
+
+
 # AXES_ONLY_ADMIN_SITE = True #Only apply restricitons to admin sites
 
 # WARNING: this has to be true if the real ip address is not passed through usually behind a proxy or this will cause everyone to be blocked
