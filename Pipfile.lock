@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6e5a069009bf13f34ef28e3c9f512d790a815175a6567cbb4a4895153c564930"
+            "sha256": "73f54afee6519e0ca65ea61421132dab41905bc4a181cf51ad8aff21d9c230f8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -535,6 +535,14 @@
                 "sha256:f115cec4201e1465cd58b9866b0b0e7b941caafec129869057405bfe5b5e3991"
             ],
             "version": "==0.5.1"
+        },
+        "pinax-messages": {
+            "hashes": [
+                "sha256:339123494dc06b40d9d916575b9475f48474928fda3a2934b55d838bd1221018",
+                "sha256:d2dad96210670dd02893680e98df6029ecae3569d96b83918a647a4dee3ffcef"
+            ],
+            "index": "pypi",
+            "version": "==3.0.0"
         },
         "pinax-referrals": {
             "hashes": [

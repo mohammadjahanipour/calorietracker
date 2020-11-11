@@ -123,6 +123,7 @@
 
     {% if user.is_authenticated %}
 
+<a href="{% url 'pinax_messages:inbox' %}"><i class="fa fa-envelope"></i> Message Inbox"</a>
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link:hover dropdown-toggle text-decoration-none" style="line-height: 50px;" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="text-gray-800 font-weight-bold">
@@ -152,7 +153,7 @@
           <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
           2FA
         </a>
-        
+
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" style="display: inline-block;" href="{% url 'feedback' %}">
           <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>

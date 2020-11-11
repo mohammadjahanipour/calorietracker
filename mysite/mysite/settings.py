@@ -229,6 +229,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'axes',
     "multifactor",
+    "pinax.messages",
 ]
 
 # 1 == dev domaine and sitename
