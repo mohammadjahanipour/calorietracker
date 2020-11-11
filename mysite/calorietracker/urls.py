@@ -1,14 +1,17 @@
-from django.urls import path
+import debug_toolbar
+from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.urls import include, path
+from django.views.generic import RedirectView
 
 from . import views
-from django.urls import include
-import debug_toolbar
-from django.urls import path
-from . import views
-from django.conf import settings
 
 urlpatterns = [
     path("", views.LandingPage.as_view(), name="welcome"),
+    path(
+        "favicon.ico/",
+        RedirectView.as_view(url=staticfiles_storage.url("favicon/favicon.ico")),
+    ),
     path("home/", views.LandingPage.as_view(), name="home"),
     path("profile/", views.Profile.as_view(), name="profile"),
     path("profile/<slug:slug>", views.Profile.as_view(), name="profile"),
@@ -16,7 +19,6 @@ urlpatterns = [
     path("logs/", views.ViewLogs.as_view(), name="logs"),
     path("logdata/<pk>/update/", views.UpdateLogData.as_view(), name="UpdateLogData"),
     path("logdata/<pk>/delete/", views.DeleteLogData.as_view(), name="DeleteLogData"),
-
     path("analytics/<uuid>/", views.Analytics.as_view(), name="analytics"),
     path("analytics/", views.Analytics.as_view(), name="analytics"),
     # AUTH

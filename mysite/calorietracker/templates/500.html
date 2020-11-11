@@ -1,0 +1,31 @@
+{% extends "extends/base.html" %}
+
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <!-- 500 Error Text -->
+  <div class="text-center">
+    <div class="error mx-auto" data-text="500">500</div>
+    <p class="lead text-gray-800 mb-5">Server Error</p>
+    <p class="text-gray-500 mb-0">Uh oh, something went seriously wrong...</p>
+    <a href="#" onclick="history.go(-1)">&larr; Go Back</a> </br>
+    <a href="{% url 'feedback' %}"> Let us know what happened we can fix it &rarr;</a>
+  </div>
+
+
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Page level custom scripts -->
+
+{% endblock %}
