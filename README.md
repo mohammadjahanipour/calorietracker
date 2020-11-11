@@ -33,6 +33,8 @@ An intelligent calorie and weight tracking assistant that learns with you.
 
 
 
+
+
 ### Logging & Analytics
 
 currently in use are Sentry, Plausible django-request and Motomo
@@ -199,6 +201,15 @@ more info can be found at the below links
 **django-multifactor**
   - https://pypi.org/project/django-multifactor/
 
+
+
+### Packages to Consider for further functionality or as alternatives
+
+bio auth and more 2fa
+https://pypi.org/project/django-mfa2/
+
+alternative to axes
+https://github.com/jazzband/django-defender
 
 
 Attributions:
