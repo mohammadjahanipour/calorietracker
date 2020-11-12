@@ -1,33 +1,54 @@
 # Calorietracker Changelog
 
 ---
+
 ## [Unreleased]
-- analytics exporting / sharing to socials
+
 - sign in with apple
 - bodyfat % calculator
-- share analytics view to social media (fb/twitter/ig)
+- share analytics view directly to social media (fb/twitter/ig)
 
+## 2020-11-12
+
+### Added
+
+- 2 Factor Authentication support!
+- Favicon.ico and apple-touch-icon.png url routing
+- Custom 404 and 500 Error Pages
+- Input streak flame and gold coin to topbar
+
+### Changed
+
+- Login buttons now comply with Google Oauth branding guidelines for sign in with Google
+
+### Fixed
+
+- Creating a new log will default unit selection based on user's unit preferences and date to today's date
 
 ## 2020-11-09
+
 ### Added
-- Friends tab - add friends & view each other's profiles!
+
+- Friends page - add friends & view each other's profiles!
 - Profile page - check out your own profile
 - Share your analytics to social media using share button
 - MyFitnessPal autosync - MFP logs can be automatically imported
 
 ### Changed
+
 - Cleaned up UI - Log buttons, font-weight and colors
 - Redirect to analytics over landing page when user is logged in
 - CSV upload errors will now display to users without 500-ing
 
 ### Fixed
+
 - Numerous MFP import bugs relating to unhandeled measurement types
 - Default goal weight, dates should be dynamic based a user's join date
 
-
-
 ## 2020-10-29
+
 ### Added
+
 - landing page!
 - sign in with google
 - download jpgs of analytics graphs buttons
@@ -36,13 +57,15 @@
 - up to 3 progress pics per log entry
 
 ### Changed
+
 - migrated feedback, logout buttons from sidebar to topbar profile dropdown
 - updated footer
 - standardized card use for forms etc.
 
-
 ## 2020-10-22
+
 ### Added
+
 - progress pics storage in logs using cloudinary
 - oauth2 logins via facebook, discord
 - deletion of logs
@@ -53,14 +76,13 @@
 - username dropdown menu in topbar
 
 ### Changed
+
 - feedback form description
 - level of email error logging
 - weekly summaries flexwidth on analytivs dashboard
 - registered copyright in footer
 
-
 ---
-
 
 ### [Style Guide](https://keepachangelog.com/en/1.0.0/)
 
