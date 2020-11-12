@@ -227,11 +227,15 @@ class ImportCSV(FormView):
                 overwrite=form.cleaned_data["csv_overwrite"],
                 calories_in_dict=calories_in_dict,
             )
+
             return True
 
     def form_valid(self, form):
         if self.request.method == "POST":
             if not self.validate_csv(form):
                 return super().form_invalid(form)
+
+            # Re-Actualize input streak
+            self.request.user.streak.actualize_input_streak()
 
             return super().form_valid(form)
