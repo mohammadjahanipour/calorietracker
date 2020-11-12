@@ -116,3 +116,5 @@ GitHub.sublime-settings
 .history
 
 .vscode/
+
+.prettierignore
