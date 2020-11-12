@@ -34,6 +34,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", False) == "True"
 
 
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+
+
+
+
 # AXES_ONLY_ADMIN_SITE = True #Only apply restricitons to admin sites
 
 # WARNING: this has to be true if the real ip address is not passed through usually behind a proxy or this will cause everyone to be blocked
@@ -135,6 +141,18 @@ LOGIN_REDIRECT_URL = "/logdata"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 
+MULTIFACTOR = {
+    'LOGIN_CALLBACK': False,             # False, or dotted import path to function to process after successful authentication
+    # 'RECHECK': True,                     # Invalidate previous authorisations at random intervals
+    # 'RECHECK_MIN': 60 * 60 * 3,          # No recheks before 3 hours
+    # 'RECHECK_MAX': 60 * 60 * 6,          # But within 6 hours
+    #
+    # 'FIDO_SERVER_ID': 'example.com',     # Server ID for FIDO request
+    # 'FIDO_SERVER_NAME': 'Django App',    # Human-readable name for FIDO request
+    'TOKEN_ISSUER_NAME': 'CalorieTracker.io',   # TOTP token issuing name (to be shown in authenticator)
+    # 'U2F_APPID': 'https://example.com',  # U2F request issuer
+}
+
 
 # # Logging Configuration ========================================================
 # Only in production
@@ -210,6 +228,7 @@ INSTALLED_APPS = [
     "request",
     'corsheaders',
     'axes',
+    "multifactor",
 ]
 
 # 1 == dev domaine and sitename

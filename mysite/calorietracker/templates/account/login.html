@@ -1,0 +1,74 @@
+{% extends "extends/base_simple.html" %}
+{% load static %}
+{% load socialaccount %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+<body class="bg-gradient-primary">
+  <div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+      <div class="col-xl-10 col-lg-12 col-md-9">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6">
+                <div class="p-5" style="text-align: center">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+
+                  </div>
+                  <form class="user" method="post">
+                    
+                    {% csrf_token %}
+                    {{ form|crispy}}
+                    <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                    <hr>
+
+                    <a href="{% provider_login_url "discord" %}" class="btn btn-discord btn-icon-split shadow my-2"
+                      style="display: inline-block">
+                      <span class="icon text-white-50">
+                        <i class="fab fa-discord"></i>
+                      </span>
+                      <span class="text" style="font-size: 90%">Login with Discord</span>
+                    </a>
+
+                    <a href="{% provider_login_url "facebook" method="js_sdk" %}"
+                      class="btn btn-facebook btn-icon-split shadow my-2" style="display: inline-block">
+                      <span class="icon text-white-50">
+                        <i class="fab fa-facebook"></i>
+                      </span>
+                      <span class="text" style="font-size: 90%">Login with Facebook</span>
+                    </a>
+
+                    <div class="my-2"></div>
+                    <a href="{% provider_login_url "google" %}">
+                      <img src="{% static 'img/btn_google_signin_light_normal_web.png' %}"></img>
+                    </a>
+
+                  </form>
+                  <hr>
+                  <!-- TODO: Forgot PW -->
+                  <!-- <div class="text-center">
+                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                  </div> -->
+
+                  <div class="text-center">
+                    <a class="small" href="{% url 'register' %}">Create an Account!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{% providers_media_js %}
+{% endblock %}

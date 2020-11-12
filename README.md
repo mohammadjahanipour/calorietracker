@@ -26,6 +26,14 @@ An intelligent calorie and weight tracking assistant that learns with you.
     ./manage.py runserver
 
 
+### Known Bugs
+2Fa Asking for a code even if disabled:
+
+    2Fa will sometimes ask for a code on login after disabled which always will be invalid if cookies are not cleared
+
+
+
+
 
 ### Logging & Analytics
 
@@ -189,6 +197,19 @@ more info can be found at the below links
 
  - https://github.com/jazzband/django-axes
 
+
+**django-multifactor**
+  - https://pypi.org/project/django-multifactor/
+
+
+
+### Packages to Consider for further functionality or as alternatives
+
+bio auth and more 2fa
+https://pypi.org/project/django-mfa2/
+
+alternative to axes
+https://github.com/jazzband/django-defender
 
 
 Attributions:

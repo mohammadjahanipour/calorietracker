@@ -250,6 +250,10 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        form.save()
+
+        # Re-actualize input streak
+        self.request.user.streak.actualize_input_streak()
         return super().form_valid(form)
 
 
@@ -266,7 +270,13 @@ class DeleteLogData(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
+
+        # Delete Log without SAFE_DELETE
         self.object.delete(force_policy=HARD_DELETE)
+
+        # Re-actualize input streak
+        self.request.user.streak.actualize_input_streak()
+
         return HttpResponseRedirect(success_url)
 
 
@@ -332,6 +342,9 @@ class LogData(LoginRequiredMixin, CreateView):
 
         if self.request.method == "POST":
             form.save()
+
+            # Re-actualize input streak
+            self.request.user.streak.actualize_input_streak()
         return super().form_valid(form)
 
 
@@ -474,9 +487,10 @@ class Register(CreateView):
         return super().get_success_url()
 
 
-class Login(LoginView):
-    form_class = LoginForm
-    template_name = "calorietracker/login.html"
+# Deprecated in favor of AllAuthLogin
+# class Login(LoginView):
+#     form_class = LoginForm
+#     template_name = "calorietracker/login.html"
 
 
 class Logout(LogoutView):

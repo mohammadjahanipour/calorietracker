@@ -36,6 +36,8 @@ django-axes = "*"
 django-cache-url = "*"
 psycopg2-binary = "*"
 pylibmc = "*"
+django-multifactor = "*"
+django-decorator-include = "*"
 
 [requires]
 python_version = "3.7"

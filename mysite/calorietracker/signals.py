@@ -51,9 +51,10 @@ def create_user_analytics_share_token(sender, instance, created, **kwargs):
         AnalyticsShareToken(user=user).save()
 
 
-# @receiver(user_logged_in)
-# def user_logged_in_sample_function(sender, request, user, **kwargs):
-#     print("Example")
+@receiver(user_logged_in)
+def actualize_streaks(sender, request, user, **kwargs):
+    # Actualize user's input streak
+    user.streak.actualize_input_streak()
 
 
 # Action example
