@@ -44,6 +44,10 @@ from ..models import Feedback, Log, MFPCredentials, Setting
 logger = logging.getLogger("PrimaryLogger")
 
 
+class Inbox(LoginRequiredMixin, TemplateView):
+    template_name = "calorietracker/inbox.html"
+
+
 class SendFriendRequest(LoginRequiredMixin, FormView):
     """docstring for AcceptFriend."""
 

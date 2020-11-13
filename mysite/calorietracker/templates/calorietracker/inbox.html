@@ -1,0 +1,98 @@
+{% extends "extends/base.html" %}
+
+{% load static %}
+
+{% load i18n %}
+{% load pinax_messages_tags %}
+​
+{% block head_title %}Messages{% endblock %}
+​
+{% block body_class %}{{ block.super }} pinax-messages-inbox{% endblock %}
+​
+{% comment %} {% block body %} {% endcomment %}
+
+{% block content %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-start mb-4">
+    <h1 class="h3 mb-0 text-gray-800 with-actions">
+      Inbox
+
+    </h1>
+    <a class="btn btn-primary btn-icon-split btn-sm ml-auto"
+      href="{% url "pinax_messages:message_create" %}">
+      <span class="icon text-white-50">
+        <i class="fas fa-envelope"></i>
+      </span>
+      <span class="text">New Message</span>
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Messages</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+              {% comment %} <thead>
+                <tr>
+                  <th>From</th>
+                  <th>Message</th>
+                  <th>Date</th>
+                </tr>
+              </thead> {% endcomment %}
+              <tbody>
+                <tr>
+                  <a href="#">
+                    <!-- User -->
+                    <td>
+                      <span class="mb-0 text-muted">Sample FROM User</span>
+                    </td>
+                    <!-- Message -->
+                    <td>
+                      <a class="link" href="javascript: void(0)">
+                        <span class="text-dark">Sample MSG TXT</span>
+                      </a>
+                    </td>
+                    <!-- Time -->
+                    <td class="text-muted">Sample DATE</td>
+
+                  </a>
+                </tr>
+                {% for thread in threads %}
+                <tr class="thread {% if thread|unread:user %}unread{% endif %}">
+                  <a href="{{thread.get_absolute_url}}">
+                    <td class="participants">{{ thread.users.all|join:", " }}</td>
+                    <td class="latest-message">
+                      <p class="content">{{ thread.latest_message.content }}</p>
+                    </td>
+                  </a>
+                </tr>
+                {% empty %}
+                <tr>
+                  <div class="no-messages">You have no messages.</div>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+[debug] Pinax threads : <br>
+{{inbox_threads}}
+
+<script>
+var threads = "{{inbox_threads | safe}}"
+console.log('threads:' + threads)
+</script>
+{% endblock %}
