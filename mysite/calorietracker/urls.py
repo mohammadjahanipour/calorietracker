@@ -56,6 +56,7 @@ urlpatterns = [
         name="sendfriendrequest",
     ),
     path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
+    path("messages/inbox", views.Inbox.as_view(), name="inbox"),
 ]
 
 if settings.DEBUG:
