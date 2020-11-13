@@ -229,6 +229,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'axes',
     "multifactor",
+    "bootstrapform",
+    "pinax.templates",
     "pinax.messages",
 ]
 
@@ -284,6 +286,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "pinax.messages.context_processors.user_messages",
                 # `allauth` needs this from django
                 "django.template.context_processors.request",
             ],
