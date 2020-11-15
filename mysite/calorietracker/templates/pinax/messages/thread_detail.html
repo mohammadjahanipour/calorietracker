@@ -1,0 +1,47 @@
+{% extends "extends/base.html" %}
+
+{% block body_class %}{{ block.super }} pinax-messages-thread{% endblock %}
+
+{% load bootstrap %}
+
+{% block content %}
+<div class="container-fluid">
+<div class="pinax-messages-thread-detail-container">
+
+
+    <div class="d-sm-flex align-items-center justify-content-start mb-4">
+      <h1 class="h3 mb-0 text-gray-800 with-actions">
+        {{ thread.subject }}
+
+      </h1>
+        <a class="btn btn-danger btn-icon-split btn-sm ml-auto" href="{% url "pinax_messages:thread_delete" thread.pk %}">
+        <span class="icon text-white-50">
+          <i class="fas fa-trash"></i>
+        </span>
+        <span class="text">Delete Thread</span>
+      </a>
+    </div>
+
+    <section class="thread-messages">
+        {% for message in thread.messages.all %}
+            <div class="thread-message">
+                <div class="message-byline">
+                    <div class="message-from">{{ message.sender.username }}</div>
+                    <div class="message-sent">{{ message.sent_at }}</div>
+                </div>
+                <div class="message-content">{{ message.content|urlize|linebreaks }}</div>
+            </div>
+        {% endfor %}
+    </section>
+
+    <form class="comment-form" action="{% url "pinax_messages:thread_detail" thread.pk %}" method="post">
+        {% csrf_token %}
+        {{ form|bootstrap }}
+        <div class="form-actions">
+            <a href="{% url "pinax_messages:inbox" %}" class="cancel">Cancel</a>
+            <button class="btn btn-primary">Send</button>
+        </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

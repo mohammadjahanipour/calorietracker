@@ -232,8 +232,6 @@ INSTALLED_APPS = [
     "bootstrapform",
     "pinax.templates",
     "pinax.messages",
-    "bootstrapform",
-    "pinax.templates",
 ]
 
 # 1 == dev domaine and sitename
