@@ -10,18 +10,19 @@
   <!-- Page Heading -->
   <div class="d-sm-flex mb-4">
     {% if not view.request.user.username == username %}
-      <h1 class="h3 mb-0 text-gray-800">{{username}}'s Analytics (Last {{ n }} days)</h1>
+      <h1 class="h3 mb-0 text-gray-800">{{username}}'s Analytics (Last {{ dateRange }} days)</h1>
     {% else %}
-      <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ n }} days)</h1>
+      <h1 class="h3 mb-0 text-gray-800">Analytics (Last {{ dateRange }} days)</h1>
     {% endif %}
 
     <div class="ml-auto mt-2">
       <form action="" method="get">
-        <select name = "rangeDrop" class="btn" onchange="this.form.submit()">
-          <option value="" disabled selected>Last {{n}} days</option>
-          <option value="7">Last 7 Days</option>
+        <select name = "dateRange" class="btn" onchange="this.form.submit()">
+          <option value="" disabled selected>Last {{dateRange}} days</option>
           <option value="14">Last 14 Days</option>
           <option value="31">Last 31 Days</option>
+          <option value="90">Last 90 Days</option>
+          <option value="180">Last 180 Days</option>
           <option value="All">All Time</option>
         </select>
         {% if view.request.user.username == username %}
@@ -47,7 +48,7 @@
           <div class="row no-gutters align-items-center">
             <div id="weightchangeTT" data-toggle="tooltip" title="" class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Weight Change</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change_smooth }} {{units_weight}}</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ weight_change }} {{weights_label}}</div>
             </div>
             <div class="col">
               <div class="progress progress-sm mr-2">
@@ -69,7 +70,7 @@
           <div class="row no-gutters align-items-center">
             <div id="TDEETT" data-toggle="tooltip" title="" class="col mr-2">
               <div class="text-xs font-weight-bold text-success text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Estimated TDEE</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ TDEE }} Calories / day</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ estimated_tdee }} Calories / day</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-fire fa-2x text-gray-300"></i>
@@ -88,7 +89,7 @@
               <div class="text-xs font-weight-bold text-info text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Projected Time to Goal Weight</div>
               <div class="row no-gutters align-items-center">
                 <div id="timetogoalTT" data-toggle="tooltip" title="" class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{current_goal_date}} ({{ current_time_to_goal }} days)</div>
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{projected_time_to_goal_date}} <br>({{ projected_time_to_goal_days }} days)</div>
                 </div>
               </div>
             </div>
@@ -107,8 +108,8 @@
           <div class="row no-gutters align-items-center">
             <div id="currentrateofweightchangeTT" data-toggle="tooltip" title="" class="col mr-2">
               <div class="text-xs font-weight-bold text-warning text-uppercase mb-1" style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted">Current Rate of Weight Change</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ weekly_weight_change }} {{units_weight}} / week</div>
-              <!-- <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ daily_weight_change }} {{units_weight}} / day</div> -->
+              <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ current_rate_of_weight_change }} {{weights_label}} / week</div>
+              <!-- <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ daily_weight_change }} {{weights_label}} / day</div> -->
             </div>
             <div class="col-auto">
               <i class="fas fa-weight fa-2x text-gray-300"></i>
@@ -165,11 +166,11 @@
               <tbody>
                 <tr>
                 <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="currentweightTT" data-toggle="tooltip" title=""> Current Weight</td>
-                <td><b>{{current_weight}} {{units_weight}} </b></td>
+                <td><b>{{current_weight}} {{weights_label}} </b></td>
               </tr>
               <tr>
               <td>Goal Weight</td>
-              <td><b>{{goal_weight}} {{units_weight}} ({{weight_to_go}} {{units_weight}})</b></td>
+              <td><b>{{goal_weight}} {{weights_label}} ({{weight_to_go}} {{weights_label}})</b></td>
               </tr>
               <tr>
               <td>Goal Date</td>
@@ -177,7 +178,7 @@
               </tr>
               <tr>
               <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="targetweightchangeTT" data-toggle="tooltip" title=""> Goal Weight Change per Week</td>
-              <td><b>{{target_weekly_deficit}} {{units_weight}} / week</b></td>
+              <td><b>{{goal_weight_change_per_week}} {{weights_label}} / week</b></td>
               </tr>
               </tbody>
             </table>
@@ -190,7 +191,7 @@
               </thead>
               <tbody>
               <td style="text-decoration: underline; text-underline-position: under; text-decoration-style: dotted" id="targetcalintakeTT" data-toggle="tooltip" title=""> Daily Caloric Intake Target</td>
-              <td><b>{{daily_cal_target}} cal / day</b></td>
+              <td><b>{{daily_caloric_intake_target}} cal / day</b></td>
               </tr>
               </tbody>
             </table>
@@ -273,8 +274,8 @@
                   <th>Daily Calories In</th>
                   <th>Total Calories In</th>
                   <th>TDEE (cal / day)</th>
-                  <th>Median Weight ({{units_weight}})</th>
-                  <th>Weekly Weight Change ({{units_weight}} / week)</th>
+                  <th>Median Weight ({{weights_label}})</th>
+                  <th>Weekly Weight Change ({{weights_label}} / week)</th>
                 </tr>
               </thead>
               <tbody>
@@ -343,25 +344,27 @@ document.getElementById("targetcalintakeTT").title = "How many calories you shou
 
 <!-- Page level global data -->
 <script>
-var timestamps = {{data_date | safe}}
-var weights = {{data_weight}}
-var calories_in = {{data_cal_in}}
+var timestamps = {{timestamps | safe}}
+var weights = {{weights}}
+var calories_in = {{calories}}
 var goal_calories_in = [];
   for (var i = 0; i < calories_in.length; i++) {
-    goal_calories_in.push({{daily_cal_target}});
+    goal_calories_in.push({{daily_caloric_intake_target}});
   }
 var estimated_TDEE = [];
   for (var i = 0; i < calories_in.length; i++) {
-    estimated_TDEE.push(Math.abs({{ TDEE }}));
+    estimated_TDEE.push(Math.abs({{ estimated_tdee }}));
   }
+
+var units_weight = " ({{weights_label}})"
+var weeklyjson = {{weeklyjson_data | safe}}
+var daily_caloric_intake_target = {{daily_caloric_intake_target}}
+var goal = "{{goal}}"
+
 var pie_labels = {{pie_labels | safe}}
 var pie_cal_in_red = {{pie_red}}
 var pie_cal_in_yellow = {{pie_yellow}}
 var pie_cal_in_green = {{pie_green}}
-var units_weight = " ({{units_weight}})"
-var weeklyjson = {{weeklyjson_data | safe}}
-var daily_cal_target = {{daily_cal_target}}
-var goal = "{{goal}}"
 </script>
 
 
@@ -393,7 +396,7 @@ $(document).ready(function() {
       console.log(goal)
       $("td", row).css('font-weight','bold');
       if (goal == "L") {
-        if (data.weeklycalories_in_mean <= daily_cal_target) {
+        if (data.weeklycalories_in_mean <= daily_caloric_intake_target) {
         $("td:eq(2)", row).css('color','#3CB371');
         } else {
           $("td:eq(2)", row).css('color','#DC143C');
@@ -405,7 +408,7 @@ $(document).ready(function() {
         }
       }
       if (goal == "G") {
-        if (data.weeklycalories_in_mean >= daily_cal_target) {
+        if (data.weeklycalories_in_mean >= daily_caloric_intake_target) {
         $("td:eq(2)", row).css('color','#3CB371');
         } else {
           $("td:eq(2)", row).css('color','#DC143C');

@@ -175,6 +175,34 @@ def calculate_TDEE(CI, weights, n, units="lbs", smooth=True, window=5):
     return round(TDEE)
 
 
+def calculate_HarrisBenedict(weight, sex, height, age, activity):
+    # Estimate TDEE in the absence of enouhg data
+    # Do all calculations in metric
+    weight = weight.kg
+    height = height.cm
+
+    if sex == "M":
+        BMR = round(
+            -1 * float(88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)),
+        )
+    elif sex == "F":
+        BMR = round(
+            -1 * float(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)),
+        )
+    if activity == "1":
+        TDEE = BMR * 1.2
+    elif activity == "2":
+        TDEE = BMR * 1.375
+    elif activity == "3":
+        TDEE = BMR * 1.55
+    elif activity == "4":
+        TDEE = BMR * 1.725
+    elif activity == "5":
+        TDEE = BMR * 1.9
+
+    return round(TDEE)
+
+
 def moving_average(x, w=5):
     """
     Helper function for smoothing an array or list (x) over a window (w). Window is the number of elements over which to smooth
@@ -197,7 +225,7 @@ def moving_average(x, w=5):
     return np.convolve(x, np.ones(w), "valid") / w
 
 
-def weight_change(weights, n, smooth=True):
+def calculate_weight_change(weights, n, smooth=True):
     """
     Calculate change in weight.
 
@@ -218,7 +246,7 @@ def weight_change(weights, n, smooth=True):
         weights = moving_average(weights)
 
     weights = weights[-n:]
-    return round(weights[-1] - weights[0], 1)
+    return weights[-1] - weights[0]
 
 
 def unit_conv(x, unit):
