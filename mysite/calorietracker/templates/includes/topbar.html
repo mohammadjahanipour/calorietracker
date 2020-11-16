@@ -123,7 +123,6 @@
     {% if user.is_authenticated %}
 
     <li class="nav-item">
-      {% comment %} <a href="{% url 'pinax_messages:inbox' %}"><i class="fa fa-envelope"></i> Message Inbox"</a> {% endcomment %}
       <a class="nav-link:hover text-decoration-none" style="line-height: 50px;" href="{% url 'pinax_messages:inbox' %}">
         <i class="fa fa-envelope"></i>
       </a>
