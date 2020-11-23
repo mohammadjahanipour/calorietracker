@@ -6,6 +6,10 @@ from rest_framework import generics
 
 from . serializer import UsernameSerializer
 from django.contrib.auth import get_user_model
+from rest_framework import authentication, permissions
+from actstream.models import target_stream
+
+
 
 
 class Ping(APIView):
@@ -45,3 +49,46 @@ class UsernameList(generics.ListAPIView):
 
         else:
             return get_user_model().objects.all()
+
+
+class ClearNotification(APIView):
+    """Removes the user as the target for a given actstream action"""
+
+
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+
+    def patch(self, request, id, *args, **kwargs):
+
+        notifications = request.user.target_actions.filter(id=id)
+
+        for notification in notifications:
+
+            notification.target = None
+            notification.save()
+
+        return Response({})
+
+
+class ClearAllNotification(APIView):
+    """
+    Removes the user from all actstream actions where he is the target
+    effectivly clearing notifications for the user
+    """
+
+
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+
+    def patch(self, request ,*args, **kwargs):
+
+        notifications = target_stream(request.user)
+
+        for notification in notifications:
+            # This might be slow on large queries but provides safety and should be fine
+            notification.target = None
+            notification.save()
+
+        return Response({})
