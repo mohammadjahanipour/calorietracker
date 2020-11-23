@@ -86,21 +86,6 @@ if not DEBUG:
     )
 
 
-# Specify the context processors as follows:
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                # Already defined Django-related contexts here
-                # `allauth` needs this from django
-                "django.template.context_processors.request",
-            ],
-        },
-    },
-]
 
 ALLOWED_HOSTS = []
 
