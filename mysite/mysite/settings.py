@@ -210,7 +210,6 @@ INSTALLED_APPS = [
     "safedelete",
     "crispy_forms",
     "bootstrap_datepicker_plus",
-    "actstream",
     "chartjs",
     "measurement",
     "pinax.referrals",
@@ -229,6 +228,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'axes',
     "multifactor",
+    "pinax.announcements",
+    "actstream",
+
 ]
 
 # 1 == dev domaine and sitename

@@ -1,0 +1,20 @@
+{% load pinax_announcements_tags %}
+
+{% announcements as announcement_list %}
+
+{% if announcement_list %}
+   <div class="alert alert-warning text-center announcement">
+       {% for announcement in announcement_list %}
+           <div class="announcement">
+               <strong>{{ announcement.title }}</strong><br />
+               {{ announcement.content }}
+           </div>
+           {% if announcement.dismiss_url %}
+             <form class="form ajax" data-replace-closest=".announcement" action="{{ announcement.dismiss_url }}" method="post">
+               {% csrf_token %}
+               <button class="btn btn-dark btn-sm mt-2">Clear Announcement</button>
+             </form>
+           {% endif %}
+       {% endfor %}
+   </div>
+{% endif %}
