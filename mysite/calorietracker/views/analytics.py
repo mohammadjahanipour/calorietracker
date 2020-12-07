@@ -329,7 +329,7 @@ class Analytics(TemplateView):
         weeklycalories_in_total = (
             df.groupby(df.date.dt.strftime("%W")).calories_in.sum().tolist()
         )
-        weeklyweights = df.groupby(df.date.dt.strftime("%W")).weight.mean().tolist()
+        weeklyweights = df.groupby(df.date.dt.strftime("%W")).weight.median().tolist()
         weeklydates = df.groupby(df.date.dt.strftime("%W")).date.agg(["first", "last"])
         weeklydatestarts = weeklydates["first"].tolist()
         weeklydateends = weeklydates["last"].tolist()
