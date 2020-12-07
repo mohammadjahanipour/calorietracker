@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a8f1bc38a1316b9cbe9dda1bf40a0a3c98912c5fcf89cb3d459309db01210e4a"
+            "sha256": "81518afdce2d0d14c88ccf0aeb5d597a5c354f91b9a351e08ab595ef31b846c1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -195,6 +195,12 @@
             ],
             "index": "pypi",
             "version": "==3.0.5"
+        },
+        "django-bootstrap-form": {
+            "hashes": [
+                "sha256:de3f7893e515352834d446c441c0cb861637f92cebbe59d8229469c6cd3dc640"
+            ],
+            "version": "==3.4"
         },
         "django-cache-url": {
             "hashes": [
@@ -544,6 +550,14 @@
             "index": "pypi",
             "version": "==4.0.0"
         },
+        "pinax-messages": {
+            "hashes": [
+                "sha256:339123494dc06b40d9d916575b9475f48474928fda3a2934b55d838bd1221018",
+                "sha256:d2dad96210670dd02893680e98df6029ecae3569d96b83918a647a4dee3ffcef"
+            ],
+            "index": "pypi",
+            "version": "==3.0.0"
+        },
         "pinax-referrals": {
             "hashes": [
                 "sha256:15020831c6210da774cb81481674964763376d0a5d871977e54e5edf2bacbee0",
@@ -551,6 +565,14 @@
             ],
             "index": "pypi",
             "version": "==4.0.1"
+        },
+        "pinax-templates": {
+            "hashes": [
+                "sha256:0bb293e9a080603b923a31b8ddb1a1902789dbce5ce02592703a7096fc41d6e8",
+                "sha256:a8adb17ec4996031502772f6e05d07204181a1231c63b6a650af74891d716d5a"
+            ],
+            "index": "pypi",
+            "version": "==2.0.6"
         },
         "pprintpp": {
             "hashes": [

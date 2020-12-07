@@ -38,8 +38,6 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 
 
-
-
 # AXES_ONLY_ADMIN_SITE = True #Only apply restricitons to admin sites
 
 # WARNING: this has to be true if the real ip address is not passed through usually behind a proxy or this will cause everyone to be blocked
@@ -64,13 +62,15 @@ AXES_FAILURE_LIMIT = 100
 if DEBUG:
 
     CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-            }
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         }
+    }
 else:
 
-    CACHES = {'default': django_cache_url.parse(os.getenv("MEMCACHED_URL"))}  # set by dokku automatically when linking apps
+    CACHES = {
+        "default": django_cache_url.parse(os.getenv("MEMCACHED_URL"))
+    }  # set by dokku automatically when linking apps
 
 
 # # Sentry Monitoring Configuration ========================================================
@@ -126,14 +126,14 @@ LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 
 MULTIFACTOR = {
-    'LOGIN_CALLBACK': False,             # False, or dotted import path to function to process after successful authentication
+    "LOGIN_CALLBACK": False,  # False, or dotted import path to function to process after successful authentication
     # 'RECHECK': True,                     # Invalidate previous authorisations at random intervals
     # 'RECHECK_MIN': 60 * 60 * 3,          # No recheks before 3 hours
     # 'RECHECK_MAX': 60 * 60 * 6,          # But within 6 hours
     #
     # 'FIDO_SERVER_ID': 'example.com',     # Server ID for FIDO request
     # 'FIDO_SERVER_NAME': 'Django App',    # Human-readable name for FIDO request
-    'TOKEN_ISSUER_NAME': 'CalorieTracker.io',   # TOTP token issuing name (to be shown in authenticator)
+    "TOKEN_ISSUER_NAME": "CalorieTracker.io",  # TOTP token issuing name (to be shown in authenticator)
     # 'U2F_APPID': 'https://example.com',  # U2F request issuer
 }
 
@@ -204,17 +204,19 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.discord",
-    'allauth.socialaccount.providers.google',
+    "allauth.socialaccount.providers.google",
     "sslserver",
     "friendship",
     "debug_toolbar",
     "request",
-    'corsheaders',
-    'axes',
+    "corsheaders",
+    "axes",
     "multifactor",
     "pinax.announcements",
     "actstream",
-
+    "bootstrapform",
+    "pinax.templates",
+    "pinax.messages",
 ]
 
 # 1 == dev domaine and sitename
@@ -231,7 +233,7 @@ PINAX_REFERRALS_SECURE_URLS = False if DEBUG else True
 # # Middleware ========================================================
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -241,8 +243,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "pinax.referrals.middleware.SessionJumpingMiddleware",
     "request.middleware.RequestMiddleware",
-    'axes.middleware.AxesMiddleware',
-
+    "axes.middleware.AxesMiddleware",
 ]
 
 
@@ -269,9 +270,12 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-
                 "calorietracker.context_processors.notifications.notifications_count",
                 "calorietracker.context_processors.notifications.notifications",
+                "pinax.messages.context_processors.user_messages",
+                # `allauth` needs this from django
+                "django.template.context_processors.request",
+                "pinax.messages.context_processors.user_messages",
             ],
         },
     },
@@ -321,7 +325,7 @@ MEDIA_URL = "/media/"
 django_heroku.settings(locals())
 
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesBackend',
+    "axes.backends.AxesBackend",
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by e-mail
@@ -363,19 +367,17 @@ SOCIALACCOUNT_PROVIDERS = {
             "key": os.getenv("DISCORD_KEY"),
         }
     },
-    'google': {
+    "google": {
         "APP": {
             "client_id": os.getenv("GOOGLE_CLIENT_ID"),
             "secret": os.getenv("GOOGLE_SECRET"),
-            },
-
-        'SCOPE': [
-            'profile',
-            'email',
+        },
+        "SCOPE": [
+            "profile",
+            "email",
         ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+        "AUTH_PARAMS": {
+            "access_type": "online",
         },
     },
-
 }

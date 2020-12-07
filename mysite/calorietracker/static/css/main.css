@@ -45,3 +45,15 @@
 #div_id_password label{
   display: none;
 }
+
+/* Messages  */
+
+/* make whole row clickable */
+td a {
+  display: block;
+}
+
+.unread {
+  background-color: #c1c1c1;
+
+}

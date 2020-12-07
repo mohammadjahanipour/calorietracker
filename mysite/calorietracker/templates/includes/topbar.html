@@ -172,11 +172,18 @@
     </li>
     {% endcomment %}
 
-    <div class="topbar-divider d-none d-sm-block"></div>
 
     <!-- Nav Item - User Information -->
 
     {% if user.is_authenticated %}
+
+    <li class="nav-item">
+      <a class="nav-link:hover text-decoration-none" style="line-height: 50px;" href="{% url 'pinax_messages:inbox' %}">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+
+    <div class="topbar-divider"></div>
 
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link:hover dropdown-toggle text-decoration-none"
