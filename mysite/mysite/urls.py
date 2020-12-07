@@ -40,6 +40,8 @@ urlpatterns = [
     re_path(
         r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")
     ),
+    re_path(r"^announcements/", include("pinax.announcements.urls", namespace="pinax_announcements")),
+    re_path(r"^messages/", include("pinax.messages.urls", namespace="pinax_messages")),
     # re_path(r"^payments/", include("djstripe.urls", namespace="djstripe")), deprecated
     path("accounts/", include("allauth.urls")),
     path("friendship/", include("friendship.urls")),

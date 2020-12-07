@@ -17,11 +17,10 @@
 
       {% if isFriend %}
         <!-- Send Message Button -->
-        <!-- <form class="ml-auto" action="" method="POST">
+        <form class="ml-auto" action="" method="POST">
           {% csrf_token %}
-          <input type="hidden" id="" name="" value="">
-          <button class="btn btn-sm btn-info my-1 mx-2" type="submit" name="button">Send Message</button>
-        </form> -->
+          <a href="{% url "pinax_messages:message_user_create" user_id=userID %}" class="btn btn-sm btn-info my-1 mx-2" type="button" name="button">Send Message</a>
+        </form>
 
       {% else %}
         <!-- Add Friend Button -->

@@ -38,6 +38,9 @@ psycopg2-binary = "*"
 pylibmc = "*"
 django-multifactor = "*"
 django-decorator-include = "*"
+pinax-announcements = "*"
+pinax-messages = "*"
+pinax-templates = "*"
 
 [requires]
 python_version = "3.7"

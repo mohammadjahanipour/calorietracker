@@ -1,0 +1,91 @@
+{% extends "extends/base.html" %}
+
+{% load static %}
+
+{% load pinax_messages_tags %}
+​​
+{% block content %}
+
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-start mb-4">
+    <h1 class="h3 mb-0 text-gray-800 with-actions">
+      Inbox
+
+    </h1>
+    <a class="btn btn-primary btn-icon-split btn-sm ml-auto"
+      href="{% url "pinax_messages:message_create" %}">
+      <span class="icon text-white-50">
+        <i class="fas fa-envelope"></i>
+      </span>
+      <span class="text">New Message</span>
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-lg-8">
+      <div class="card shadow mb-4">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Messages</h6>
+        </div>
+        <div class="card-body">
+          <div class="{% if  threads %} table-responsive {% endif %}">
+            <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+              <tbody>
+
+                <!-- TODO: Find a better solution to make the row clickale and improve the ui/ux of the table -->
+                <!-- https://stackoverflow.com/questions/17147821/how-to-make-a-whole-row-in-a-table-clickable-as-a-link -->
+
+                {% if  threads %}
+                <tr>
+                    <!-- User -->
+                    <td>
+                      <span class="mb-0 text-muted">Users</span>
+                    </td>
+                    <!-- Message -->
+                    <td>
+                      <a class="link" href="javascript: void(0)">
+                        <span class="text-dark">Subject & Message/s</span>
+                      </a>
+                    </td>
+                    <!-- Time -->
+                    <!-- <td class="text-muted">Sample DATE</td> -->
+
+                </tr>
+                {% endif %}
+
+                {% for thread in threads %}
+
+                <tr class="thread {% if thread|unread:user %}unread{% endif %}">
+                    <td class="participants">
+                      <a href="{{thread.get_absolute_url}}">{{ thread.users.all|join:", " }}</a>
+                    </td>
+
+                    <td class="latest-message">
+                      <a href="{{thread.get_absolute_url}}">
+                        <p class="subject">{{ thread.subject }}</p>
+
+                        <p class="content">{{ thread.latest_message.content }}</p>
+                      </a>
+                    </td>
+                </tr>
+
+                {% empty %}
+
+                <tr  class="disabled">
+                  <div class="no-messages disabled">You have no messages.</div>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

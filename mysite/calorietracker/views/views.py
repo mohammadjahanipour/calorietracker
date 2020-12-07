@@ -44,6 +44,7 @@ from ..models import Feedback, Log, MFPCredentials, Setting
 logger = logging.getLogger("PrimaryLogger")
 
 
+
 class SendFriendRequest(LoginRequiredMixin, FormView):
     """docstring for AcceptFriend."""
 

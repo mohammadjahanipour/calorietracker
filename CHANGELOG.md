@@ -3,30 +3,38 @@
 ---
 
 ## [Unreleased]
-
 - sign in with apple
-- bodyfat % calculator
-- share analytics view directly to social media (fb/twitter/ig)
+- bodyfat % calculator and body measurement tracking
+- share analytics view to social media (fb/twitter/ig)
+
+## 2020-12-07
+### Added
+- Announcement system - users can recieve dismissable announcements
+- Messaging system - users can send and recieve messages to their friends
+- Notification system - users can recieve notifications
+
+### Changed
+- Analytics weekly summary now shows median instead of average weekly weight
+- Analytics TDEE calculation should be more dynamic and robust
+
+### Fixed
+- CSV import now handles decimals for calories in
+- Topbar responsiveness on mobile
 
 ## 2020-11-12
-
 ### Added
-
 - 2 Factor Authentication support!
 - Favicon.ico and apple-touch-icon.png url routing
 - Custom 404 and 500 Error Pages
 - Input streak flame and gold coin to topbar
 
 ### Changed
-
 - Login buttons now comply with Google Oauth branding guidelines for sign in with Google
 
 ### Fixed
-
 - Creating a new log will default unit selection based on user's unit preferences and date to today's date
 
 ## 2020-11-09
-
 ### Added
 
 - Friends page - add friends & view each other's profiles!

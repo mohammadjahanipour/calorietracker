@@ -185,7 +185,7 @@ class ImportCSV(FormView):
                         )
                     try:
                         # Parse the calories in
-                        calories_in_dict[fmtd_date] = row[CaloriesIn_index]
+                        calories_in_dict[fmtd_date] = int(float(row[CaloriesIn_index]))
                     except:
                         validation_error_messages.append(
                             "Could not parse calories_in: "
