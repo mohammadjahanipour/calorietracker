@@ -178,7 +178,7 @@
     {% if user.is_authenticated %}
 
     <li class="nav-item">
-      <a class="nav-link:hover text-decoration-none" style="line-height: 50px;" href="{% url 'pinax_messages:inbox' %}">
+      <a class="nav-link" href="{% url 'pinax_messages:inbox' %}">
         <i class="fa fa-envelope"></i>
       </a>
     </li>
@@ -255,30 +255,31 @@
       </div>
     </li>
     <div class="topbar-divider"></div>
-    <li class="nav-item"
+    
+    <li class="nav-item mx-2"
       data-toggle="tooltip"
-      title="You currently have {{ user.wallet.coins|default:"0" }} coins">
-      <img src="{% static 'img/coin.svg' %}"
+      title="You currently have {{ user.wallet.coins|default:"0" }} coins"
+      style="line-height: 75px">
+      <button class="btn btn-circle btn-sm">
+       <img src="{% static 'img/coin.svg' %} "
         alt="Gold Coin"
-        height="22px"
-        width="22px"
-        style="display: inline-block; vertical-align: middle" />
-      <span style="line-height: 75px"
-        class="mx-1 text-gray-800 font-weight-bold">
+        height="140%"/> 
+        <span class="mx-1 text-gray-800 font-weight-bold">
         {{ user.wallet.coins|default:"0" }}</span>
+      </button>
+      
     </li>
-    <li class="nav-item"
+    <li class="nav-item mx-2"
       data-toggle="tooltip"
-      title="Your current logging streak is {{ user.streak.input_streak|default:"0" }} days!">
-      <img class="ml-1"
-        src="{% static 'img/fire.svg' %}"
+      title="Your current logging streak is {{ user.streak.input_streak|default:"0" }} days!"
+      style="line-height: 75px">
+      <button class="btn btn-circle btn-sm">
+       <img src="{% static 'img/fire.svg' %} "
         alt="Gold Coin"
-        height="22px"
-        width="22px"
-        style="display: inline-block; vertical-align: middle" />
-      <span style="line-height: 75px"
-        class="mx-1 text-gray-800 font-weight-bold">
+        height="140%"/> 
+        <span class="mx-1 text-gray-800 font-weight-bold">
         {{ user.streak.input_streak|default:"0" }}</span>
+      </button>
     </li>
     {% endif %}
   </ul>
