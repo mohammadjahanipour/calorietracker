@@ -40,7 +40,9 @@
         aria-expanded="false">
         <i class="fas fa-search fa-fw"></i>
       </a>
-      {% endcomment %} {% comment %}
+      {% endcomment %}
+
+      {% comment %}
       <!-- Dropdown - Messages -->
       <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
         aria-labelledby="searchDropdown">
@@ -61,7 +63,8 @@
         </form>
       </div>
     </li>
-    {% endcomment %} {% comment %}
+    {% endcomment %}
+
     <!-- Nav Item - Alerts -->
     <li class="nav-item dropdown no-arrow mx-1">
       <a class="nav-link dropdown-toggle"
@@ -72,42 +75,48 @@
         aria-haspopup="true"
         aria-expanded="false">
         <i class="fas fa-bell fa-fw"></i>
-        <!-- Counter - Alerts -->
-        <span class="badge badge-danger badge-counter">3+</span>
+        <!-- Counter - Notifications -->
+        {% if notifications_count %}
+        <span id="notifications_badge_counter" class="badge badge-danger badge-counter">{{notifications_count|default:"0" }}+</span>
+        {% endif %}
       </a>
-      <!-- Dropdown - Alerts -->
+      <!-- Dropdown - Notifications -->
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-        aria-labelledby="alertsDropdown">
-        <h6 class="dropdown-header">Alerts</h6>
-        <a class="dropdown-item d-flex align-items-center"
-          href="#">
-          <div class="mr-3">
-            <div class="icon-circle bg-primary">
-              <i class="fas fa-file-alt text-white"></i>
+        aria-labelledby="alertsDropdown" id="notifications">
+        <h6 class="dropdown-header">Notifications</h6>
+
+        {% for notification in notifications %}
+
+          <a class="dropdown-item d-flex align-items-center notification" id="notification{{ notification.id }}">
+            <div class="mr-auto">
+              <div class="btn btn-circle btn-success">
+                <i class="far fa-bell text-white"></i>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="small text-gray-500">December 12, 2019</div>
-            <span class="font-weight-bold">A new monthly report is ready to download!</span>
-          </div>
-        </a>
-        <a class="dropdown-item d-flex align-items-center"
-          href="#">
-          <div class="mr-3">
-            <div class="icon-circle bg-success">
-              <i class="fas fa-donate text-white"></i>
+            <div>
+              <div class="small text-gray-500 notification-timestamp">{{ notification.timestamp }}</div>
+              {{ notification.verb }}
+              <br>
+
+              <span class="small">{{ notification.description|default:"" }}</span>
             </div>
-          </div>
-          <div>
-            <div class="small text-gray-500">December 7, 2019</div>
-            $290.29 has been deposited into your account!
-          </div>
+            <button onclick="clearNotification({{ notification.id }})" class="btn btn-danger btn-icon btn-circle btn-sm ml-auto" type="button" name="button">
+              <span class="icon text-white-50">
+                <i class="fas fa-minus"></i>
+              </span>
+            </button>
+
+          </a>
+
+        {% endfor %}
+
+        <a onclick="clearAllNotifications()" class="dropdown-item text-center small text-gray-500"
+        >Clear All Notifications
         </a>
-        <a class="dropdown-item text-center small text-gray-500"
-          href="#">Show All Alerts</a>
       </div>
     </li>
-    {% endcomment %} {% comment %}
+
+     {% comment %}
     <!-- Nav Item - Messages -->
     <li class="nav-item dropdown no-arrow mx-1">
       <a class="nav-link dropdown-toggle"
@@ -171,7 +180,7 @@
 
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link:hover dropdown-toggle text-decoration-none"
-        style="line-height: 50px"
+        style="line-height: 75px"
         href="#"
         id="userDropdown"
         role="button"
@@ -247,7 +256,7 @@
         height="22px"
         width="22px"
         style="display: inline-block; vertical-align: middle" />
-      <span style="line-height: 50px"
+      <span style="line-height: 75px"
         class="mx-1 text-gray-800 font-weight-bold">
         {{ user.wallet.coins|default:"0" }}</span>
     </li>
@@ -260,7 +269,7 @@
         height="22px"
         width="22px"
         style="display: inline-block; vertical-align: middle" />
-      <span style="line-height: 50px"
+      <span style="line-height: 75px"
         class="mx-1 text-gray-800 font-weight-bold">
         {{ user.streak.input_streak|default:"0" }}</span>
     </li>

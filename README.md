@@ -201,6 +201,8 @@ more info can be found at the below links
 **django-multifactor**
   - https://pypi.org/project/django-multifactor/
 
+**pinax-announcements**
+ - https://github.com/pinax/pinax-announcements
 
 
 ### Packages to Consider for further functionality or as alternatives

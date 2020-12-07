@@ -40,6 +40,11 @@
   <script src="{% static "vendor/datatables/jquery.dataTables.min.js" %}"></script>
   <script src="{% static "vendor/datatables/dataTables.bootstrap4.min.js" %}"></script>
 
+
+
+  <script src="{% static "js/get_cookie.js" %}"></script>
+  <script src="{% static "js/notifications.js" %}"></script>
+
   <!-- Turbolinks for more dynamic page loads -->
   {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.2.0/turbolinks.js" integrity="sha512-G3jAqT2eM4MMkLMyQR5YBhvN5/Da3IG6kqgYqU9zlIH4+2a+GuMdLb5Kpxy6ItMdCfgaKlo2XFhI0dHtMJjoRw==" crossorigin="anonymous"></script> {% endcomment %}
 
@@ -62,6 +67,8 @@
       <div id="content">
 
         {% include "includes/topbar.html" %}
+        {% include "includes/announcements.html" %}
+
         {% include "includes/flash_messages.html" %}
 
         {% block content %}

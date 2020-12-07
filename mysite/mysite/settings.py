@@ -86,22 +86,6 @@ if not DEBUG:
     )
 
 
-# Specify the context processors as follows:
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                # Already defined Django-related contexts here
-                # `allauth` needs this from django
-                "django.template.context_processors.request",
-            ],
-        },
-    },
-]
-
 ALLOWED_HOSTS = []
 
 # # Email Configuration ========================================================
@@ -210,7 +194,6 @@ INSTALLED_APPS = [
     "safedelete",
     "crispy_forms",
     "bootstrap_datepicker_plus",
-    "actstream",
     "chartjs",
     "measurement",
     "pinax.referrals",
@@ -229,6 +212,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'axes',
     "multifactor",
+    "pinax.announcements",
+    "actstream",
+
 ]
 
 # 1 == dev domaine and sitename
@@ -283,8 +269,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # `allauth` needs this from django
-                "django.template.context_processors.request",
+
+                "calorietracker.context_processors.notifications.notifications_count",
+                "calorietracker.context_processors.notifications.notifications",
             ],
         },
     },
