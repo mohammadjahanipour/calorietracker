@@ -170,7 +170,7 @@ class Analytics(TemplateView):
                 self.handle_weight_units(i, units_weight) for i in all_weights
             ],
             TDEE=context["estimated_tdee"],
-            calories=calories,
+            calories=all_calories,
             units=weights_label,
         )
         context["weeklyjson_data"] = json.dumps(
