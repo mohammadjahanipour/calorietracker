@@ -61,3 +61,18 @@ urlpatterns = [
         ),
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+if settings.DEBUG is True:
+    urlpatterns += [
+        path(
+            "admin/", decorator_include(multifactor_protected(factors=0),
+                                        admin.site.urls)
+        ), ]
+
+else:
+    urlpatterns += [
+        path(
+            "admin/", decorator_include(multifactor_protected(factors=1),
+                                        admin.site.urls)
+        ), ]
