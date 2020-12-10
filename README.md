@@ -4,6 +4,8 @@
 
   [e7b2d569]: https://github.com/hhatto/autopep8 "autopep8"
 
+![CalorieTracker.io](brand_assets/molecule.svg)
+
 An intelligent calorie and weight tracking assistant that learns with you.
 
 
