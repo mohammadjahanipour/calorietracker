@@ -32,16 +32,16 @@ urlpatterns = [
             multifactor_protected(factors=0), include("calorietracker.urls")
         ),
     ),
-    path(
-        "admin/", decorator_include(multifactor_protected(factors=1), admin.site.urls)
-    ),
     path("multifactor/", include("multifactor.urls")),
     path("api/", include("api.urls")),
     re_path(
-        r"^referrals/", include("pinax.referrals.urls", namespace="pinax_referrals")
+        r"^referrals/", include("pinax.referrals.urls",
+                                namespace="pinax_referrals")
     ),
-    re_path(r"^announcements/", include("pinax.announcements.urls", namespace="pinax_announcements")),
-    re_path(r"^messages/", include("pinax.messages.urls", namespace="pinax_messages")),
+    re_path(r"^announcements/", include("pinax.announcements.urls",
+                                        namespace="pinax_announcements")),
+    re_path(r"^messages/", include("pinax.messages.urls",
+                                   namespace="pinax_messages")),
     # re_path(r"^payments/", include("djstripe.urls", namespace="djstripe")), deprecated
     path("accounts/", include("allauth.urls")),
     path("friendship/", include("friendship.urls")),
@@ -50,7 +50,8 @@ urlpatterns = [
     # This needs to be outside of any multifactor protected views and therefore cant be in the calorietracker app urls
     path(
         "favicon.ico/",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon/favicon.ico")),
+        RedirectView.as_view(
+            url=staticfiles_storage.url("favicon/favicon.ico")),
     ),
     # Apple-touch-icon redirect for ios safari and add to homescreen
     # This needs to be outside of any multifactor protected views and therefore cant be in the calorietracker app urls
