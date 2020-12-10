@@ -1,5 +1,11 @@
 # Calorietracker
+
+[![Code Style](https://img.shields.io/badge/code%20style-autopep8-blue)][e7b2d569]
+
+  [e7b2d569]: https://github.com/hhatto/autopep8 "autopep8"
+
 An intelligent calorie and weight tracking assistant that learns with you.
+
 
 
 ### Installation & Requirements
