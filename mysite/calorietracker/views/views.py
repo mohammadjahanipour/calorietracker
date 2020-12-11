@@ -1,3 +1,4 @@
+from actstream import action
 import json
 import logging
 from datetime import datetime, timezone
@@ -44,7 +45,6 @@ from ..models import Feedback, Log, MFPCredentials, Setting
 logger = logging.getLogger("PrimaryLogger")
 
 
-
 class SendFriendRequest(LoginRequiredMixin, FormView):
     """docstring for AcceptFriend."""
 
@@ -68,6 +68,10 @@ class SendFriendRequest(LoginRequiredMixin, FormView):
             to_user,  # The recipient
             message="Hi! I would like to add you",
         )  # This message is optional
+
+        # Creating a notification for the recipient
+        action.send(self.request.user,
+                    verb=f"Friend Request from {to_user.username}", target=to_user)
 
         messages.success(self.request, "Friend Request Sent")
 
