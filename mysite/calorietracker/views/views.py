@@ -177,6 +177,10 @@ class Contacts(LoginRequiredMixin, TemplateView):
         context["unrejected_friend_requests"] = Friend.objects.unrejected_requests(
             user=self.request.user
         )
+        context["pending_friends_count"] = len(
+            context["unrejected_friend_requests"]
+        )
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -300,7 +304,8 @@ class LogData(LoginRequiredMixin, CreateView):
         form = super().get_form()
 
         # We can initialize fields here as needed
-        user_weight_units = Setting.objects.get(user=self.request.user).unit_preference
+        user_weight_units = Setting.objects.get(
+            user=self.request.user).unit_preference
         if user_weight_units == "M":
             # Show metric units first
             form["weight"].field.widget.widgets[1].choices = [
@@ -418,7 +423,8 @@ class ViewLogs(TemplateView):
         if not self.request.user.is_authenticated:
             return redirect(reverse_lazy("login"))
         if not Log.objects.filter(user=self.request.user).exists():
-            messages.info(request, "You need to have made at least one log entry")
+            messages.info(
+                request, "You need to have made at least one log entry")
             return redirect(reverse_lazy("logdata"))
 
         return super().dispatch(request)
