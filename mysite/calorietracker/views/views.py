@@ -71,7 +71,7 @@ class SendFriendRequest(LoginRequiredMixin, FormView):
 
         # Creating a notification for the recipient
         action.send(self.request.user,
-                    verb=f"Friend Request from {to_user.username}", target=to_user)
+                    verb=f"Friend Request from {self.request.user.username}", target=to_user)
 
         messages.success(self.request, "Friend Request Sent")
 
