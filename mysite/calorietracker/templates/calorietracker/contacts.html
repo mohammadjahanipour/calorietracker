@@ -36,7 +36,10 @@
               {% endcomment %}
 
               <li class="nav-item">
-                  <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending</a>
+                  <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending
+                    <span id="" class="badge badge-primary badge-counter">{{pending_friends_count|default:"0" }}</span>
+
+                  </a>
               </li>
 
               <li class="nav-item">
@@ -91,7 +94,7 @@
                 {% for friend in all_friends %}
                   <li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend%}';" >
                     <text style='text-decoration: none; font-size: 1.15rem;'>{{friend}}</text>
-                  
+
                     <!-- Remove Friend -->
                     <form class="float-right" action="{% url 'removefriend' %}" method="POST">
                       {% csrf_token %}
@@ -112,7 +115,7 @@
               <ul>
                 {% for friend_request in unrejected_friend_requests %}
                   <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend_request.from_user%}';">
-                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.from_user }}</text>               
+                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.from_user }}</text>
 
                     <!-- Accept Friend -->
                     <form class="float-right" action="{% url 'acceptfriend' %}" method="POST">
@@ -178,12 +181,12 @@ function updateLiveSearch(searchQuery) {
 
     searchResults.then(function(result) {
       if (result.length) { // if there are results...
-      
+
         document.getElementById('ErrorText').innerHTML = ''; // remove any previous error text
         document.getElementById('search-results').innerHTML = ''; // reset search-results.innerHTML
 
         for (index = 0; index < result.length; index++) { // iteratively add result.username and form button to add user as friend
-            if (result[index].username === '{{ user.get_username }}' ) { // don't display self 
+            if (result[index].username === '{{ user.get_username }}' ) { // don't display self
               continue;
             }
             if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
