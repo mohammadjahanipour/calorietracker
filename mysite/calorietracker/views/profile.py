@@ -124,6 +124,21 @@ class Profile(LoginRequiredMixin, TemplateView):
             }
         )
 
+        # Check if pending friend request
+        if FriendshipRequest.objects.filter(
+            from_user=self.request.user, to_user=user
+        ).exists():
+            # print("friendship request exists")
+            isRequestedFriend = True
+        else:
+            isRequestedFriend = False
+
+        context.update(
+            {
+                "isRequestedFriend": isRequestedFriend,
+            }
+        )
+
         # Debug print context keys and vals
         # print("\n".join("{!r}: {!r},".format(k, v) for k, v in context.items()))
 
