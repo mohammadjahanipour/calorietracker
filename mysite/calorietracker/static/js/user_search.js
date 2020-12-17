@@ -45,9 +45,11 @@ function updateLiveSearch(searchQuery) {
           if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
             continue
           }
+          if (pending_outgoing_requests_usernames.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in pending_outgoing_requests
+            continue
+          }
 
-          // todo fix url building here so its more readable.
-
+          // todo improve html building here so its more readable.
           let prof_url = "'/profile/" + result[index].username + "'"
           let form = '<form class="float-right"' + friend_request_action + '" method="POST">' + csrf + '<input type="hidden" id="id_to_user" name="to_user" value="' + result[index].id + '">' + button + '</form>'
           document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href=' + prof_url + ';"><text style="text-decoration: none; font-size: 1.15rem;"">' + result[index].username + '</text>' + form + '</li>');

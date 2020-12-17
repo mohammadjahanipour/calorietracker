@@ -163,19 +163,33 @@
 // store current friends list for filtering search results
 var all_friends = [] 
 {% for friend in all_friends %}
-  all_friends += '{{ friend }}'
+  all_friends.push('{{ friend }}')
 {% endfor %}
+
+// todo improve html elements building so its more readable and not purely string based.
+
 // button next to each search result 
 let button = '<button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button>'
+
 // form action for each search result
 let friend_request_action = 'action="{% url 'sendfriendrequest' %}'
+
 // form csrf 
 let csrf = '{% csrf_token %}'
+
 // current user username for filtering search results
 let username = '{{ user.get_username }}'
 
 // pending friendship requests for the user for filtering search results
-// todo
+let pending_outgoing_requests_usernames = []
+{% for friend_request in pending_outgoing_requests %}
+  pending_outgoing_requests_usernames.push('{{ friend_request.to_user }}')
+{% endfor %}
+
+// console.log(all_friends)
+// console.log(pending_outgoing_requests_usernames)
+
+
 
 </script>
 
