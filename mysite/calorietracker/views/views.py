@@ -292,6 +292,19 @@ class LogData(LoginRequiredMixin, CreateView):
     login_url = "/login/"
     redirect_field_name = "redirect_to"
 
+    def get_success_url(self):
+
+        success_url = reverse_lazy("analytics")
+
+        if self.request.POST["submit"] == "save_and_add_another":
+            success_url = reverse_lazy("logdata")
+
+        # Adding success Flash messages especially usefull if the user adds multiple logs in a row
+        # Flash message will give him visual feedback that it worked and not just vanish in thin air
+        messages.success(self.request, "Log Added")
+
+        return success_url
+
     def get_form(self):
         form = super().get_form()
 
