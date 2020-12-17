@@ -46,7 +46,7 @@ logger = logging.getLogger("PrimaryLogger")
 
 
 class SendFriendRequest(LoginRequiredMixin, FormView):
-    """docstring for AcceptFriend."""
+    """docstring for SendFriendRequest."""
 
     form_class = FriendShipRequestForm
     success_url = "/contacts/"
@@ -77,6 +77,38 @@ class SendFriendRequest(LoginRequiredMixin, FormView):
         )
 
         messages.success(self.request, "Friend Request Sent")
+
+        return super().form_valid(form)
+
+
+class CancelFriendRequest(LoginRequiredMixin, FormView):
+    """docstring for CancelFriendRequest."""
+
+    form_class = FriendShipRequestForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        to_user = form.cleaned_data.get("to_user")
+        print("to_user", (to_user))
+
+        friend_request = FriendshipRequest.objects.get(
+            from_user=self.request.user, to_user=to_user
+        )
+        friend_request.cancel()
+
+        # Todo check if the action signal is succesfully being deleted
+        # this is a known issue with a simple fix: https://github.com/revsys/django-friendship/issues/123
+
+        messages.success(self.request, "Friend Request Canceled")
 
         return super().form_valid(form)
 

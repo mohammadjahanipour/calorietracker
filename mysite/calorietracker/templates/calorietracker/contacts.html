@@ -133,6 +133,20 @@
                   </li>
 
                 {% endfor %}
+
+                {% for friend_request in pending_outgoing_requests %}
+                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend_request.to_user%}';">
+                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.to_user }}</text>
+
+                    <!-- Cancel Friend Request -->
+                    <form class="float-right" action="{% url 'cancelfriendrequest' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_to_user" name="to_user" value="{{ friend_request.to_user.id }}">
+                      <button class="btn btn-sm btn-info" type="submit" name="button">Cancel Request</button>
+                    </form>
+                  </li>
+
+                {% endfor %}
               </ul>
             </div>
 

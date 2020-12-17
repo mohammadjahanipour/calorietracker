@@ -55,6 +55,11 @@ urlpatterns = [
         views.SendFriendRequest.as_view(),
         name="sendfriendrequest",
     ),
+    path(
+        "cancel-friend-request/",
+        views.CancelFriendRequest.as_view(),
+        name="cancelfriendrequest",
+    ),
     path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
 ]
 
