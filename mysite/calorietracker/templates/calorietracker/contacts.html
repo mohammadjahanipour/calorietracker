@@ -156,76 +156,30 @@
 
 </div>
 
-<script>
 
-var all_friends = [] // store current friends list for filtering search later
+<script>
+// Global variables for user_search are defined here as they require django tags
+
+// store current friends list for filtering search results
+var all_friends = [] 
 {% for friend in all_friends %}
   all_friends += '{{ friend }}'
 {% endfor %}
+// button next to each search result 
+let button = '<button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button>'
+// form action for each search result
+let friend_request_action = 'action="{% url 'sendfriendrequest' %}'
+// form csrf 
+let csrf = '{% csrf_token %}'
+// current user username for filtering search results
+let username = '{{ user.get_username }}'
 
-// Live Search Users for Adding Friends
-
-// async fetch json
-async function fetchUsers(searchQuery) {
-  let apiURL = window.location.origin + '/api/usernames/' + searchQuery;
-  // console.log(apiURL)
-  const response = await fetch(apiURL);
-  return response.json()
-}
-
-// Update the list of users displayed
-function updateLiveSearch(searchQuery) {
-  if (searchQuery) {
-    // Make Request to DRF api search endpoint asynchronously
-    let searchResults = fetchUsers(searchQuery);
-
-    searchResults.then(function(result) {
-      if (result.length) { // if there are results...
-
-        document.getElementById('ErrorText').innerHTML = ''; // remove any previous error text
-        document.getElementById('search-results').innerHTML = ''; // reset search-results.innerHTML
-
-        for (index = 0; index < result.length; index++) { // iteratively add result.username and form button to add user as friend
-            if (result[index].username === '{{ user.get_username }}' ) { // don't display self
-              continue;
-            }
-            if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
-              continue
-            }
-
-            // todo fix url building here so its more readable.
-            let prof_url = "'/profile/" + result[index].username + "'"
-            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href='+prof_url+';"><text style="text-decoration: none; font-size: 1.15rem;"">'+result[index].username+'</text> <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
-        }
-
-      } else { // if there are no results...
-        document.getElementById('ErrorText').innerHTML = ('No users found matching: ' + searchQuery);
-      }
-    })
-  } else {
-    document.getElementById('ErrorText').innerHTML = ('Search for a username above')
-  }
-}
-
-// Input change small search bar or Small button click triggers this
-function updateLiveSearchSm() {
-  displaySearchNavTab()
-  var searchQuery = document.getElementById("searchbarSm").value
-  updateLiveSearch(searchQuery)
-}
-
-// Input change large search bar or Large button click triggers this
-function updateLiveSearchLg() {
-  displaySearchNavTab()
-  var searchQuery = document.getElementById("searchbarLg").value
-  updateLiveSearch(searchQuery)
-}
-
-// Display search nav tab
-function displaySearchNavTab() {
-  $('.nav-tabs a[href="#searchusers"]').tab('show')
-}
+// pending friendship requests for the user for filtering search results
+// todo
 
 </script>
+
+<script src="{% static "js/user_search.js" %}">// Live Search Users for Adding Friends</script>
+
 
 {% endblock %}
