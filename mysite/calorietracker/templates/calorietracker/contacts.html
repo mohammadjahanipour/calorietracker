@@ -106,13 +106,16 @@
                         <button class="btn btn-danger btn-sm mx-1" type="submit" onclick="return confirm('Are you sure you would like to remove user as a coach?');" name="button">Remove Coach</button>
                       </form>
                     {% else %}
-
-                      <!-- Add Coach -->
-                      <form class="float-right" action="{% url 'addcoach' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" id="id_to_user" name="to_user" value="{{ friend.id }}">
-                        <button class="btn btn-warning btn-sm mx-1" type="submit" onclick="return confirm('Are you sure you would like to add user as a coach? Coaches are able to see all your logs and analytics.');" name="button">Add Coach</button>
-                      </form>
+                      {% if friend in clients %}
+                        <span class="badge badge-pill badge-info">client</span>
+                      {% else %}
+                        <!-- Add Coach -->
+                        <form class="float-right" action="{% url 'addcoach' %}" method="POST">
+                          {% csrf_token %}
+                          <input type="hidden" id="id_to_user" name="to_user" value="{{ friend.id }}">
+                          <button class="btn btn-warning btn-sm mx-1" type="submit" onclick="return confirm('Are you sure you would like to add user as a coach? Coaches are able to see all your logs and analytics.');" name="button">Add Coach</button>
+                        </form>
+                      {% endif %}
                     {% endif %}
 
                     <!-- Remove Friend -->
@@ -186,8 +189,6 @@
       </div>
     </div>
   </div>
-
-
 </div>
 
 
@@ -222,12 +223,7 @@ let pending_outgoing_requests_usernames = []
 
 // console.log(all_friends)
 // console.log(pending_outgoing_requests_usernames)
-
-
-
 </script>
-
 <script src="{% static "js/user_search.js" %}">// Live Search Users for Adding Friends</script>
-
 
 {% endblock %}

@@ -206,7 +206,11 @@ class Contacts(LoginRequiredMixin, TemplateView):
             coachclient.coach
             for coachclient in CoachClient.objects.filter(client=self.request.user)
         ]
-        # print("coaches", context["coaches"])
+
+        context["clients"] = [
+            coachclient.client
+            for coachclient in CoachClient.objects.filter(coach=self.request.user)
+        ]
 
         return context
 
