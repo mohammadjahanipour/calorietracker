@@ -1,10 +1,12 @@
+import json
+
+from actstream import action
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 from django.views.generic import FormView, TemplateView
 from friendship.models import Block, Follow, Friend, FriendshipRequest
-from ..models import CoachClient
-from django.db.models import Q
-from django.contrib import messages
-from actstream import action
 
 from ..forms import (
     FriendForm,
@@ -15,6 +17,8 @@ from ..forms import (
     RegisterForm,
     SettingForm,
 )
+from ..models import CoachClient
+from .profile import Profile
 
 
 class SendFriendRequest(LoginRequiredMixin, FormView):
@@ -169,12 +173,9 @@ class AcceptFriend(LoginRequiredMixin, FormView):
 
 
 class Contacts(LoginRequiredMixin, TemplateView):
-    """"""
+    """docstring for Contacts."""
 
-    # The forms for this view/template are built manually in the template
-
-    # TODO: find out if friendships go both ways seems not to
-    # OPTIMIZE: refreshing the page causes the state to be lost in the tabs
+    # todo OPTIMIZE: refreshing the page causes the state to be lost in the tabs
 
     template_name = "calorietracker/contacts.html"
 
@@ -199,6 +200,62 @@ class Contacts(LoginRequiredMixin, TemplateView):
             for coachclient in CoachClient.objects.filter(client=self.request.user)
         ]
         print("coaches", context["coaches"])
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+
+class Clients(LoginRequiredMixin, TemplateView):
+    """docstring for Clients."""
+
+    # todo OPTIMIZE: refreshing the page causes the state to be lost in the tabs
+
+    template_name = "calorietracker/clients.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Unit Preference
+        unit_preference = self.request.user.setting.unit_preference
+        if unit_preference == "M":
+            weights_label = "kgs"
+        else:
+            weights_label = "lbs"
+
+        coach_clients_qs = CoachClient.objects.filter(coach=self.request.user)
+
+        # for each client we create an object containing Name, Current Weight, Goal Weight, Goal Date, Logging Rate
+        # and append it to clients list to later be serialized
+        clients = []
+        for i in coach_clients_qs:
+            client_data = {}
+            client_data["Name"] = i.client.username
+            logs = i.client.log_set.all().order_by("date")
+            current_weight = Profile.get_current_weight(logs)
+            client_data["Current Weight"] = round(
+                (current_weight.kg if unit_preference == "M" else current_weight.lb), 1
+            )
+            client_data["Goal Date"] = i.client.setting.goal_date.strftime("%b. %-d")
+            goal_weight = i.client.setting.goal_weight
+            client_data["Goal Weight"] = round(
+                (goal_weight.kg if unit_preference == "M" else goal_weight.lb), 1
+            )
+            client_data["Log Rate"] = Profile.get_log_rate(logs)
+            client_data["uuid"] = i.client.analyticssharetoken.uuid
+
+            clients.append(client_data)
+
+        # serialize clients as data for datatable
+        context["clients_data"] = json.dumps(
+            {"data": clients}, sort_keys=True, indent=1, cls=DjangoJSONEncoder
+        )
+
+        context["weights_label"] = weights_label
 
         return context
 
@@ -248,7 +305,7 @@ class AddCoach(LoginRequiredMixin, FormView):
 
 
 class AddClient(LoginRequiredMixin, FormView):
-    """docstring for AddCoach."""
+    """docstring for AddClient."""
 
     # Adds a coach-client object
 

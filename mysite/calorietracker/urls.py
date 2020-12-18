@@ -1,9 +1,9 @@
 import debug_toolbar
+from allauth.account.views import LoginView as AllAuthLoginView
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import include, path
 from django.views.generic import RedirectView
-from allauth.account.views import LoginView as AllAuthLoginView
 
 from . import views
 
@@ -43,10 +43,9 @@ urlpatterns = [
         views.ImportMFPCredentialsUpdate.as_view(),
         name="import-credentials-mfp-update",
     ),
-    path("referral-program/", views.Referral.as_view(), name="referral-program"),
-    path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
-    path("subscription/", views.Subscription.as_view(), name="subscription"),
+    # CONTACTS / FRIENDSHIP / COACH-CLIENT
     path("contacts/", views.Contacts.as_view(), name="contacts"),
+    path("clients/", views.Clients.as_view(), name="clients"),
     path("accept-friend/", views.AcceptFriend.as_view(), name="acceptfriend"),
     path("reject-friend/", views.RejectFriend.as_view(), name="rejectfriend"),
     path("remove-friend/", views.RemoveFriend.as_view(), name="removefriend"),
@@ -75,6 +74,10 @@ urlpatterns = [
         views.RemoveCoachClient.as_view(),
         name="removecoachclient",
     ),
+    # MISC
+    path("referral-program/", views.Referral.as_view(), name="referral-program"),
+    path("privacy-policy/", views.PrivacyPolicy.as_view(), name="privacy-policy"),
+    path("subscription/", views.Subscription.as_view(), name="subscription"),
     path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
 ]
 
