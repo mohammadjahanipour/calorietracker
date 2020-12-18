@@ -167,6 +167,13 @@ class AcceptFriend(LoginRequiredMixin, FormView):
         )
         friend_request.accept()
 
+        # Creating a notification for the request from_user
+        action.send(
+            self.request.user,
+            verb=f"You are now friends with {self.request.user.username}! You can view all your friends in the client tab.",
+            target=from_user,
+        )
+
         messages.success(self.request, "Friend Request Accepted")
 
         return super().form_valid(form)
@@ -199,7 +206,7 @@ class Contacts(LoginRequiredMixin, TemplateView):
             coachclient.coach
             for coachclient in CoachClient.objects.filter(client=self.request.user)
         ]
-        print("coaches", context["coaches"])
+        # print("coaches", context["coaches"])
 
         return context
 
@@ -300,6 +307,13 @@ class AddCoach(LoginRequiredMixin, FormView):
 
         else:
             CoachClient.objects.create(coach=to_user, client=self.request.user)
+
+            # Creating a notification for the Coach
+            action.send(
+                self.request.user,
+                verb=f"{self.request.user.username} has added you as a coach! You can view all your clients in the client tab.",
+                target=to_user,
+            )
             messages.info(self.request, "Added Coach")
             return super().form_valid(form)
 
@@ -335,6 +349,13 @@ class AddClient(LoginRequiredMixin, FormView):
 
         else:
             CoachClient.objects.create(coach=self.request.user, client=to_user)
+
+            # Creating a notification for the Client
+            action.send(
+                self.request.user,
+                verb=f"Coach {self.request.user.username} has added you as a client!",
+                target=to_user,
+            )
             messages.info(self.request, "Added Client")
             return super().form_valid(form)
 
@@ -371,6 +392,7 @@ class RemoveCoachClient(LoginRequiredMixin, FormView):
 
         if coachclient:
             coachclient.delete()
+
             messages.info(self.request, "Coach | Client Role Removed")
             return super().form_valid(form)
 
