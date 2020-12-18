@@ -272,6 +272,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "calorietracker.context_processors.notifications.notifications_count",
                 "calorietracker.context_processors.notifications.notifications",
+                "calorietracker.context_processors.coachclients.isCoach",
                 "pinax.messages.context_processors.user_messages",
                 # `allauth` needs this from django
                 "django.template.context_processors.request",
