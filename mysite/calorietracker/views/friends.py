@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView, TemplateView
 from friendship.models import Block, Follow, Friend, FriendshipRequest
+from ..models import CoachClient
+from django.db.models import Q
 from django.contrib import messages
 from actstream import action
 
@@ -191,6 +193,13 @@ class Contacts(LoginRequiredMixin, TemplateView):
             context["unrejected_friend_requests"]
         ) + len(context["pending_outgoing_requests"])
 
+        # Coach Role Relations to user
+        context["coaches"] = [
+            coachclient.coach
+            for coachclient in CoachClient.objects.filter(client=self.request.user)
+        ]
+        print("coaches", context["coaches"])
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -198,3 +207,116 @@ class Contacts(LoginRequiredMixin, TemplateView):
         method only servers to run code for testing
         """
         return super().get(request, *args, **kwargs)
+
+
+class AddCoach(LoginRequiredMixin, FormView):
+    """docstring for AddCoach."""
+
+    # Adds a coach-client object
+
+    form_class = FriendShipRequestForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        to_user = form.cleaned_data.get("to_user")
+
+        alreadyexists = (
+            (CoachClient.objects.filter(coach=to_user, client=self.request.user))
+            .distinct()
+            .all()
+        )
+
+        # todo add any other validation we want to have for adding users as coaches
+
+        if alreadyexists:
+            messages.info(self.request, "Coach | Client relationship already exists")
+            return super().form_invalid(form)
+
+        else:
+            CoachClient.objects.create(coach=to_user, client=self.request.user)
+            messages.info(self.request, "Added Coach")
+            return super().form_valid(form)
+
+
+class AddClient(LoginRequiredMixin, FormView):
+    """docstring for AddCoach."""
+
+    # Adds a coach-client object
+
+    form_class = FriendShipRequestForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        to_user = form.cleaned_data.get("to_user")
+
+        alreadyexists = (
+            (CoachClient.objects.filter(coach=self.request.user, client=to_user))
+            .distinct()
+            .all()
+        )
+        if alreadyexists:
+            messages.info(self.request, "Coach | Client relationship already exists")
+            return super().form_invalid(form)
+
+        else:
+            CoachClient.objects.create(coach=self.request.user, client=to_user)
+            messages.info(self.request, "Added Client")
+            return super().form_valid(form)
+
+
+class RemoveCoachClient(LoginRequiredMixin, FormView):
+    """docstring for RemoveCoachClient."""
+
+    # Removes an existing coach-client object
+
+    form_class = FriendShipRequestForm
+    success_url = "/contacts/"
+
+    def get(self, request, *args, **kwargs):
+        """
+        method only servers to run code for testing
+        """
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+
+        to_user = form.cleaned_data.get("to_user")
+
+        # Lookup coach-client object in bidirectional way
+        coachclient = (
+            CoachClient.objects.filter(
+                Q(coach=to_user, client=self.request.user)
+                | Q(coach=self.request.user, client=to_user)
+            )
+            .distinct()
+            .all()
+        )
+
+        if coachclient:
+            coachclient.delete()
+            messages.info(self.request, "Coach | Client Role Removed")
+            return super().form_valid(form)
+
+        else:
+            messages.info(self.request, "Could not find Coach | Client Relationship")
+            return super().form_invalid(form)

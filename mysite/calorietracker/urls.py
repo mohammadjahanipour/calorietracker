@@ -60,6 +60,21 @@ urlpatterns = [
         views.CancelFriendRequest.as_view(),
         name="cancelfriendrequest",
     ),
+    path(
+        "add-coach/",
+        views.AddCoach.as_view(),
+        name="addcoach",
+    ),
+    path(
+        "add-client/",
+        views.AddClient.as_view(),
+        name="addclient",
+    ),
+    path(
+        "remove-coach-client/",
+        views.RemoveCoachClient.as_view(),
+        name="removecoachclient",
+    ),
     path("terms-and-conditions/", views.Terms.as_view(), name="terms-and-conditions"),
 ]
 
