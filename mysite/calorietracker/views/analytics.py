@@ -213,15 +213,27 @@ class Analytics(TemplateView):
     def get_data_goals_targets(self):
         """
         Computes:
-           current_weight, goal_weight, goal_date, weight_to_go, goal_weight_change_per_week,
+           current_weight, goal_weight, goal_date, weight_to_go, goal_weight_change_per_week, percent_to_goal
         Returns:
             dict
         """
+        current_weight = self.get_current_weight(self.logs)
+        initial_weight = self.logs[0].weight
+
         goals_and_targets = {
-            "current_weight": self.get_current_weight(self.logs),
+            "current_weight": current_weight,
             "goal_weight": self.settings.goal_weight,
-            "weight_to_go": self.settings.goal_weight
-            - self.get_current_weight(self.logs),
+            "weight_to_go": self.settings.goal_weight - current_weight,
+            "percent_to_goal": round(
+                100
+                * (
+                    1
+                    - (
+                        (self.settings.goal_weight - current_weight)
+                        / (self.settings.goal_weight - initial_weight)
+                    )
+                )
+            ),
             "goal_date": self.settings.goal_date.strftime("%b. %-d"),
             "time_left": self.settings.time_to_goal,
             "goal_weight_change_per_week": (
