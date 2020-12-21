@@ -19,7 +19,7 @@ class FriendShipRequestForm(forms.Form):
 
 
 class FriendForm(forms.Form):
-    """docstring for AcceptFriendForm."""
+    """docstring for FriendForm."""
 
     from_user = forms.ModelChoiceField(get_user_model().objects.all())
 

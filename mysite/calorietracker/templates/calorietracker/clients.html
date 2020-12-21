@@ -1,0 +1,86 @@
+{% extends "extends/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Clients</h1>
+
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <!-- Logs -->
+    <div class="col-xl-12 col-lg-7">
+      <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Clients (Click Row to View Analytics)</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover"id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Current Weight ({{weights_label}})</th>
+                  <th>Goal Weight ({{weights_label}})</th>
+                  <th>Goal Date</th>
+                  <th>Logging Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /.container-fluid -->
+
+<!-- Page level global data -->
+<script>
+var logjson = {{clients_data | safe}}
+var units_weight = " ({{weights_label}})"
+</script>
+
+
+<!-- Page level clients datatable -->
+<script>
+$(document).ready(function() {
+  $('#dataTable').DataTable( {
+    "data": logjson.data,
+    "columns": [
+    { "data": "Name" },
+    { "data": "Current Weight" },
+    { "data": "Goal Weight" },
+    { "data": "Goal Date" },
+    { "data": "Log Rate" },
+    ],
+  });
+})
+
+$('#dataTable').on('click', 'tbody > tr > td', function (e) {
+    // 'this' refers to the current <td>
+    e.preventDefault();
+    var table = $('#dataTable').DataTable();
+    var data = table.row($(this).closest('tr')).data();
+
+    url = "/analytics/" + String(data.uuid) // use user's share token to access full view of analytics.
+
+    location.href=url // redirect
+  });
+</script>
+
+
+
+{% endblock %}

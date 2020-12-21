@@ -3,9 +3,25 @@
 ---
 
 ## [Unreleased]
-- sign in with apple
 - bodyfat % calculator and body measurement tracking
-- share analytics view to social media (fb/twitter/ig)
+- share analytics directly to social media (fb/twitter/ig)
+- exercise tracking with fitness progression analytics
+- food diary with nutrition tracking using OpenFoodFacts
+
+## 2020-12-21
+### Added
+- Roles: coaches and clients! 
+- Users can now assign friends to the "Coach" role from the friends tab
+- Coaches are able to view all of their clients analytics data from the clients tab
+- Friend list badges to display role
+- Log and add another log button
+
+### Changed
+- Pending friend requests can be canceled
+
+### Fixed
+- Percent to goal on analytics page
+- friend request already exists handling
 
 ## 2020-12-07
 ### Added

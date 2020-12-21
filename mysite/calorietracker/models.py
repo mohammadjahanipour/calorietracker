@@ -14,6 +14,16 @@ from cloudinary.models import CloudinaryField
 import uuid
 
 
+class CoachClient(DateTimeFields):
+    """docstring for Feedback."""
+
+    coach = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="coach")
+
+    client = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="client")
+
+
 class AnalyticsShareToken(DateTimeFields, SafeDeleteModel):
     """docstring for Feedback."""
 
