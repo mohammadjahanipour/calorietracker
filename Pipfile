@@ -42,6 +42,7 @@ django-decorator-include = "*"
 pinax-announcements = "*"
 pinax-messages = "*"
 pinax-templates = "*"
+django-cockroachdb = "*"
 
 [requires]
 python_version = "3.7"
