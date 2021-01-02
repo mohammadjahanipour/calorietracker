@@ -393,7 +393,6 @@ $(document).ready(function() {
     ],
     "order": [[ 0, "desc" ]],
   rowCallback: function(row, data, index) {
-      console.log(goal)
       $("td", row).css('font-weight','bold');
       if (goal == "L") {
         if (data.weeklycalories_in_mean <= daily_caloric_intake_target) {

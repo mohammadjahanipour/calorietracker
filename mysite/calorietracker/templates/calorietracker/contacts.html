@@ -36,7 +36,10 @@
               {% endcomment %}
 
               <li class="nav-item">
-                  <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending</a>
+                  <a class="nav-link" id="pending-friends-tab" data-toggle="tab" href="#pendingfriends" role="tab" aria-controls="pendingfriends" aria-selected="false">Pending
+                    <span id="" class="badge badge-primary badge-counter">{{pending_friends_count|default:"0" }}</span>
+
+                  </a>
               </li>
 
               <li class="nav-item">
@@ -91,12 +94,35 @@
                 {% for friend in all_friends %}
                   <li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend%}';" >
                     <text style='text-decoration: none; font-size: 1.15rem;'>{{friend}}</text>
-                  
+                    <span class="badge badge-pill badge-success">friend</span>
+
+                    {% if friend in coaches %}
+                      <span class="badge badge-pill badge-warning">coach</span>
+
+                      <!-- Remove Coach -->
+                      <form class="float-right" action="{% url 'removecoachclient' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" id="id_to_user" name="to_user" value="{{ friend.id }}">
+                        <button class="btn btn-danger btn-sm mx-1" type="submit" onclick="return confirm('Are you sure you would like to remove user as a coach?');" name="button">Remove Coach</button>
+                      </form>
+                    {% else %}
+                      {% if friend in clients %}
+                        <span class="badge badge-pill badge-info">client</span>
+                      {% else %}
+                        <!-- Add Coach -->
+                        <form class="float-right" action="{% url 'addcoach' %}" method="POST">
+                          {% csrf_token %}
+                          <input type="hidden" id="id_to_user" name="to_user" value="{{ friend.id }}">
+                          <button class="btn btn-warning btn-sm mx-1" type="submit" onclick="return confirm('Are you sure you would like to add user as a coach? Coaches are able to see all your logs and analytics.');" name="button">Add Coach</button>
+                        </form>
+                      {% endif %}
+                    {% endif %}
+
                     <!-- Remove Friend -->
                     <form class="float-right" action="{% url 'removefriend' %}" method="POST">
                       {% csrf_token %}
                       <input type="hidden" id="id_from_user" name="from_user" value="{{ friend.id }}">
-                      <button class="btn btn-circle btn-sm" type="submit" onclick="return confirm('Are you sure you would like to remove this friend?');" name="button">X</button>
+                      <button class="btn btn-danger btn-sm mx-1" type="submit" onclick="return confirm('Are you sure you would like to remove this friend?');" name="button">Remove Friend</button>
                     </form>
                   </li>
                 {% endfor %}
@@ -112,7 +138,7 @@
               <ul>
                 {% for friend_request in unrejected_friend_requests %}
                   <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend_request.from_user%}';">
-                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.from_user }}</text>               
+                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.from_user }}</text>
 
                     <!-- Accept Friend -->
                     <form class="float-right" action="{% url 'acceptfriend' %}" method="POST">
@@ -126,6 +152,20 @@
                       {% csrf_token %}
                       <input type="hidden" id="id_from_user" name="from_user" value="{{ friend_request.from_user.id }}">
                       <button class="btn btn-sm btn-danger" type="submit" name="button">Reject</button>
+                    </form>
+                  </li>
+
+                {% endfor %}
+
+                {% for friend_request in pending_outgoing_requests %}
+                  <li class="dropdown-item mb-2 mt-2 font-weight-bold" style="display: inline-block;" onclick="location.href='{% url 'profile' slug=friend_request.to_user%}';">
+                      <text style='text-decoration: none; font-size: 1.15rem;'>{{ friend_request.to_user }}</text>
+
+                    <!-- Cancel Friend Request -->
+                    <form class="float-right" action="{% url 'cancelfriendrequest' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" id="id_to_user" name="to_user" value="{{ friend_request.to_user.id }}">
+                      <button class="btn btn-sm btn-info" type="submit" name="button">Cancel Request</button>
                     </form>
                   </li>
 
@@ -149,80 +189,41 @@
       </div>
     </div>
   </div>
-
-
 </div>
 
-<script>
 
-var all_friends = [] // store current friends list for filtering search later
+<script>
+// Global variables for user_search.js are defined here as they require django tags
+
+// store current friends list for filtering search results
+var all_friends = [] 
 {% for friend in all_friends %}
-  all_friends += '{{ friend }}'
+  all_friends.push('{{ friend }}')
 {% endfor %}
 
-// Live Search Users for Adding Friends
+// todo improve html elements building so its more readable and not purely string based.
 
-// async fetch json
-async function fetchUsers(searchQuery) {
-  let apiURL = window.location.origin + '/api/usernames/' + searchQuery;
-  // console.log(apiURL)
-  const response = await fetch(apiURL);
-  return response.json()
-}
+// button next to each search result 
+let button = '<button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button>'
 
-// Update the list of users displayed
-function updateLiveSearch(searchQuery) {
-  if (searchQuery) {
-    // Make Request to DRF api search endpoint asynchronously
-    let searchResults = fetchUsers(searchQuery);
+// form action for each search result
+let friend_request_action = 'action="{% url 'sendfriendrequest' %}'
 
-    searchResults.then(function(result) {
-      if (result.length) { // if there are results...
-      
-        document.getElementById('ErrorText').innerHTML = ''; // remove any previous error text
-        document.getElementById('search-results').innerHTML = ''; // reset search-results.innerHTML
+// form csrf 
+let csrf = '{% csrf_token %}'
 
-        for (index = 0; index < result.length; index++) { // iteratively add result.username and form button to add user as friend
-            if (result[index].username === '{{ user.get_username }}' ) { // don't display self 
-              continue;
-            }
-            if (all_friends.indexOf(result[index].username) > -1) { // filter results for usernames that are not already in all_friends
-              continue
-            }
+// current user username for filtering search results
+let username = '{{ user.get_username }}'
 
-            // todo fix url building here so its more readable.
-            let prof_url = "'/profile/" + result[index].username + "'"
-            document.getElementById('search-results').innerHTML += ('<li class="dropdown-item mb-2 mt-2" style="display: inline-block;" onclick="location.href='+prof_url+';"><text style="text-decoration: none; font-size: 1.15rem;"">'+result[index].username+'</text> <form class="float-right" action="{% url 'sendfriendrequest' %}" method="POST"> {% csrf_token %} <input type="hidden" id="id_to_user" name="to_user" value="'+result[index].id+'"> <button class="btn btn-sm btn-success" type="submit" name="button">Add Friend</button> </form> </li>');
-        }
+// pending friendship requests for the user for filtering search results
+let pending_outgoing_requests_usernames = []
+{% for friend_request in pending_outgoing_requests %}
+  pending_outgoing_requests_usernames.push('{{ friend_request.to_user }}')
+{% endfor %}
 
-      } else { // if there are no results...
-        document.getElementById('ErrorText').innerHTML = ('No users found matching: ' + searchQuery);
-      }
-    })
-  } else {
-    document.getElementById('ErrorText').innerHTML = ('Search for a username above')
-  }
-}
-
-// Input change small search bar or Small button click triggers this
-function updateLiveSearchSm() {
-  displaySearchNavTab()
-  var searchQuery = document.getElementById("searchbarSm").value
-  updateLiveSearch(searchQuery)
-}
-
-// Input change large search bar or Large button click triggers this
-function updateLiveSearchLg() {
-  displaySearchNavTab()
-  var searchQuery = document.getElementById("searchbarLg").value
-  updateLiveSearch(searchQuery)
-}
-
-// Display search nav tab
-function displaySearchNavTab() {
-  $('.nav-tabs a[href="#searchusers"]').tab('show')
-}
-
+// console.log(all_friends)
+// console.log(pending_outgoing_requests_usernames)
 </script>
+<script src="{% static "js/user_search.js" %}">// Live Search Users for Adding Friends</script>
 
 {% endblock %}
