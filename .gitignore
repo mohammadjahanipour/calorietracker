@@ -6,6 +6,10 @@ __pycache__
 db.sqlite3
 media
 
+
+# Locale cockroach cluster data
+cockroach-data
+
 # Backup files #
 *.bak
 
