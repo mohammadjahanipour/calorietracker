@@ -292,6 +292,29 @@ DATABASES = {
 }
 
 
+# # Cockroach
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django_cockroachdb',
+#         'NAME': 'django6',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '26257',
+#         # If connecting with SSL, include the section below, replacing the
+#         # file paths as appropriate.
+#         # 'OPTIONS': {
+#         #     'sslmode': 'require',
+#         #     'sslrootcert': '/certs/ca.crt',
+#         #     # Either sslcert and sslkey (below) or PASSWORD (above) is
+#         #     # required.
+#         #     'sslcert': '/certs/client.myprojectuser.crt',
+#         #     'sslkey': '/certs/client.myprojectuser.key',
+#         # },
+#     },
+# }
+
+
 # # Password Validation ========================================================
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 # AUTH_PASSWORD_VALIDATORS = [
