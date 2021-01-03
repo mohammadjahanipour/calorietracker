@@ -126,14 +126,16 @@ LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "login"
 
 MULTIFACTOR = {
-    "LOGIN_CALLBACK": False,  # False, or dotted import path to function to process after successful authentication
+    # False, or dotted import path to function to process after successful authentication
+    "LOGIN_CALLBACK": False,
     # 'RECHECK': True,                     # Invalidate previous authorisations at random intervals
     # 'RECHECK_MIN': 60 * 60 * 3,          # No recheks before 3 hours
     # 'RECHECK_MAX': 60 * 60 * 6,          # But within 6 hours
     #
     # 'FIDO_SERVER_ID': 'example.com',     # Server ID for FIDO request
     # 'FIDO_SERVER_NAME': 'Django App',    # Human-readable name for FIDO request
-    "TOKEN_ISSUER_NAME": "CalorieTracker.io",  # TOTP token issuing name (to be shown in authenticator)
+    # TOTP token issuing name (to be shown in authenticator)
+    "TOKEN_ISSUER_NAME": "CalorieTracker.io",
     # 'U2F_APPID': 'https://example.com',  # U2F request issuer
 }
 
@@ -313,6 +315,18 @@ DATABASES = {
 #         #     'sslkey': '/certs/client.myprojectuser.key',
 #         # },
 #     },
+# }
+
+# Yugabyte
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ysql_django',
+#         'USER': 'postgres',
+#         'PASSWORD': '',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5433',
+#     }
 # }
 
 
