@@ -213,15 +213,31 @@ class Analytics(TemplateView):
     def get_data_goals_targets(self):
         """
         Computes:
-           current_weight, goal_weight, goal_date, weight_to_go, goal_weight_change_per_week,
+           current_weight, goal_weight, goal_date, weight_to_go, goal_weight_change_per_week, percent_to_goal
         Returns:
             dict
         """
+        current_weight = self.get_current_weight(self.logs)
+        initial_weight = self.logs[0].weight
+        if (self.settings.goal_weight - initial_weight) != 0:
+            percent_to_goal = round(
+                100
+                * (
+                    1
+                    - (
+                        (self.settings.goal_weight - current_weight)
+                        / (self.settings.goal_weight - initial_weight)
+                    )
+                )
+            )
+        else:
+            percent_to_goal = 100
+
         goals_and_targets = {
-            "current_weight": self.get_current_weight(self.logs),
+            "current_weight": current_weight,
             "goal_weight": self.settings.goal_weight,
-            "weight_to_go": self.settings.goal_weight
-            - self.get_current_weight(self.logs),
+            "weight_to_go": self.settings.goal_weight - current_weight,
+            "percent_to_goal": percent_to_goal,
             "goal_date": self.settings.goal_date.strftime("%b. %-d"),
             "time_left": self.settings.time_to_goal,
             "goal_weight_change_per_week": (
@@ -266,12 +282,16 @@ class Analytics(TemplateView):
 
         current_rate_of_weight_change = (weight_change / len(weights)) * 7  # per week
 
-        projected_time_to_goal_days = (
-            self.settings.goal_weight - self.get_current_weight(self.logs)
-        ) / (weight_change / len(weights))
-        projected_time_to_goal_date = date.today() + timedelta(
-            days=projected_time_to_goal_days
-        )
+        if weight_change != 0:
+            projected_time_to_goal_days = (
+                self.settings.goal_weight - self.get_current_weight(self.logs)
+            ) / (weight_change / len(weights))
+            projected_time_to_goal_date = date.today() + timedelta(
+                days=projected_time_to_goal_days
+            )
+        else:
+            projected_time_to_goal_days = -1
+            projected_time_to_goal_date = -1
 
         return {
             "weight_change": weight_change,

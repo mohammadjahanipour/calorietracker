@@ -3,6 +3,7 @@ import logging
 from datetime import datetime, timezone
 import pandas as pd
 
+from actstream import action
 from chartjs.views.lines import BaseLineChartView
 from django.conf import settings
 from django.contrib import messages
@@ -24,162 +25,15 @@ from django.views.generic import (
     TemplateView,
     UpdateView,
 )
-from friendship.models import Block, Follow, Friend, FriendshipRequest
 from measurement.measures import Weight
 from safedelete.models import HARD_DELETE
 
 from .. import models
-from ..forms import (
-    FriendForm,
-    FriendShipRequestForm,
-    LogDataForm,
-    LoginForm,
-    MeasurementWidget,
-    RegisterForm,
-    SettingForm,
-)
+from ..forms import LogDataForm, LoginForm, MeasurementWidget, RegisterForm, SettingForm
 from ..models import Feedback, Log, MFPCredentials, Setting
 
 # Get an instance of a logger
 logger = logging.getLogger("PrimaryLogger")
-
-
-
-class SendFriendRequest(LoginRequiredMixin, FormView):
-    """docstring for AcceptFriend."""
-
-    form_class = FriendShipRequestForm
-    success_url = "/contacts/"
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-
-        to_user = form.cleaned_data.get("to_user")
-
-        Friend.objects.add_friend(
-            self.request.user,  # The sender
-            to_user,  # The recipient
-            message="Hi! I would like to add you",
-        )  # This message is optional
-
-        messages.success(self.request, "Friend Request Sent")
-
-        return super().form_valid(form)
-
-
-class RemoveFriend(LoginRequiredMixin, FormView):
-    """docstring for RemoveFriend."""
-
-    # Removes an existing aka previously accepted friend
-
-    form_class = FriendForm
-    success_url = "/contacts/"
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-
-        from_user = form.cleaned_data.get("from_user")
-        # Remove friend request
-        Friend.objects.remove_friend(self.request.user, from_user)
-
-        messages.info(self.request, "Friend Removed")
-
-        return super().form_valid(form)
-
-
-class RejectFriend(LoginRequiredMixin, FormView):
-    """Rejects a friend request not to be confused with removing a existing friend"""
-
-    form_class = FriendForm
-    success_url = "/contacts/"
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-
-        from_user = form.cleaned_data.get("from_user")
-        # Reject friend request
-        friend_request = FriendshipRequest.objects.get(
-            to_user=self.request.user, from_user=from_user
-        )
-        friend_request.reject()
-
-        messages.info(self.request, "Friend Request Rejected")
-
-        return super().form_valid(form)
-
-
-class AcceptFriend(LoginRequiredMixin, FormView):
-    """docstring for AcceptFriend."""
-
-    form_class = FriendForm
-    success_url = "/contacts/"
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-
-        from_user = form.cleaned_data.get("from_user")
-        # Accept friend request
-        friend_request = FriendshipRequest.objects.get(
-            to_user=self.request.user, from_user=from_user
-        )
-        friend_request.accept()
-
-        messages.success(self.request, "Friend Request Accepted")
-
-        return super().form_valid(form)
-
-
-class Contacts(LoginRequiredMixin, TemplateView):
-    """"""
-
-    # The forms for this view/template are built manually in the template
-
-    # TODO: find out if friendships go both ways seems not to
-    # OPTIMIZE: refreshing the page causes the state to be lost in the tabs
-
-    template_name = "calorietracker/contacts.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["all_friends"] = Friend.objects.friends(self.request.user)
-        context["unrejected_friend_requests"] = Friend.objects.unrejected_requests(
-            user=self.request.user
-        )
-        return context
-
-    def get(self, request, *args, **kwargs):
-        """
-        method only servers to run code for testing
-        """
-        return super().get(request, *args, **kwargs)
 
 
 class Subscription(LoginRequiredMixin, TemplateView):
@@ -237,6 +91,19 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
 
     login_url = "/login/"
     redirect_field_name = "redirect_to"
+
+    def get_success_url(self):
+
+        success_url = reverse_lazy("analytics")
+
+        if self.request.POST["submit"] == "update_and_edit_another":
+            success_url = reverse_lazy("logs")
+
+        # Adding success Flash messages especially usefull if the user edits multiple logs in a row
+        # Flash message will give him visual feedback that it worked and not just vanish in thin air
+        messages.success(self.request, "Log Edited")
+
+        return success_url
 
     def get_queryset(self):
         return Log.objects.filter(user=self.request.user)
@@ -309,7 +176,8 @@ class LogData(LoginRequiredMixin, CreateView):
         form = super().get_form()
 
         # We can initialize fields here as needed
-        user_weight_units = Setting.objects.get(user=self.request.user).unit_preference
+        user_weight_units = Setting.objects.get(
+            user=self.request.user).unit_preference
         if user_weight_units == "M":
             # Show metric units first
             form["weight"].field.widget.widgets[1].choices = [
@@ -427,7 +295,8 @@ class ViewLogs(TemplateView):
         if not self.request.user.is_authenticated:
             return redirect(reverse_lazy("login"))
         if not Log.objects.filter(user=self.request.user).exists():
-            messages.info(request, "You need to have made at least one log entry")
+            messages.info(
+                request, "You need to have made at least one log entry")
             return redirect(reverse_lazy("logdata"))
 
         return super().dispatch(request)

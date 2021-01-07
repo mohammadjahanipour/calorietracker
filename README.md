@@ -142,6 +142,9 @@ more info can be found at the below links
     Daily MFP Auto Sync
     0 0 * * * dokku run calorietracker python mysite/manage.py mfp_sync
 
+    Daily Auto Renew letsencrypt certificates for all apps
+    0 0 * * * dokku letsencrypt:auto-renew
+
 
 
 ### Package Documentation

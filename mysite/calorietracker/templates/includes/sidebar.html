@@ -92,9 +92,19 @@
   <!-- Nav Item - Friends -->
   <li class="nav-item">
     <a class="nav-link" href="{% url 'contacts' %}">
-      <i class="fas fa-users"></i>
+      <i class="fas fa-user-friends"></i>
       <span>Friends</span></a>
   </li>
+
+  {% if isCoach %}
+  <!-- Nav Item - Clients -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'clients' %}">
+      <i class="fas fa-users"></i>
+      <span>Clients</span></a>
+  </li>
+  {% endif %}
+
 
   <!-- Nav Item - Community Collapse Menu -->
   <li class="nav-item">

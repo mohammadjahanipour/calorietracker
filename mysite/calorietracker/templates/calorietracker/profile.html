@@ -23,12 +23,23 @@
         </form>
 
       {% else %}
-        <!-- Add Friend Button -->
-        <form class="ml-auto" action="{% url 'sendfriendrequest' %}" method="POST">
-          {% csrf_token %}
-          <input type="hidden" id="id_to_user" name="to_user" value="{{userID}}">
-          <button class="btn btn-sm btn-success my-1 mx-2" type="submit" name="button">Add Friend</button>
-        </form>
+        <!-- Check if friendship requested -->
+        {% if isRequestedFriend %}
+          <form class="ml-auto" action="{% url 'cancelfriendrequest' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="id_to_user" name="to_user" value="{{userID}}">
+            <button class="btn btn-sm btn-info my-1 mx-2" type="submit" name="button">Cancel Friend Request</button>
+          </form>
+
+
+        {% else %}
+          <!-- Add Friend Button -->
+          <form class="ml-auto" action="{% url 'sendfriendrequest' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="id_to_user" name="to_user" value="{{userID}}">
+            <button class="btn btn-sm btn-success my-1 mx-2" type="submit" name="button">Add Friend</button>
+          </form>
+        {% endif %}
       {% endif %}
 
 
