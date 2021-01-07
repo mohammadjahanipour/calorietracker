@@ -92,6 +92,19 @@ class UpdateLogData(LoginRequiredMixin, UpdateView):
     login_url = "/login/"
     redirect_field_name = "redirect_to"
 
+    def get_success_url(self):
+
+        success_url = reverse_lazy("analytics")
+
+        if self.request.POST["submit"] == "update_and_edit_another":
+            success_url = reverse_lazy("logs")
+
+        # Adding success Flash messages especially usefull if the user edits multiple logs in a row
+        # Flash message will give him visual feedback that it worked and not just vanish in thin air
+        messages.success(self.request, "Log Edited")
+
+        return success_url
+
     def get_queryset(self):
         return Log.objects.filter(user=self.request.user)
 
@@ -163,7 +176,8 @@ class LogData(LoginRequiredMixin, CreateView):
         form = super().get_form()
 
         # We can initialize fields here as needed
-        user_weight_units = Setting.objects.get(user=self.request.user).unit_preference
+        user_weight_units = Setting.objects.get(
+            user=self.request.user).unit_preference
         if user_weight_units == "M":
             # Show metric units first
             form["weight"].field.widget.widgets[1].choices = [
@@ -281,7 +295,8 @@ class ViewLogs(TemplateView):
         if not self.request.user.is_authenticated:
             return redirect(reverse_lazy("login"))
         if not Log.objects.filter(user=self.request.user).exists():
-            messages.info(request, "You need to have made at least one log entry")
+            messages.info(
+                request, "You need to have made at least one log entry")
             return redirect(reverse_lazy("logdata"))
 
         return super().dispatch(request)
