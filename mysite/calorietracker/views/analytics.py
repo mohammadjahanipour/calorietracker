@@ -282,7 +282,7 @@ class Analytics(TemplateView):
 
         current_rate_of_weight_change = (weight_change / len(weights)) * 7  # per week
 
-        if weight_change != 0:
+        if weight_change != Weight(lb=0.0):
             projected_time_to_goal_days = (
                 self.settings.goal_weight - self.get_current_weight(self.logs)
             ) / (weight_change / len(weights))
