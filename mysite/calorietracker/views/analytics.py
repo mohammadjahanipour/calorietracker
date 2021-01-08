@@ -330,6 +330,8 @@ class Analytics(TemplateView):
         TDEE,
         units,
     ):
+
+        date_format = "%Y-%m-%W-%d"
         df = pd.DataFrame(
             list(
                 (
@@ -344,13 +346,13 @@ class Analytics(TemplateView):
         df["weight"] = all_weights
 
         weeklycalories_in_mean = (
-            df.groupby(df.date.dt.strftime("%W")).calories_in.mean().tolist()
+            df.groupby(df.date.dt.strftime(date_format)).calories_in.mean().tolist()
         )
         weeklycalories_in_total = (
-            df.groupby(df.date.dt.strftime("%W")).calories_in.sum().tolist()
+            df.groupby(df.date.dt.strftime(date_format)).calories_in.sum().tolist()
         )
-        weeklyweights = df.groupby(df.date.dt.strftime("%W")).weight.median().tolist()
-        weeklydates = df.groupby(df.date.dt.strftime("%W")).date.agg(["first", "last"])
+        weeklyweights = df.groupby(df.date.dt.strftime(date_format)).weight.median().tolist()
+        weeklydates = df.groupby(df.date.dt.strftime(date_format)).date.agg(["first", "last"])
         weeklydatestarts = weeklydates["first"].tolist()
         weeklydateends = weeklydates["last"].tolist()
 
@@ -377,8 +379,8 @@ class Analytics(TemplateView):
                 )
                 # Calculate TDEE for the week using smoothing with a window of 3
                 entry["TDEE"] = calculate_TDEE(
-                    calories[(i - 1) * 7 : (i + 1) * 7],
-                    all_weights[(i - 1) * 7 : (i + 1) * 7],
+                    calories[(i - 1) * 7: (i + 1) * 7],
+                    all_weights[(i - 1) * 7: (i + 1) * 7],
                     n=len(all_weights),
                     units=units,
                     smooth=True,
