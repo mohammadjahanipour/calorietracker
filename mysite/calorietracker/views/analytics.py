@@ -331,7 +331,7 @@ class Analytics(TemplateView):
         units,
     ):
 
-        date_format = "%Y-%m-%W-%d"
+        date_format = "%Y-%W"
         df = pd.DataFrame(
             list(
                 (
