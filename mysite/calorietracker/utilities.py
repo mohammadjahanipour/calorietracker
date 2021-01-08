@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
-from sklearn.linear_model import LinearRegression
+# from sklearn.linear_model import LinearRegression # removed due an error on dokku deploy
+# TODO: probably remove the functions that use this and are not used anywhere anyway
 
 from .base_models import Weight
 
@@ -28,7 +29,7 @@ def single_regression(X, Y):
         Class with attributes coef_, rank, singular_, intercept_
     """
 
-    linear_regressor = LinearRegression()  #  object for the class
+    linear_regressor = LinearRegression()  # object for the class
     model = linear_regressor.fit(X, Y)  # perform regression
 
     Y_pred = linear_regressor.predict(X)  # predictions
@@ -59,7 +60,7 @@ def sci_multiple_regression(X, Y):
         Class with attributes coef_, rank, singular_, intercept_
     """
 
-    linear_regressor = LinearRegression()  #  object for the class
+    linear_regressor = LinearRegression()  # object for the class
     model = linear_regressor.fit(X, Y)  # perform regression
     response = model.predict(X)
     r2 = model.score(X, Y)
@@ -157,7 +158,7 @@ def calculate_TDEE(CI, weights, n, units="lbs", smooth=True, window=5):
         weights = moving_average(weights, window)
 
     # Trim the data so we only look at last n days.
-    CI = CI[-n + 1 : -2]
+    CI = CI[-n + 1: -2]
     weights = weights[-n:]
 
     #  Calculate weight change and convert to calories
@@ -183,11 +184,13 @@ def calculate_HarrisBenedict(weight, sex, height, age, activity):
 
     if sex == "M":
         BMR = round(
-            -1 * float(88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)),
+            -1 * float(88.362 + (13.397 * weight) +
+                       (4.799 * height) - (5.677 * age)),
         )
     elif sex == "F":
         BMR = round(
-            -1 * float(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)),
+            -1 * float(447.593 + (9.247 * weight) +
+                       (3.098 * height) - (4.330 * age)),
         )
     if activity == "1":
         TDEE = BMR * 1.2
@@ -329,7 +332,8 @@ def smooth_zero_weights_lerp(date_weight_tuples_list):
     all_logs = date_weight_tuples_list  # list of tuples (date, weight)
 
     dates, weights = [e[0] for e in all_logs], [e[1] for e in all_logs]
-    nonzeroweight_indices = [i for i, e in enumerate(weights) if e != Weight(g=0)]
+    nonzeroweight_indices = [
+        i for i, e in enumerate(weights) if e != Weight(g=0)]
 
     for i in range(len(dates)):
         if weights[i] == Weight(g=0):
@@ -378,8 +382,9 @@ def smooth_zero_weights_previous_avg(date_weight_tuples_list):
     for i in range(len(dates)):
         if weights[i] == Weight(g=0.0):
             # get last n weights
-            previous = weights[i - n : i - 1]
-            previous = [weight for weight in previous if weight != Weight(g=0.0)]
+            previous = weights[i - n: i - 1]
+            previous = [
+                weight for weight in previous if weight != Weight(g=0.0)]
             # calculate average.
             if len((previous)):
                 average = sum([value.lb for value in previous]) / len(previous)
@@ -389,7 +394,8 @@ def smooth_zero_weights_previous_avg(date_weight_tuples_list):
                     value[1].lb for value in all_logs if value[1] != Weight(g=0.0)
                 ]
                 if len(nonzeroweights[-10:-1]) != 0:
-                    average = sum(nonzeroweights[-10:-1]) / len(nonzeroweights[-10:-1])
+                    average = sum(
+                        nonzeroweights[-10:-1]) / len(nonzeroweights[-10:-1])
                 else:
                     average = 0
             smoothed_weights.append(Weight(lb=average))
@@ -399,7 +405,8 @@ def smooth_zero_weights_previous_avg(date_weight_tuples_list):
 
 
 if __name__ == "__main__":
-    sys.path.append(os.path.join(os.getcwd(), ".."))  # add path to project root dir
+    # add path to project root dir
+    sys.path.append(os.path.join(os.getcwd(), ".."))
     os.environ["DJANGO_SETTINGS_MODULE"] = "mysite.settings"
 
     # Connect to Django ORM
@@ -449,7 +456,8 @@ if __name__ == "__main__":
     print("Raw Weight Change:", weight_change_raw)
     print("Smoothed Weight Change:", weight_change_smooth)
     print("Rate of Weight Change:", weight_change_smooth / n, "pounds per day")
-    print("Rate of Weight Change:", (weight_change_smooth / n) * 7, "pounds per week")
+    print("Rate of Weight Change:",
+          (weight_change_smooth / n) * 7, "pounds per week")
 
     # # Single Regression - pretty straight forward here.
     print("\nSingle Regression Results for cal_in vs weights")
