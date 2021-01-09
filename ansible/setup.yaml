@@ -4,7 +4,7 @@
 
   tasks:
     - name: upgrade all packages
-      yum:
+      package:
         name: '*'
         state: latest
 
@@ -32,14 +32,8 @@
     - name: Adding ssh key to authorized ssh keys for 'admin' user
       authorized_key: user=admin key="{{ lookup('file', './ssh_keys/id_ed25519.pub') }}"
 
-    - name: install epel-release for ufw
-      # ufw is not in the standard repo but in epel
-      yum:
-        name: epel-release
-        state: latest
-
     - name: install ufw
-      yum:
+      package:
         name: ufw
         state: latest
 
