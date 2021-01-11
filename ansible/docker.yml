@@ -8,12 +8,9 @@
 
     - name: Remove conflicting packages
       # this seems to be some sort of bug and not the default
-      yum:
+      package:
         name: podman, buildah
-        state: removed
-
-    - name: Upgrade all packages
-      yum: name=* state=latest
+        state: absent
 
     - name: Check if Docker is installed
       command: systemctl status docker
