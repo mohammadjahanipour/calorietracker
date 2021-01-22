@@ -86,7 +86,10 @@ if not DEBUG:
     )
 
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = []
 
 # # Email Configuration ========================================================
 ADMINS = [("CT", "calorietrackerio@gmail.com")]
