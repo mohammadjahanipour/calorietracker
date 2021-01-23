@@ -287,13 +287,26 @@ TEMPLATES = [
 
 # # Database(s) ========================================================
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+
+# Djongo
+# docker run --name djongo -p 27017:27017 mongo
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'mydjongodb',
+        # 'USER': 'admin',
+        # 'PASSWORD': 'admin',
+        # 'HOST': '0.0.0.0',
+        # 'PORT': '27017',
     }
 }
-
 
 # # Cockroach
 # DATABASES = {
