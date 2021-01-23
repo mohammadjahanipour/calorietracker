@@ -43,6 +43,7 @@ pinax-announcements = "*"
 pinax-messages = "*"
 pinax-templates = "*"
 django-cockroachdb = "*"
+djongo = "*"
 
 [requires]
 python_version = "3.7"
