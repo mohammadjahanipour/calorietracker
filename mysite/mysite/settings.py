@@ -288,35 +288,38 @@ TEMPLATES = [
 
 # # Database(s) ========================================================
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
-# # Cockroach
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django_cockroachdb',
-#         'NAME': 'django6',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': '26257',
-#         # If connecting with SSL, include the section below, replacing the
-#         # file paths as appropriate.
-#         # 'OPTIONS': {
-#         #     'sslmode': 'require',
-#         #     'sslrootcert': '/certs/ca.crt',
-#         #     # Either sslcert and sslkey (below) or PASSWORD (above) is
-#         #     # required.
-#         #     'sslcert': '/certs/client.myprojectuser.crt',
-#         #     'sslkey': '/certs/client.myprojectuser.key',
-#         # },
-#     },
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
 # }
+
+ca_crt_location = os.path.join(BASE_DIR, "certs/ca.crt")
+sslcert_location = os.path.join(BASE_DIR, "certs/client.root.crt")
+sslkey_location = os.path.join(BASE_DIR, "certs/client.root.key")
+
+# Cockroach
+DATABASES = {
+    'default': {
+        'ENGINE': 'django_cockroachdb',
+        'NAME': 'bank',
+        'USER': 'django',
+        'PASSWORD': 'password',
+        'HOST': '95.179.251.204',
+        'PORT': '26257',
+        # If connecting with SSL, include the section below, replacing the
+        # file paths as appropriate.
+        # 'OPTIONS': {
+        #     'sslmode': 'require',
+        #     'sslrootcert': ca_crt_location,
+        #     # Either sslcert and sslkey (below) or PASSWORD (above) is
+        #     # required.
+        #     'sslcert': sslcert_location,
+        #     'sslkey': sslkey_location,
+        # },
+    },
+}
 
 
 # # Password Validation ========================================================
