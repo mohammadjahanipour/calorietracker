@@ -296,9 +296,12 @@ TEMPLATES = [
 
 # testing config for rqlite # TODO: finalize database config
 DATABASES = {
-    "default": {
-        "ENGINE": "mydbengine",
-        "NAME": BASE_DIR / "db.mydbengine",
+    'default': {
+        'ENGINE': 'rqlite.djangobackend',
+        'OPTIONS': {
+            'host': 'localhost',    # default
+            'port': 4001            # default
+        }
     }
 }
 
