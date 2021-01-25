@@ -43,6 +43,8 @@ pinax-announcements = "*"
 pinax-messages = "*"
 pinax-templates = "*"
 django-cockroachdb = "*"
+rqlite-django = {path = "./rqlite-django"} # https://github.com/sum12/rqlite-django
+pyrqlite = {path = "./pyrqlite"}
 
 [requires]
 python_version = "3.7"
