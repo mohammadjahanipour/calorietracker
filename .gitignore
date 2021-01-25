@@ -9,6 +9,8 @@ media
 
 # Locale cockroach cluster data
 cockroach-data
+mysite/certs
+mysite/my-safe-directory
 
 # Backup files #
 *.bak
