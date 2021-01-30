@@ -287,10 +287,22 @@ TEMPLATES = [
 
 # # Database(s) ========================================================
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+# Maria
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': '',
+        'HOST': '167.71.38.198',
+        'PORT': '3306',
     }
 }
 
